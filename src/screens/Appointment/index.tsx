@@ -17,6 +17,7 @@ import {
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import {
     Address,
+    CustomerVisitationPayloadType,
     PIC,
     projectPayloadType,
     visitationPayload
@@ -131,49 +132,9 @@ export default function Appointment() {
         }, [step])
     );
 
-    const validateCompanyDetailsForm = React.useCallback(() => {
-        const errors: Partial<StepOne> = {};
-        if (stepOne?.customerType === "company") {
-            if (!stepOne?.company?.Company?.title) {
-                errors.errorCompany = "Nama perusahaan harus diisi";
-            }
-        }
-
-        if (
-            !stepOne[customerType]?.name ||
-            stepOne[customerType]?.name?.length === 0
-        ) {
-            errors.errorProject = "Nama Proyek harus diisi";
-        } else if (stepOne[customerType]?.name?.length < 4) {
-            errors.errorProject =
-                "Nama Proyek tidak boleh kurang dari 4 karakter";
-        }
-        if (
-            !stepOne[customerType]?.Pics ||
-            stepOne[customerType]?.Pics?.length === 0
-        ) {
-            errors.errorPics = "Tambahkan minimal 1 PIC";
-        } else if (stepOne[customerType]?.Pics?.length > 1) {
-            const selectedPic = stepOne[customerType]?.Pics?.filter(
-                (v) => v?.isSelected
-            );
-            if (!selectedPic || selectedPic?.length === 0) {
-                errors.errorPics = "Pilih salah satu PIC";
-            }
-        }
-        return errors;
-    }, [customerType, stepOne]);
-
     const goToVisitationDateStep = React.useCallback(() => {
-        const errors = validateCompanyDetailsForm();
-        if (JSON.stringify(errors) !== "{}" && errors) {
-            Object?.keys(errors)?.forEach((val) => {
-                dispatch(assignError({ key: val, value: errors }));
-            });
-        } else {
-            dispatch(increaseStep());
-        }
-    }, [dispatch, validateCompanyDetailsForm]);
+        dispatch(increaseStep());
+    }, [dispatch]);
 
     const submitAppoinmentData = React.useCallback(async () => {
         try {
@@ -186,7 +147,8 @@ export default function Appointment() {
                     location: {} as Address
                 } as projectPayloadType,
                 pic: [] as PIC[],
-                batchingPlantId: authState?.selectedBatchingPlant?.id
+                batchingPlantId: authState?.selectedBatchingPlant?.id,
+                customer: {} as CustomerVisitationPayloadType
             };
             if (
                 stepOne[customerType]?.Pics &&
@@ -240,9 +202,6 @@ export default function Appointment() {
                 payload.project.location.lat =
                     stepOne[customerType]?.locationAddress?.lat;
             }
-            if (stepOne?.customerType) {
-                payload.visitation.customerType = typeCustomer;
-            }
             if (appointmentState?.selectedDate) {
                 const selectDate = moment(appointmentState?.selectedDate?.date);
                 payload.visitation.bookingDate = selectDate?.valueOf();
@@ -251,18 +210,33 @@ export default function Appointment() {
             if (stepOne[customerType]?.name) {
                 payload.project.name = stepOne[customerType]?.name;
             }
-            if (stepOne?.customerType === "company") {
-                if (stepOne[customerType]?.Company?.title) {
-                    payload.project.companyDisplayName =
-                        stepOne[customerType]?.Company?.title;
-                }
-            }
+
             if (stepOne[customerType]?.Visitation?.id) {
                 payload.visitation.visitationId =
                     stepOne[customerType]?.Visitation?.id;
             }
             if (stepOne[customerType]?.id) {
                 payload.project.id = stepOne[customerType]?.id;
+            }
+
+            if (stepOne?.customerType) {
+                payload.customer.type = typeCustomer;
+            }
+            if (stepOne?.customerType) {
+                payload.visitation.customerType = typeCustomer;
+            }
+            if (stepOne[customerType]?.selectedCustomer?.id) {
+                payload.customer.id = stepOne[customerType].selectedCustomer.id;
+            }
+            if (stepOne[customerType]?.selectedCustomer?.title) {
+                payload.customer.displayName =
+                    stepOne[customerType].selectedCustomer.title;
+            }
+            if (stepOne[customerType]?.selectedCustomer?.paymentType) {
+                payload.customer.paymentType =
+                    stepOne[customerType].selectedCustomer.paymentType;
+            } else {
+                payload.customer.paymentType = "CBD";
             }
 
             payload.visitation.isBooking = true;
@@ -327,7 +301,10 @@ export default function Appointment() {
 
     function isCanAdvanceToStep2() {
         const customerTypeCondition = stepOne?.customerType;
-        const companyNameCondition = stepOne?.company?.Company;
+        const selectedCompanyCustomerCondition =
+            stepOne?.company?.selectedCustomer?.title;
+        const selectedIndividuCustomerCondition =
+            stepOne?.individu?.selectedCustomer?.title;
         const projectNameConditionIndividu = stepOne?.individu?.name;
         const projectNameConditionCompany = stepOne?.company?.name;
         const picIndividu = stepOne?.individu?.Pics
@@ -337,14 +314,18 @@ export default function Appointment() {
 
         if (customerTypeCondition === "company") {
             return (
-                !!companyNameCondition &&
+                selectedCompanyCustomerCondition?.length > 0 &&
                 !!projectNameConditionCompany &&
                 picCompany &&
                 picCompany?.length > 0
             );
         }
         if (customerTypeCondition === "individu") {
-            return !!projectNameConditionIndividu && picIndividu.length > 0;
+            return (
+                !!projectNameConditionIndividu &&
+                picIndividu?.length > 0 &&
+                selectedIndividuCustomerCondition?.length > 0
+            );
         }
 
         return undefined;
@@ -394,7 +375,9 @@ export default function Appointment() {
                             const finalPIC: any[] = [
                                 ...stepOne[customerType].Pics
                             ];
+
                             let finalData;
+
                             if (dataPic) {
                                 finalData = {
                                     ...dataPic,

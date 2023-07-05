@@ -25,8 +25,11 @@ import { CREATE_VISITATION } from "@/navigation/ScreenNames";
 import {
     resetStepperFocused,
     resetVisitationState,
+    setPics,
+    setProjectName,
     setSearchProject,
     setSearchQuery,
+    setSelectedCustomerData,
     setStepperFocused,
     updateCurrentStep,
     updateDataVisitation,
@@ -39,6 +42,7 @@ import { updateRegion } from "@/redux/reducers/locationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { shouldAllowVisitationStateToContinue } from "@/utils/generalFunc";
+import { COMPANY } from "@/constants/general";
 import ThirdStep from "./elements/third";
 import BSheetAddPic from "./elements/second/BottomSheetAddPic";
 import SecondStep from "./elements/second";
@@ -92,17 +96,16 @@ function stepHandler(
     } else {
         setStepsDone((curr) => curr?.filter((num) => num !== 0));
     }
-    const selectedPic = state?.pics?.filter((v) => v?.isSelected);
-    const customerTypeCond =
-        state?.customerType === "COMPANY" ? !!state?.companyName : true;
-    console.log("dataa 1:: ", state?.pics);
-    console.log("dataa 2:: ", state?.customerType);
-    console.log("dataa 3:: ", state?.companyName);
+
+    const selectedCustomerType =
+        state?.customerType === COMPANY ? "company" : "individu";
+    const selectedPic = state[selectedCustomerType]?.pics?.filter(
+        (v) => v.isSelected
+    );
+
     if (
-        state?.customerType &&
-        customerTypeCond &&
-        state?.projectName &&
-        selectedPic &&
+        state[selectedCustomerType]?.selectedCustomer?.title?.length > 0 &&
+        state[selectedCustomerType]?.projectName &&
         selectedPic?.length > 0
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
@@ -164,15 +167,14 @@ function CreateVisitation() {
     function populateData(existingData: visitationListResponse) {
         const { project } = existingData;
         const { company, Pics: picList, mainPic } = project;
+
         dispatch(
             updateDataVisitation({ type: "projectId", value: project?.id })
         );
-        dispatch(
-            updateDataVisitation({ type: "projectName", value: project?.name })
-        );
+
         if (company) {
             dispatch(
-                updateDataVisitation({ type: "customerType", value: "COMPANY" })
+                updateDataVisitation({ type: "customerType", value: COMPANY })
             );
             dispatch(
                 updateDataVisitation({
@@ -189,7 +191,38 @@ function CreateVisitation() {
             );
         }
 
-        if (existingData?.project?.stage) {
+        if (project.Customer) {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: company ? "company" : "individu",
+                    value: {
+                        id: project?.Customer?.id,
+                        title: project?.Customer?.displayName,
+                        paymentType: project?.Customer?.paymentType
+                    }
+                })
+            );
+        } else {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: company ? "company" : "individu",
+                    value: {
+                        id: null,
+                        title: "",
+                        paymentType: ""
+                    }
+                })
+            );
+        }
+
+        dispatch(
+            setProjectName({
+                customerType: company ? "company" : "individu",
+                value: project?.name
+            })
+        );
+
+        if (existingData.project?.stage) {
             dispatch(
                 updateDataVisitation({
                     type: "stageProject",
@@ -306,12 +339,20 @@ function CreateVisitation() {
                     isSelected: false
                 };
             });
-            dispatch(updateDataVisitation({ type: "pics", value: list }));
+            dispatch(
+                setPics({
+                    customerType: company ? "company" : "individu",
+                    value: list
+                })
+            );
         } else if (project?.Pic) {
             const selectedPic = { ...project.Pic };
             selectedPic.isSelected = true;
             dispatch(
-                updateDataVisitation({ type: "pics", value: [selectedPic] })
+                setPics({
+                    customerType: company ? "company" : "individu",
+                    value: [selectedPic]
+                })
             );
         }
     }
@@ -426,17 +467,18 @@ function CreateVisitation() {
         ) {
             dispatch(resetStepperFocused(1));
         }
-        const selectedPic = visitationData?.pics?.filter((v) => v?.isSelected);
-        const customerTypeCond =
-            visitationData?.customerType === "COMPANY"
-                ? !!visitationData?.companyName
-                : true;
+        const selectedCustomerType =
+            visitationData?.customerType === COMPANY ? "company" : "individu";
+        const selectedPic = visitationData[selectedCustomerType]?.pics?.filter(
+            (v) => v.isSelected
+        );
+
         if (
-            visitationData?.stepperVisitationShouldNotFocused &&
-            visitationData?.step === 1 &&
-            (visitationData?.customerType ||
-                customerTypeCond ||
-                visitationData?.projectName ||
+            visitationData.stepperVisitationShouldNotFocused &&
+            visitationData.step === 1 &&
+            (visitationData[selectedCustomerType]?.selectedCustomer?.title
+                ?.length > 0 ||
+                visitationData[selectedCustomerType]?.projectName ||
                 selectedPic)
         ) {
             dispatch(resetStepperFocused(2));
@@ -476,29 +518,41 @@ function CreateVisitation() {
         visitationData?.customerType,
         visitationData?.companyName,
         visitationData?.typeProject,
-        visitationData?.estimationDate?.estimationMonth,
-        visitationData?.estimationDate?.estimationWeek,
+        visitationData?.estimationDate.estimationMonth,
+        visitationData?.estimationDate.estimationWeek,
         visitationData?.paymentType,
         visitationData?.competitors,
-        visitationData?.images
+        visitationData?.images,
+        visitationData?.individu,
+        visitationData?.company
     ]);
 
     const addPic = (state: PIC) => {
         const pic = state;
         pic.isSelected = true;
-        let finalPIC: any[] = [];
-        if (visitationData?.pics) finalPIC = [...visitationData.pics];
-        if (visitationData?.pics && visitationData?.pics?.length > 0) {
-            finalPIC?.forEach((it, index) => {
+        const finalPIC =
+            visitationData?.customerType === COMPANY
+                ? [...visitationData.company.pics]
+                : [...visitationData.individu.pics];
+        const picsValue =
+            visitationData?.customerType === COMPANY
+                ? visitationData.company.pics
+                : visitationData.individu.pics;
+        if (picsValue && picsValue.length > 0) {
+            finalPIC.forEach((it, index) => {
                 finalPIC[index] = {
                     ...finalPIC[index],
                     isSelected: false
                 };
             });
         }
+
         dispatch(
-            updateDataVisitation({
-                type: "pics",
+            setPics({
+                customerType:
+                    visitationData?.customerType === COMPANY
+                        ? "company"
+                        : "individu",
                 value: [...finalPIC, pic]
             })
         );

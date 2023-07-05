@@ -11,6 +11,7 @@ import * as React from "react";
 import { Details } from "react-native-maps";
 import { DateData } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
+import { TAutocompleteDropdownItem } from "react-native-autocomplete-dropdown";
 
 interface Input {
     label?: string;
@@ -47,7 +48,7 @@ interface Input {
     disabledFileInput?: boolean;
     LeftIcon?: () => JSX.Element;
     keyboardType?: KeyboardType | KeyboardTypeOptions;
-    items?: any;
+    itemSet?: ItemSet[];
     showChevronAutoCompleted?: boolean;
     showClearAutoCompleted?: boolean;
     textSize?: number;
@@ -130,7 +131,9 @@ interface Input {
         value: any;
         onValueChange: (value: any) => void;
     };
-    onSelect?: (index: number | any) => void; // eg for pic radio
+    onSelect?: (index: TAutocompleteDropdownItem) => void; // eg for pic radio
+    selectedItems?: { id: null | string; title: string };
+    onPressSelected?: () => void;
     isInputDisable?: boolean;
     disableColor?: string;
     onClear?: () => void;
@@ -140,6 +143,15 @@ interface Input {
     outlineColor?: string;
     comboRadioBtn?: IComboRadioBtn;
     tableInput?: ITableInput;
+    textInputStyle?: TextStyle;
+}
+
+interface ItemSet {
+    id: string;
+    title: string;
+    subtitle?: string;
+    chipTitle?: string;
+    chipBgColor?: string;
 }
 
 interface IDurationButton {
@@ -367,6 +379,24 @@ interface SelectedCompanyInterface {
         formattedAddress?: string;
     };
     Pic: PIC;
+    selectedCustomer: {
+        id: string | null;
+        title: string;
+        paymentType: string | null;
+    };
+    customerData: {
+        items: {
+            id: string;
+            title: string;
+        }[];
+        loading: "idle" | "pending";
+        searchQuery: string;
+    };
+    Customer: {
+        id: string;
+        displayName: string;
+        paymentType: "CBD" | "CREDIT";
+    };
 }
 
 interface ChosenProductType {
@@ -523,6 +553,11 @@ interface VisitationListResponse {
         };
         quotationLetterId?: null | string;
         Competitors: Competitor[];
+        Customer: {
+            id: string;
+            displayName: string;
+            paymentType: "CBD" | "CREDIT";
+        } | null;
     };
     visitNotes: string | null;
     estimationWeek: number;
@@ -600,6 +635,13 @@ interface ProjectPayloadType {
     type?: "INFRASTRUKTUR" | "HIGH-RISE" | "RUMAH" | "KOMERSIAL" | "INDUSTRIAL";
 }
 
+interface CustomerVisitationPayloadType {
+    id: string | null;
+    displayName: string;
+    paymentType: "CBD" | "CREDIT";
+    type: "COMPANY" | "INDIVIDU";
+}
+
 interface PicPayloadType {
     name?: string;
     position?: string;
@@ -624,6 +666,7 @@ interface PayloadPostType {
     pic: PicPayloadType[];
     files: FilesType[];
     batchingPlantId?: string;
+    customer: CustomerVisitationPayloadType;
 }
 
 type VisitationDataType = {
@@ -789,6 +832,7 @@ export type {
     ProjectPayloadType as projectPayloadType,
     PicPayloadType as picPayloadType,
     PayloadPostType as payloadPostType,
+    CustomerVisitationPayloadType,
     VisitationDataType as visitationDataType,
     ProjectResponseType as projectResponseType,
     SelectedCompanyInterface as selectedCompanyInterface,
@@ -811,5 +855,6 @@ export type {
     ITableInput,
     ITableInputItem,
     ITableInputListItem,
-    IDurationButton
+    IDurationButton,
+    ItemSet
 };

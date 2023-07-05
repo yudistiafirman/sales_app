@@ -38,6 +38,7 @@ import BComboRadioButton from "../molecules/BComboRadioButton";
 import BTableInput from "../molecules/BTableInput";
 import BButtonPrimary from "../atoms/BButtonPrimary";
 import BCalendarRange from "./BCalendarRange";
+import BSearchBar from "../molecules/BSearchBar";
 
 interface IProps {
     inputs: Input[];
@@ -163,6 +164,7 @@ const styles: Styles = {
         flexDirection: "row",
         justifyContent: "space-between"
     },
+
     calendarOne: { flex: 1, marginEnd: layout.pad.sm },
     timeOne: { flex: 1, marginStart: layout.pad.sm }
 };
@@ -219,7 +221,10 @@ const renderInput = (
         quantityType,
         disableColor,
         comboRadioBtn,
-        tableInput
+        tableInput,
+        textInputStyle,
+        onPressSelected,
+        selectedItems
     } = input;
 
     function getSelectedValueCalendarRange(
@@ -849,19 +854,31 @@ const renderInput = (
                     <BSpacer size="verySmall" />
                 </View>
 
-                {!isInputDisable ? (
+                {selectedItems && selectedItems?.title?.length > 0 ? (
+                    <TouchableOpacity
+                        onPress={onPressSelected}
+                        disabled={isInputDisable}
+                    >
+                        <BSearchBar
+                            disabled
+                            activeOutlineColor="gray"
+                            value={selectedItems?.title}
+                            textColor={colors.textInput.input}
+                            placeholder="Pilih Tanggal"
+                            left={
+                                <TextInput.Icon
+                                    forceTextInputFocus={false}
+                                    icon="magnify"
+                                />
+                            }
+                        />
+                    </TouchableOpacity>
+                ) : (
                     <BAutoComplete
                         {...input}
                         onClear={onClear}
                         showClear={input?.showClearAutoCompleted}
                         showChevron={input?.showChevronAutoCompleted}
-                    />
-                ) : (
-                    <BTextInput
-                        value={value?.title}
-                        placeholder={placeholder}
-                        disabled={isInputDisable}
-                        contentStyle={textStyles}
                     />
                 )}
                 {isError && (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DeviceEventEmitter } from "react-native";
 import {
+    CustomerVisitationPayloadType,
     locationPayloadType,
     payloadPostType,
     picPayloadType,
@@ -34,6 +35,7 @@ import {
 import { postVisitations, putVisitation } from "@/actions/ProductivityActions";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { resetSPHState } from "@/redux/reducers/SphReducer";
+import { COMPANY } from "@/constants/general";
 import LastStepPopUp from "../LastStepPopUp";
 
 export type SelectedDateType = {
@@ -55,10 +57,16 @@ function payloadMapper(
             location: {} as locationPayloadType
         } as projectPayloadType,
         pic: [] as picPayloadType[],
-        files: []
+        files: [],
+        customer: {} as CustomerVisitationPayloadType
     } as payloadPostType;
-    if (values?.pics && values?.pics?.length > 0) {
-        payload.pic = values?.pics;
+    const selectedCustomerType =
+        values?.customerType === COMPANY ? "company" : "individu";
+    if (
+        values[selectedCustomerType]?.pics &&
+        values[selectedCustomerType]?.pics?.length > 0
+    ) {
+        payload.pic = values[selectedCustomerType]?.pics;
     }
     payload.visitation.order = 1;
     if (type === "REJECTED") {
@@ -105,9 +113,6 @@ function payloadMapper(
             values?.createdLocation?.PostalId;
     }
 
-    if (values?.customerType) {
-        payload.visitation.customerType = values?.customerType;
-    }
     if (values?.paymentType) {
         payload.visitation.paymentType = values?.paymentType;
     }
@@ -145,14 +150,14 @@ function payloadMapper(
             pouringMethod: product?.pouringMethod
         }));
     }
-    if (values?.projectName) {
-        payload.project.name = values?.projectName;
+    if (values[selectedCustomerType]?.projectName) {
+        payload.project.name = values[selectedCustomerType]?.projectName;
     }
-    if (values?.companyName) {
-        if (values?.customerType === "COMPANY") {
-            payload.project.companyDisplayName = values?.companyName;
-        }
-    }
+    // if (values?.companyName) {
+    //     if (values?.customerType === "COMPANY") {
+    //         payload.project.companyDisplayName = values?.companyName;
+    //     }
+    // }
     if (values?.stageProject) {
         payload.project.stage = values?.stageProject;
     }
@@ -180,6 +185,27 @@ function payloadMapper(
     if (values?.projectId) {
         payload.project.id = values?.projectId;
         payload.visitation.order += 1;
+    }
+    if (values?.customerType) {
+        payload.visitation.customerType = values?.customerType;
+    }
+
+    if (values[selectedCustomerType]?.selectedCustomer?.id) {
+        payload.customer.id = values[selectedCustomerType].selectedCustomer.id;
+    }
+    if (values[selectedCustomerType]?.selectedCustomer?.title) {
+        payload.customer.displayName =
+            values[selectedCustomerType].selectedCustomer.title;
+    }
+
+    if (values?.customerType) {
+        payload.customer.type = values?.customerType;
+    }
+    if (values[selectedCustomerType]?.selectedCustomer?.paymentType) {
+        payload.customer.paymentType =
+            values[selectedCustomerType].selectedCustomer.paymentType;
+    } else {
+        payload.customer.paymentType = "CBD";
     }
 
     return payload;

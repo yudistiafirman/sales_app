@@ -16,7 +16,7 @@ interface IProps extends Partial<TextInputProps> {
     rounded?: boolean;
     disabled?: boolean;
     contentStyle?: ViewStyle;
-    textInputStyle: TextStyle;
+    textInputStyle?: TextStyle;
     mode?: "flat" | "outlined" | undefined;
     outlineColor?: string;
     activeOutlineColor?: string;

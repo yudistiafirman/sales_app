@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Address, Competitor, PIC } from "@/interfaces";
-import { getUserCurrentLocation } from "../async-thunks/commonThunks";
+import { COMPANY } from "@/constants/general";
+import {
+    getAllCustomer,
+    getUserCurrentLocation
+} from "../async-thunks/commonThunks";
 
 export interface VisitationGlobalState {
     step: number;
@@ -11,6 +15,40 @@ export interface VisitationGlobalState {
     companyName: string;
     customerType?: "INDIVIDU" | "COMPANY";
     projectName: string;
+    individu: {
+        selectedCustomer: {
+            id: string | null;
+            title: string;
+            paymentType: string | null;
+        };
+        projectName: string;
+        pics: PIC[];
+        customerData: {
+            items: {
+                id: string;
+                title: string;
+            }[];
+            loading: "idle" | "pending";
+            searchQuery: string;
+        };
+    };
+    company: {
+        selectedCustomer: {
+            id: string | null;
+            title: string;
+            paymentType: string | null;
+        };
+        projectName: string;
+        pics: PIC[];
+        customerData: {
+            items: {
+                id: string;
+                title: string;
+            }[];
+            loading: "idle" | "pending";
+            searchQuery: string;
+        };
+    };
     projectId?: string;
     location: { [key: string]: any };
     pics: PIC[];
@@ -18,6 +56,7 @@ export interface VisitationGlobalState {
         loading: boolean;
         items: { title: string; id: string }[] | null;
     };
+
     visitationId?: string;
     existingOrderNum?: number;
     stageProject?: "LAND_PREP" | "FOUNDATION" | "FORMWORK" | "FINISHING";
@@ -54,6 +93,7 @@ export interface VisitationGlobalState {
 const initialState: VisitationGlobalState = {
     step: 0,
     shouldScrollView: true,
+    customerType: "COMPANY",
     createdLocation: {
         lat: 0,
         lon: 0,
@@ -80,6 +120,27 @@ const initialState: VisitationGlobalState = {
     competitors: [],
     pics: [],
     projectName: "",
+    individu: {
+        selectedCustomer: { id: null, title: "", paymentType: null },
+        projectName: "",
+        pics: [],
+        customerData: {
+            items: [],
+            loading: "idle",
+            searchQuery: ""
+        }
+    },
+    company: {
+        selectedCustomer: { id: null, title: "", paymentType: null },
+        projectName: "",
+        pics: [],
+        customerData: {
+            items: [],
+            loading: "idle",
+            searchQuery: ""
+        }
+    },
+
     options: {
         items: null,
         loading: false
@@ -224,6 +285,81 @@ export const visitationSlice = createSlice({
             ...state,
             searchedAddress: actions.payload?.value
         }),
+        setProjectName: (
+            state,
+            actions: PayloadAction<{
+                customerType: "company" | "individu";
+                value: string;
+            }>
+        ) => ({
+            ...state,
+            [actions.payload.customerType]: {
+                ...state[actions.payload.customerType],
+                projectName: actions.payload.value
+            }
+        }),
+        setPics: (
+            state,
+            actions: PayloadAction<{
+                customerType: "company" | "individu";
+                value: PIC[];
+            }>
+        ) => ({
+            ...state,
+            [actions.payload.customerType]: {
+                ...state[actions.payload.customerType],
+                pics: actions.payload.value
+            }
+        }),
+        setCustomerSearchQuery: (
+            state,
+            actions: PayloadAction<{
+                value: string;
+                customerType: "company" | "individu";
+            }>
+        ) => ({
+            ...state,
+            [actions.payload.customerType]: {
+                ...state[actions.payload.customerType],
+                customerData: {
+                    ...state[actions.payload.customerType].customerData,
+                    searchQuery: actions.payload.value
+                }
+            }
+        }),
+        setCustomerData: (
+            state,
+            actions: PayloadAction<{
+                value: any;
+                customerType: "company" | "individu";
+            }>
+        ) => ({
+            ...state,
+            [actions.payload.customerType]: {
+                ...state[actions.payload.customerType],
+                customerData: {
+                    ...state[actions.payload.customerType].customerData,
+                    items: actions.payload.value
+                }
+            }
+        }),
+        setSelectedCustomerData: (
+            state,
+            actions: PayloadAction<{
+                customerType: "company" | "individu";
+                value: {
+                    id: string | null;
+                    title: string;
+                    paymentType: string;
+                };
+            }>
+        ) => ({
+            ...state,
+            [actions.payload.customerType]: {
+                ...state[actions.payload.customerType],
+                selectedCustomer: actions.payload.value
+            }
+        }),
         updateDataVisitation: (
             state,
             { payload }: { payload: { type: any; value: any } }
@@ -364,6 +500,63 @@ export const visitationSlice = createSlice({
                 createdLocation: payload
             })
         );
+        builder.addCase(getAllCustomer.pending, (state, { payload }) => ({
+            ...state,
+            [state.customerType === COMPANY ? "company" : "individu"]: {
+                ...state[
+                    state.customerType === COMPANY ? "company" : "individu"
+                ],
+                customerData: {
+                    ...state[
+                        state.customerType === COMPANY ? "company" : "individu"
+                    ].customerData,
+                    loading: "pending"
+                }
+            }
+        }));
+        builder.addCase(getAllCustomer.fulfilled, (state, { payload }) => {
+            const items = payload.map((v) => ({
+                id: v.id,
+                title: v.displayName,
+                chipTitle: v.type === COMPANY ? "Perusahaan" : "Individu",
+                subtitle:
+                    v.npwp.length > 0 ? `npwp : ${v.npwp}` : `nik: ${v.nik}`,
+                paymentType: v.paymentType
+            }));
+
+            const selectedCustomerType =
+                state.customerType === COMPANY ? "company" : "individu";
+
+            return {
+                ...state,
+                [selectedCustomerType]: {
+                    ...state[selectedCustomerType],
+                    customerData: {
+                        ...state[selectedCustomerType].customerData,
+                        items:
+                            items.length > 0
+                                ? items
+                                : [
+                                      {
+                                          id: null,
+                                          title: state[selectedCustomerType]
+                                              .customerData.searchQuery,
+                                          subtitle:
+                                              state.customerType === "COMPANY"
+                                                  ? "npwp : -"
+                                                  : "nik : -",
+                                          chipTitle:
+                                              state.customerType === "COMPANY"
+                                                  ? "Perusahaan"
+                                                  : "Individu",
+                                          paymentType: ""
+                                      }
+                                  ],
+                        loading: "idle"
+                    }
+                }
+            };
+        });
     }
 });
 
@@ -381,6 +574,11 @@ export const {
     setSearchQuery,
     deleteImagesVisitation,
     setSearchedAddress,
-    setUseSearchedAddress
+    setUseSearchedAddress,
+    setProjectName,
+    setPics,
+    setCustomerSearchQuery,
+    setCustomerData,
+    setSelectedCustomerData
 } = visitationSlice.actions;
 export default visitationSlice.reducer;

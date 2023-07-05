@@ -7,10 +7,13 @@ import {
     getSphDocuments,
     getAddressSuggestion,
     postProjectDoc,
-    getLocationCoordinates
+    getLocationCoordinates,
+    getAllCustomers
 } from "@/actions/CommonActions";
 import { Region, projectResponseType } from "@/interfaces";
 import Geolocation from "react-native-geolocation-service";
+import { COMPANY } from "@/constants/general";
+import { ICustomerListData } from "@/models/Customer";
 
 type ErrorType = {
     success: boolean;
@@ -28,6 +31,12 @@ interface CoordinateDetails {
     formattedAddress: string | undefined;
     PostalId: string | undefined;
     distance: number | undefined;
+}
+
+interface CustomerData {
+    id: string;
+    displayName: string;
+    paymentType: null | "CREDIT";
 }
 export const postUploadFiles = createAsyncThunk<
     any,
@@ -179,6 +188,7 @@ export const getCoordinateDetails = createAsyncThunk<
             if (error?.response?.data) {
                 errorData = error?.response?.data;
             }
+
             return rejectWithValue(errorData);
         }
     }
@@ -195,6 +205,7 @@ export const getUserCurrentLocation = createAsyncThunk(
             const position = await new Promise((resolve, error) =>
                 Geolocation.getCurrentPosition(resolve, error, opt)
             );
+
             const coords = position?.coords;
             const latitude = coords?.latitude;
             const longitude = coords?.longitude;
@@ -204,7 +215,9 @@ export const getUserCurrentLocation = createAsyncThunk(
                 selectedBatchingPlant,
                 signal
             );
+
             const result = response?.data?.result;
+
             const coordinate = {
                 longitude: Number(result?.lon),
                 latitude: Number(result?.lat),
@@ -213,6 +226,32 @@ export const getUserCurrentLocation = createAsyncThunk(
             };
 
             return coordinate;
+        } catch (error) {
+            console.log(error);
+            let errorData = error?.message;
+            if (error?.response?.data) {
+                errorData = error?.response?.data;
+            }
+
+            return rejectWithValue(errorData);
+        }
+    }
+);
+
+export const getAllCustomer = createAsyncThunk<
+    ICustomerListData[],
+    { searchQuery: string; customerType: "COMPANY" | "INDIVIDU" }
+>(
+    "common/getAllCustomer",
+    async ({ searchQuery, customerType }, { rejectWithValue }) => {
+        try {
+            const response = await getAllCustomers(
+                customerType,
+                searchQuery,
+                0
+            );
+
+            return response.data.data.data;
         } catch (error) {
             let errorData = error?.message;
             if (error?.response?.data) {

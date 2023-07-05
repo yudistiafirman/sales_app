@@ -13,13 +13,17 @@ import { layout } from "@/constants";
 import { PIC } from "@/interfaces";
 import { getAllProject } from "@/redux/async-thunks/commonThunks";
 import {
+    setPics,
+    setProjectName,
     setSearchQuery,
+    setSelectedCustomerData,
     updateDataVisitation,
     updateShouldScrollView
 } from "@/redux/reducers/VisitationReducer";
 import { retrying } from "@/redux/reducers/commonReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
+import { COMPANY, INDIVIDU } from "@/constants/general";
 
 const style = StyleSheet.create({
     touchable: {
@@ -91,53 +95,39 @@ function SearchFlow({
     };
 
     const onSelectProject = (item: any) => {
-        if (item?.Company?.id) {
-            const company = {
-                id: item?.Company?.id,
-                title: item?.Company?.name
-            };
-            setSelectedCompany(company);
-            dispatch(
-                updateDataVisitation({
-                    type: "companyName",
-                    value: company?.title
-                })
-            );
-            if (visitationData?.options?.items) {
-                const newOptionsValue = [
-                    ...(visitationData?.options?.items || [
-                        { id: "", title: "" }
-                    ])
-                ];
-                newOptionsValue?.push(company);
-                dispatch(
-                    updateDataVisitation({
-                        type: "options",
-                        value: {
-                            ...visitationData?.options,
-                            items: newOptionsValue
-                        }
-                    })
-                );
-            } else {
-                dispatch(
-                    updateDataVisitation({
-                        type: "options",
-                        value: {
-                            ...visitationData?.options,
-                            items: [company]
-                        }
-                    })
-                );
-            }
-        }
-        const customerType = item?.Company?.id ? "COMPANY" : "INDIVIDU";
+        const customerType = item?.Company?.id ? COMPANY : INDIVIDU;
+        const selectedCustomerType =
+            customerType === COMPANY ? "company" : "individu";
         dispatch(
             updateDataVisitation({
                 type: "customerType",
                 value: customerType
             })
         );
+
+        if (item?.Customer) {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: selectedCustomerType,
+                    value: {
+                        id: item?.Customer?.id,
+                        title: item?.Customer?.displayName,
+                        paymentType: item?.paymentType
+                    }
+                })
+            );
+        } else {
+            dispatch(
+                setSelectedCustomerData({
+                    customerType: selectedCustomerType,
+                    value: {
+                        id: null,
+                        title: "",
+                        paymentType: ""
+                    }
+                })
+            );
+        }
 
         if (item?.Pics) {
             const picList = item?.Pics?.map((pic: PIC, i: number) => ({
@@ -148,15 +138,15 @@ function SearchFlow({
                 picList[0].isSelected = true;
             }
             dispatch(
-                updateDataVisitation({
-                    type: "pics",
+                setPics({
+                    customerType: selectedCustomerType,
                     value: picList
                 })
             );
         }
         dispatch(
-            updateDataVisitation({
-                type: "projectName",
+            setProjectName({
+                customerType: selectedCustomerType,
                 value: item?.name
             })
         );
