@@ -17,6 +17,7 @@ import {
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
+    onChangeProjectDetails,
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -81,22 +82,12 @@ function Dispatch() {
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
-            if (photoFiles && photoFiles?.length > 1) {
-                navigation.navigate(SUBMIT_FORM, {
-                    operationType:
-                        userData?.type === EntryType.SECURITY
-                            ? EntryType.DISPATCH
-                            : EntryType.OUT
-                });
-            } else {
-                navigation.navigate(CAMERA, {
-                    photoTitle: "DO",
-                    navigateTo:
-                        userData?.type === EntryType.SECURITY
-                            ? EntryType.DISPATCH
-                            : EntryType.OUT
-                });
-            }
+            navigation.navigate(SUBMIT_FORM, {
+                operationType:
+                    userData?.type === EntryType.SECURITY
+                        ? EntryType.DISPATCH
+                        : EntryType.OUT
+            });
         } else {
             const dataToDeliver: OperationProjectDetails = {
                 deliveryOrderId: item?.id ? item?.id : "",
@@ -120,14 +111,39 @@ function Dispatch() {
                 requestedQuantity: item?.quantity ? item?.quantity : 0,
                 deliveryTime: item?.date ? item?.date : ""
             };
-            dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
+            dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+            if (userData?.type === EntryType.SECURITY) {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            { file: null, attachType: "DO" },
+                            { file: null, attachType: "Driver" },
+                            { file: null, attachType: "No Polisi TM" },
+                            { file: null, attachType: "Segel" },
+                            { file: null, attachType: "Kondom" }
+                        ]
+                    })
+                );
+            } else {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            { file: null, attachType: "DO" },
+                            { file: null, attachType: "Hasil" }
+                        ]
+                    })
+                );
+            }
+
+            // dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
             navigation.navigate(CAMERA, {
                 photoTitle: "DO",
+                closeButton: true,
                 navigateTo:
                     userData?.type === EntryType.SECURITY
                         ? EntryType.DISPATCH
                         : EntryType.OUT,
-                operationTempData: dataToDeliver
+                operationAddedStep: "DO"
             });
         }
     };
