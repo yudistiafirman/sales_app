@@ -142,10 +142,10 @@ function CameraScreen() {
                     quality: 70
                 });
 
-                await CameraRoll.save(takenPhoto?.path, {
-                    type: "photo",
-                    album: ALBUM_NAME
-                });
+                // await CameraRoll.save(takenPhoto?.path, {
+                //     type: "photo",
+                //     album: ALBUM_NAME
+                // });
 
                 animateElement();
 
