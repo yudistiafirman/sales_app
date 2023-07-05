@@ -94,7 +94,7 @@ function BAutoComplete({
     onClear
 }: IProps) {
     let isShowChevron = showChevron;
-    if (itemSet?.length === 0) {
+    if (itemSet || itemSet?.length === 0) {
         isShowChevron = false;
     }
 
