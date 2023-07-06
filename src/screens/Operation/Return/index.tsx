@@ -16,6 +16,7 @@ import {
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
+    onChangeProjectDetails,
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -81,22 +82,12 @@ function Return() {
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
-            if (photoFiles && photoFiles?.length > 1) {
-                navigation.navigate(SUBMIT_FORM, {
-                    operationType:
-                        userData?.type === EntryType.SECURITY
-                            ? EntryType.RETURN
-                            : EntryType.IN
-                });
-            } else {
-                navigation.navigate(CAMERA, {
-                    photoTitle: "DO",
-                    navigateTo:
-                        userData?.type === EntryType.SECURITY
-                            ? EntryType.RETURN
-                            : EntryType.IN
-                });
-            }
+            navigation.navigate(SUBMIT_FORM, {
+                operationType:
+                    userData?.type === EntryType.SECURITY
+                        ? EntryType.RETURN
+                        : EntryType.IN
+            });
         } else {
             const dataToDeliver: OperationProjectDetails = {
                 deliveryOrderId: item?.id ? item?.id : "",
@@ -118,14 +109,35 @@ function Return() {
                 requestedQuantity: item?.quantity ? item?.quantity : 0,
                 deliveryTime: item?.date ? item?.date : ""
             };
-            dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
+            dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+            if (userData?.type === EntryType.SECURITY) {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            { file: null, attachType: "DO" },
+                            { file: null, attachType: "Kondisi TM" }
+                        ]
+                    })
+                );
+            } else {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            { file: null, attachType: "DO" },
+                            { file: null, attachType: "Hasil" }
+                        ]
+                    })
+                );
+            }
+
+            // dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
             navigation.navigate(CAMERA, {
                 photoTitle: "DO",
                 navigateTo:
                     userData?.type === EntryType.SECURITY
                         ? EntryType.RETURN
                         : EntryType.IN,
-                operationTempData: dataToDeliver
+                operationAddedStep: "DO"
             });
         }
     };

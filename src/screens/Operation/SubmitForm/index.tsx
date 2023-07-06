@@ -156,52 +156,43 @@ function SubmitForm() {
 
     const removedAddButtonImage = () => {
         switch (userData?.type) {
-            case EntryType.WB: {
-                if (
-                    operationData?.photoFiles &&
-                    operationData?.photoFiles?.length > 1
-                ) {
-                    let tempImages;
-                    if (operationData?.photoFiles)
-                        tempImages = [
-                            ...operationData.photoFiles.filter(
-                                (it) => it?.file !== null
-                            )
-                        ];
-                    dispatch(setAllOperationPhoto({ file: tempImages }));
-                }
-                break;
-            }
-            case EntryType.SECURITY: {
-                if (operationType === EntryType.DISPATCH) {
-                    if (
-                        operationData?.photoFiles &&
-                        operationData?.photoFiles?.length > 4
-                    ) {
-                        let tempImages;
-                        if (operationData?.photoFiles)
-                            tempImages = [
-                                ...operationData.photoFiles.filter(
-                                    (it) => it?.file !== null
-                                )
-                            ];
-                        dispatch(setAllOperationPhoto({ file: tempImages }));
-                    }
-                } else if (
-                    operationData?.photoFiles &&
-                    operationData?.photoFiles?.length > 1
-                ) {
-                    let tempImages;
-                    if (operationData?.photoFiles)
-                        tempImages = [
-                            ...operationData.photoFiles.filter(
-                                (it) => it?.file !== null
-                            )
-                        ];
-                    dispatch(setAllOperationPhoto({ file: tempImages }));
-                }
-                break;
-            }
+            // case EntryType.WB: {
+            //     if (operationData?.photoFiles?.length > 1) {
+            //         let tempImages;
+            //         if (operationData?.photoFiles)
+            //             tempImages = [
+            //                 ...operationData.photoFiles.filter(
+            //                     (it) => it?.file !== null
+            //                 )
+            //             ];
+            //         dispatch(setAllOperationPhoto({ file: tempImages }));
+            //     }
+            //     break;
+            // }
+            // case EntryType.SECURITY: {
+            //     if (operationType === EntryType.DISPATCH) {
+            //         if (operationData?.photoFiles?.length > 4) {
+            //             let tempImages;
+            //             if (operationData?.photoFiles)
+            //                 tempImages = [
+            //                     ...operationData.photoFiles.filter(
+            //                         (it) => it?.file !== null
+            //                     )
+            //                 ];
+            //             dispatch(setAllOperationPhoto({ file: tempImages }));
+            //         }
+            //     } else if (operationData?.photoFiles?.length > 1) {
+            //         let tempImages;
+            //         if (operationData?.photoFiles)
+            //             tempImages = [
+            //                 ...operationData.photoFiles.filter(
+            //                     (it) => it?.file !== null
+            //                 )
+            //             ];
+            //         dispatch(setAllOperationPhoto({ file: tempImages }));
+            //     }
+            //     break;
+            // }
             default: {
                 break;
             }
@@ -557,11 +548,11 @@ function SubmitForm() {
 
     const deleteImages = useCallback(
         (i: number, attachType?: string) => {
-            if (userData?.type === EntryType.DRIVER) {
-                dispatch(removeDriverPhoto({ index: i, attachType }));
-            } else {
-                dispatch(removeOperationPhoto({ index: i }));
-            }
+            // if (userData?.type === EntryType.DRIVER) {
+            dispatch(removeDriverPhoto({ index: i, attachType }));
+            // } else {
+            //     dispatch(removeOperationPhoto({ index: i }));
+            // }
         },
         [
             operationData?.photoFiles,
@@ -589,30 +580,44 @@ function SubmitForm() {
                     if (operationType === EntryType.DISPATCH) {
                         navigation.dispatch(
                             StackActions.push(CAMERA, {
-                                photoTitle: "Tambahan",
+                                photoTitle: attachType,
                                 closeButton: true,
-                                navigateTo: GALLERY_OPERATION
+                                navigateTo: EntryType.DISPATCH,
+                                operationAddedStep: attachType
                             })
                         );
                     } else {
                         navigation.dispatch(
                             StackActions.push(CAMERA, {
-                                photoTitle: "Tambahan",
+                                photoTitle: attachType,
                                 closeButton: true,
-                                navigateTo: GALLERY_OPERATION
+                                navigateTo: EntryType.RETURN,
+                                operationAddedStep: attachType
                             })
                         );
                     }
                     break;
                 }
                 case EntryType.WB: {
-                    navigation.dispatch(
-                        StackActions.push(CAMERA, {
-                            photoTitle: "Tambahan",
-                            closeButton: true,
-                            navigateTo: GALLERY_OPERATION
-                        })
-                    );
+                    if (operationType === EntryType.IN) {
+                        navigation.dispatch(
+                            StackActions.push(CAMERA, {
+                                photoTitle: attachType,
+                                closeButton: true,
+                                navigateTo: EntryType.IN,
+                                operationAddedStep: attachType
+                            })
+                        );
+                    } else {
+                        navigation.dispatch(
+                            StackActions.push(CAMERA, {
+                                photoTitle: attachType,
+                                closeButton: true,
+                                navigateTo: EntryType.OUT,
+                                operationAddedStep: attachType
+                            })
+                        );
+                    }
                     break;
                 }
                 default: {
