@@ -136,7 +136,15 @@ function Inputs() {
                 {
                     label: "Nama Pelanggan",
                     isRequire: true,
-                    isError: false,
+                    isError:
+                        appointmentState?.stepOne[selectedCustomerType]
+                            ?.customerData?.searchQuery &&
+                        appointmentState?.stepOne[selectedCustomerType]
+                            ?.customerData?.searchQuery.length > 1 &&
+                        appointmentState?.stepOne[selectedCustomerType]
+                            ?.customerData?.searchQuery.length < 3,
+                    customerErrorMsg:
+                        "Mohon untuk tidak menggunakan nama singkatan",
                     type: "autocomplete",
                     onChange: onChangeText,
                     onClear: () => {

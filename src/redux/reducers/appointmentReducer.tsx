@@ -527,28 +527,7 @@ export const appointmentSlice = createSlice({
                         ...state.stepOne[selectedCustomerType],
                         customerData: {
                             ...state.stepOne[selectedCustomerType].customerData,
-                            items:
-                                items.length > 0
-                                    ? items
-                                    : [
-                                          {
-                                              id: null,
-                                              title: state.stepOne[
-                                                  selectedCustomerType
-                                              ].customerData.searchQuery,
-                                              subtitle:
-                                                  state.stepOne.customerType ===
-                                                  COMPANY.toLowerCase()
-                                                      ? "npwp : -"
-                                                      : "nik : -",
-                                              chipTitle:
-                                                  state.stepOne.customerType ===
-                                                  COMPANY.toLowerCase()
-                                                      ? "Perusahaan"
-                                                      : "Individu",
-                                              paymentType: ""
-                                          }
-                                      ],
+                            items,
                             loading: "idle"
                         }
                     }

@@ -882,7 +882,7 @@ const renderInput = (
                     />
                 )}
                 {isError && (
-                    <BText size="small" color="primary" bold="100">
+                    <BText size="small" color="primary" bold="500">
                         {customerErrorMsg || defaultErrorMsg}
                     </BText>
                 )}

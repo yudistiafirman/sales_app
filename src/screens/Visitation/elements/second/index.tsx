@@ -153,6 +153,16 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "autocomplete",
                 onChange: onChangeText,
+
+                isError:
+                    visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery &&
+                    visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery?.length > 1 &&
+                    visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery?.length < 3,
+                customerErrorMsg:
+                    "Mohon untuk tidak menggunakan nama singkatan",
                 value: isCompany
                     ? visitationData.company.customerData.searchQuery
                     : visitationData.individu.customerData.searchQuery,

@@ -107,8 +107,11 @@ function stepHandler(
     );
 
     if (
-        state[selectedCustomerType]?.selectedCustomer?.title &&
-        state[selectedCustomerType]?.selectedCustomer?.title?.length > 0 &&
+        ((state[selectedCustomerType]?.selectedCustomer?.title &&
+            state[selectedCustomerType]?.selectedCustomer?.title?.length > 0) ||
+            (state[selectedCustomerType]?.customerData?.searchQuery &&
+                state[selectedCustomerType]?.customerData?.searchQuery?.length >
+                    2)) &&
         state[selectedCustomerType]?.projectName &&
         selectedPic &&
         selectedPic?.length > 0
@@ -492,7 +495,11 @@ function CreateVisitation() {
                 visitationData[selectedCustomerType]?.selectedCustomer?.title
                     ?.length > 0) ||
                 visitationData[selectedCustomerType]?.projectName ||
-                selectedPic)
+                selectedPic ||
+                (visitationData[selectedCustomerType]?.customerData
+                    ?.searchQuery &&
+                    visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery?.length > 2))
         ) {
             dispatch(resetStepperFocused(2));
         }
