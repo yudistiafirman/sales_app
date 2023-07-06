@@ -138,6 +138,8 @@ function Inputs() {
                     isRequire: true,
                     isError:
                         appointmentState?.stepOne[selectedCustomerType]
+                            ?.customerData?.searchQuery &&
+                        appointmentState?.stepOne[selectedCustomerType]
                             ?.customerData?.searchQuery.length > 1 &&
                         appointmentState?.stepOne[selectedCustomerType]
                             ?.customerData?.searchQuery.length < 3,

@@ -156,6 +156,8 @@ function SecondStep({ openBottomSheet }: IProps) {
 
                 isError:
                     visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery &&
+                    visitationData[selectedCustomerType]?.customerData
                         ?.searchQuery?.length > 1 &&
                     visitationData[selectedCustomerType]?.customerData
                         ?.searchQuery?.length < 3,
@@ -267,6 +269,7 @@ function SecondStep({ openBottomSheet }: IProps) {
             {!visitationData.isSearchProject && (
                 <KeyboardAvoidingView style={{ flex: 1 }} enabled>
                     <ScrollView
+                        nestedScrollEnabled
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps="handled"
                         contentInsetAdjustmentBehavior="automatic"
