@@ -30,6 +30,7 @@ import {
     updateLocationAddress
 } from "@/actions/CommonActions";
 import { openPopUp } from "@/redux/reducers/modalReducer";
+import { safetyCheck } from "@/utils/generalFunc";
 
 const { height } = Dimensions.get("window");
 
@@ -104,7 +105,7 @@ export default function BillingModal({
     const dispatch = useDispatch<AppDispatch>();
     const nameAddress = React.useMemo(() => {
         const idx = region?.formattedAddress?.split(",");
-        if (idx?.length > 1) {
+        if (idx && idx?.length > 1) {
             return idx?.[0];
         }
 
@@ -162,10 +163,10 @@ export default function BillingModal({
         if (region?.postalId) {
             body.postalid = region.postalId;
         }
-        if (region?.longitude) {
+        if (safetyCheck(region?.longitude)) {
             body.lon = region.longitude;
         }
-        if (region?.latitude) {
+        if (safetyCheck(region?.latitude)) {
             body.lat = region.latitude;
         }
         if (region?.formattedAddress) {

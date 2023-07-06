@@ -33,6 +33,7 @@ import {
     getCoordinateDetails,
     getUserCurrentLocation
 } from "@/redux/async-thunks/commonThunks";
+import { safetyCheck } from "@/utils/generalFunc";
 
 const styles = StyleSheet.create({
     container: { flex: 1, marginHorizontal: -(layout.pad.md + layout.pad.ml) },
@@ -201,8 +202,8 @@ function FirstStep() {
 
     React.useEffect(() => {
         const isExist =
-            !visitationData?.createdLocation?.lat ||
-            visitationData?.createdLocation?.lon === 0;
+            !safetyCheck(visitationData?.createdLocation?.lat) ||
+            !safetyCheck(visitationData?.createdLocation?.lon);
 
         if (isExist) {
             onMapReady();

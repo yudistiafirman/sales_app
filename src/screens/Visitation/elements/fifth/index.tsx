@@ -36,6 +36,7 @@ import { postVisitations, putVisitation } from "@/actions/ProductivityActions";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { resetSPHState } from "@/redux/reducers/SphReducer";
 import { COMPANY } from "@/constants/general";
+import { safetyCheck } from "@/utils/generalFunc";
 import LastStepPopUp from "../LastStepPopUp";
 
 export type SelectedDateType = {
@@ -91,10 +92,10 @@ function payloadMapper(
         payload.project.location.formattedAddress =
             values?.locationAddress?.formattedAddress;
     }
-    if (values?.locationAddress?.longitude) {
+    if (safetyCheck(values?.locationAddress?.longitude)) {
         payload.project.location.lon = values?.locationAddress?.longitude;
     }
-    if (values?.locationAddress?.latitude) {
+    if (safetyCheck(values?.locationAddress?.latitude)) {
         payload.project.location.lat = values?.locationAddress?.latitude;
     }
     if (values?.createdLocation?.formattedAddress) {
@@ -102,10 +103,10 @@ function payloadMapper(
             values?.createdLocation?.formattedAddress;
     }
 
-    if (values?.createdLocation?.longitude) {
+    if (safetyCheck(values?.createdLocation?.longitude)) {
         payload.visitation.location.lon = values?.createdLocation?.longitude;
     }
-    if (values?.createdLocation?.latitude) {
+    if (safetyCheck(values?.createdLocation?.latitude)) {
         payload.visitation.location.lat = values?.createdLocation?.latitude;
     }
     if (values?.createdLocation?.PostalId) {
@@ -164,7 +165,7 @@ function payloadMapper(
     if (values?.typeProject) {
         payload.project.type = values?.typeProject;
     }
-    if (values?.competitors?.length > 0) {
+    if (values?.competitors && values?.competitors?.length > 0) {
         payload.visitation.competitors = values?.competitors;
     }
     // if (values.currentCompetitor) {

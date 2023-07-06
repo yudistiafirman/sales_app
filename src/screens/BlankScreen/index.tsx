@@ -8,6 +8,7 @@ import { signOut } from "@/actions/CommonActions";
 import EmptyState from "@/components/organism/BEmptyState";
 import { signout } from "@/redux/reducers/authReducer";
 import { AppDispatch, RootState } from "@/redux/store";
+import { BLANK_SCREEN } from "@/navigation/ScreenNames";
 
 const styles = StyleSheet.create({
     container: {
@@ -28,6 +29,11 @@ function BlankScreen() {
         crashlytics().setUserId("");
         analytics().setUserId("");
     };
+
+    React.useEffect(() => {
+        crashlytics().log(BLANK_SCREEN);
+    }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <EmptyState

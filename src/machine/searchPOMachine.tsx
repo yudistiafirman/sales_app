@@ -234,7 +234,9 @@ const searchPOMachine = createMachine(
             })),
             assignSphData: assign((_context, event) => {
                 const newData = event?.data?.filter(
-                    (it) => it?.QuotationRequests?.length > 0
+                    (it) =>
+                        it?.QuotationRequests &&
+                        it?.QuotationRequests?.length > 0
                 );
                 return {
                     routes: [
@@ -244,7 +246,7 @@ const searchPOMachine = createMachine(
                                 _context?.filterSphDataBy === "INDIVIDU"
                                     ? "Individu"
                                     : "Perusahaan",
-                            totalItems: newData?.length,
+                            totalItems: newData ? newData?.length : 0,
                             chipPosition: "right"
                         }
                     ],
@@ -283,7 +285,7 @@ const searchPOMachine = createMachine(
                         {
                             key: "first",
                             title: "Proyek",
-                            totalItems: newData?.length,
+                            totalItems: newData ? newData?.length : 0,
                             chipPosition: "right"
                         }
                     ],
@@ -307,7 +309,7 @@ const searchPOMachine = createMachine(
         },
         guards: {
             searchValueLengthAccepted: (_context, event) =>
-                event?.value?.length > 2,
+                !!(event?.value && event?.value?.length > 2),
             isDataTypeSph: (context) => context?.dataType === "SPHDATA",
             isDataTypePurchaseOrder: (context) =>
                 context?.dataType === "DEPOSITDATA" ||

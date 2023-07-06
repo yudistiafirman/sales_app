@@ -40,6 +40,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import {
     checkSelectedSPHPic,
+    safetyCheck,
     shouldAllowSPHStateToContinue
 } from "@/utils/generalFunc";
 import { SphContext, SphProvider } from "./elements/context/SphContext";
@@ -89,7 +90,9 @@ function stepHandler(
     }
 
     const billingAddressFilled =
+        sphData?.billingAddress &&
         !Object?.values(sphData?.billingAddress)?.every((val) => !val) &&
+        sphData?.billingAddress?.addressAutoComplete &&
         Object?.entries(sphData?.billingAddress?.addressAutoComplete) &&
         Object?.entries(sphData?.billingAddress?.addressAutoComplete)?.length >
             1;
@@ -114,7 +117,7 @@ function stepHandler(
         setSteps((curr) => curr?.filter((num) => num !== 2));
     }
 
-    if (sphData?.chosenProducts?.length) {
+    if (sphData?.chosenProducts && sphData?.chosenProducts?.length) {
         setSteps((curr) => [...new Set(curr), 3]);
     } else {
         setSteps((curr) => curr?.filter((num) => num !== 3));
@@ -162,7 +165,9 @@ function SphContent() {
             dispatch(resetStepperFocused(1));
         }
         const billingAddressFilled =
+            sphData?.billingAddress &&
             !Object?.values(sphData?.billingAddress)?.every((val) => !val) &&
+            sphData?.billingAddress?.addressAutoComplete &&
             Object?.entries(sphData?.billingAddress?.addressAutoComplete) &&
             Object?.entries(sphData?.billingAddress?.addressAutoComplete)
                 ?.length > 1;
@@ -188,7 +193,7 @@ function SphContent() {
         if (
             sphData?.stepperSPHShouldNotFocused &&
             currentPosition === 3 &&
-            (!sphData?.chosenProducts || !sphData?.chosenProducts?.length)
+            (!sphData?.chosenProducts || sphData?.chosenProducts?.length <= 0)
         ) {
             dispatch(resetStepperFocused(4));
         }
@@ -201,8 +206,12 @@ function SphContent() {
                 abortControllerRef.current = new AbortController();
             const { data } = await getLocationCoordinates(
                 // '',
-                coordinate?.longitude as unknown as number,
-                coordinate?.latitude as unknown as number,
+                safetyCheck(coordinate?.longitude)
+                    ? (coordinate?.longitude as unknown as number)
+                    : undefined,
+                safetyCheck(coordinate?.latitude)
+                    ? (coordinate?.latitude as unknown as number)
+                    : undefined,
                 selectedBatchingPlant?.name,
                 abortControllerRef?.current?.signal
             );
@@ -217,12 +226,12 @@ function SphContent() {
                 PostalId: result?.PostalId
             };
 
-            if (typeof result?.lon === "string") {
+            if (safetyCheck(result?.lon) && typeof result?.lon === "string") {
                 coordinateToSet.longitude = Number(result.lon);
                 coordinateToSet.lon = Number(result.lon);
             }
 
-            if (typeof result?.lat === "string") {
+            if (safetyCheck(result?.lat) && typeof result?.lat === "string") {
                 coordinateToSet.latitude = Number(result.lat);
                 coordinateToSet.lat = Number(result.lat);
             }
@@ -268,23 +277,13 @@ function SphContent() {
                 dispatch(updateSelectedCompany(project));
 
                 if (LocationAddress) {
-                    if (LocationAddress?.lon && LocationAddress?.lat) {
-                        const longitude =
-                            LocationAddress?.lon !== null &&
-                            LocationAddress?.lon !== undefined
-                                ? +LocationAddress.lon
-                                : undefined;
-                        const latitude =
-                            LocationAddress?.lat !== null &&
-                            LocationAddress?.lat !== undefined
-                                ? +LocationAddress.lat
-                                : undefined;
-                        if (
-                            longitude !== null &&
-                            longitude !== undefined &&
-                            latitude !== undefined &&
-                            latitude !== null
-                        )
+                    if (
+                        safetyCheck(LocationAddress?.lon) &&
+                        safetyCheck(LocationAddress?.lat)
+                    ) {
+                        const longitude = +LocationAddress.lon;
+                        const latitude = +LocationAddress.lat;
+                        if (safetyCheck(longitude) && safetyCheck(latitude))
                             getLocationCoord({ longitude, latitude });
                     }
                 }

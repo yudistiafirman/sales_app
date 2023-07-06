@@ -1366,11 +1366,6 @@
     picocolors "^1.0.0"
     tslib "^2.5.0"
 
-"@react-native-camera-roll/camera-roll@^5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-5.7.1.tgz#d275f1611e4e7ba8f2db5c34afa6b7d407f7035d"
-  integrity sha512-SQw/YaQmBqFw42SPSgbGBJZ2US9gszs3xIyHRcqCs15TwYqZ2He/HhB32rmW9IPQmtDqjFKko5yS1fYx8dSWJw==
-
 "@react-native-community/async-storage@^1.12.1":
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.12.1.tgz#25f821b4f6b13abe005ad67e47c6f1cee9f27b24"

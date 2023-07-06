@@ -16,9 +16,11 @@ import {
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
+    onChangeProjectDetails,
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
+import { safetyCheck } from "@/utils/generalFunc";
 import OperationList from "../element/OperationList";
 
 const style = StyleSheet.create({
@@ -80,22 +82,12 @@ function Return() {
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
-            if (photoFiles && photoFiles?.length > 1) {
-                navigation.navigate(SUBMIT_FORM, {
-                    operationType:
-                        userData?.type === EntryType.SECURITY
-                            ? EntryType.RETURN
-                            : EntryType.IN
-                });
-            } else {
-                navigation.navigate(CAMERA, {
-                    photoTitle: "DO",
-                    navigateTo:
-                        userData?.type === EntryType.SECURITY
-                            ? EntryType.RETURN
-                            : EntryType.IN
-                });
-            }
+            navigation.navigate(SUBMIT_FORM, {
+                operationType:
+                    userData?.type === EntryType.SECURITY
+                        ? EntryType.RETURN
+                        : EntryType.IN
+            });
         } else {
             const dataToDeliver: OperationProjectDetails = {
                 deliveryOrderId: item?.id ? item?.id : "",
@@ -107,26 +99,45 @@ function Return() {
                     ? item.project.ShippingAddress.line1
                     : "",
                 lonlat: {
-                    longitude:
-                        item?.project?.ShippingAddress?.lon !== undefined
-                            ? Number(item.project.ShippingAddress.lon)
-                            : 0,
-                    latitude:
-                        item?.project?.ShippingAddress?.lat !== undefined
-                            ? Number(item.project.ShippingAddress.lat)
-                            : 0
+                    longitude: safetyCheck(item?.project?.ShippingAddress?.lon)
+                        ? Number(item.project.ShippingAddress.lon)
+                        : 0,
+                    latitude: safetyCheck(item?.project?.ShippingAddress?.lat)
+                        ? Number(item.project.ShippingAddress.lat)
+                        : 0
                 },
                 requestedQuantity: item?.quantity ? item?.quantity : 0,
                 deliveryTime: item?.date ? item?.date : ""
             };
-            dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
+            dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+            if (userData?.type === EntryType.SECURITY) {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            { file: null, attachType: "DO" },
+                            { file: null, attachType: "Kondisi TM" }
+                        ]
+                    })
+                );
+            } else {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            { file: null, attachType: "DO" },
+                            { file: null, attachType: "Hasil" }
+                        ]
+                    })
+                );
+            }
+
+            // dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
             navigation.navigate(CAMERA, {
                 photoTitle: "DO",
                 navigateTo:
                     userData?.type === EntryType.SECURITY
                         ? EntryType.RETURN
                         : EntryType.IN,
-                operationTempData: dataToDeliver
+                operationAddedStep: "DO"
             });
         }
     };

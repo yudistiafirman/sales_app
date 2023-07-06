@@ -31,6 +31,7 @@ import moment from "moment";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { postSchedule } from "@/actions/OrderActions";
 import { RootState } from "@/redux/store";
+import crashlytics from "@react-native-firebase/crashlytics";
 import FirstStep from "./element/FirstStep";
 import SecondStep from "./element/SecondStep";
 
@@ -81,7 +82,7 @@ function CreateScheduleScreen() {
     const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
-        const totalStep = stepRender?.length;
+        const totalStep = stepRender ? stepRender?.length : 0;
         if (nextStep < totalStep && nextStep >= 0) {
             action.updateValue("step", nextStep);
         } else {
@@ -211,6 +212,7 @@ function CreateScheduleScreen() {
     );
 
     React.useEffect(() => {
+        crashlytics().log(CREATE_SCHEDULE);
         stepHandler(values, setStepsDone);
 
         if (!values?.stepTwo?.deliveryTime) {

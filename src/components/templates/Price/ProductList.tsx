@@ -64,7 +64,7 @@ function ProductList<ArrayOfObject extends ProductsData>({
 }: ProductListProps<ArrayOfObject>) {
     const renderItem: ListRenderItem<ProductsData> = useCallback(({ item }) => {
         const fc =
-            item?.properties?.fc?.length > 0
+            item?.properties?.fc && item?.properties?.fc?.length > 0
                 ? ` / FC${item?.properties?.fc}`
                 : "";
         const onPressCheck = onPress || null;

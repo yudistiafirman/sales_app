@@ -33,7 +33,7 @@ function TotalDocumentChip({
             ...(documents?.cbd || []),
             ...(documents?.credit || [])
         ]?.filter((v) => v?.File !== null);
-        return totalUploadedDocument?.length;
+        return totalUploadedDocument ? totalUploadedDocument?.length : 0;
     }, [documents]);
 
     if (!documents || !customerType) {

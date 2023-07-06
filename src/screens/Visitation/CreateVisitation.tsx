@@ -41,7 +41,10 @@ import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { updateRegion } from "@/redux/reducers/locationReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
-import { shouldAllowVisitationStateToContinue } from "@/utils/generalFunc";
+import {
+    safetyCheck,
+    shouldAllowVisitationStateToContinue
+} from "@/utils/generalFunc";
 import { COMPANY } from "@/constants/general";
 import ThirdStep from "./elements/third";
 import BSheetAddPic from "./elements/second/BottomSheetAddPic";
@@ -104,9 +107,11 @@ function stepHandler(
     );
 
     if (
-        state[selectedCustomerType]?.selectedCustomer?.title?.length > 0 ||
+        (state[selectedCustomerType]?.selectedCustomer?.title &&
+            state[selectedCustomerType]?.selectedCustomer?.title?.length > 0) ||
         (state[selectedCustomerType]?.customerData?.searchQuery?.length > 2 &&
             state[selectedCustomerType]?.projectName &&
+            selectedPic &&
             selectedPic?.length > 0)
     ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
@@ -116,6 +121,7 @@ function stepHandler(
 
     if (
         state?.stageProject &&
+        state?.products &&
         state?.products?.length > 0 &&
         state?.estimationDate?.estimationMonth &&
         state?.estimationDate?.estimationWeek &&
@@ -126,14 +132,14 @@ function stepHandler(
         setStepsDone((curr) => curr?.filter((num) => num !== 2));
     }
 
-    if (state?.competitors?.length > 0) {
+    if (state?.competitors && state?.competitors?.length > 0) {
         setStepsDone((curr) => [...new Set(curr), 3]);
     } else {
         setStepsDone((curr) => curr?.filter((num) => num !== 3));
     }
 
     const filteredImages = state?.images?.filter((it) => it?.file !== null);
-    if (filteredImages?.length > 0) {
+    if (filteredImages && filteredImages?.length > 0) {
         setStepsDone((curr) => [...new Set(curr), 4]);
     } else {
         setStepsDone((curr) => curr?.filter((num) => num !== 4));
@@ -241,7 +247,10 @@ function CreateVisitation() {
             );
         }
 
-        if (existingData?.project?.Competitors?.length > 0) {
+        if (
+            existingData?.project?.Competitors &&
+            existingData?.project?.Competitors?.length > 0
+        ) {
             dispatch(
                 updateDataVisitation({
                     type: "competitors",
@@ -297,7 +306,7 @@ function CreateVisitation() {
             );
         }
 
-        if (existingData?.products?.length > 0) {
+        if (existingData?.products && existingData?.products?.length > 0) {
             const newProductIDList = [];
             existingData?.products?.forEach((it) => {
                 const newProduct = {
@@ -359,7 +368,7 @@ function CreateVisitation() {
     }
 
     const next = (nextStep: number) => () => {
-        const totalStep = stepRender?.length;
+        const totalStep = stepRender ? stepRender?.length : 0;
         if (nextStep < totalStep && nextStep >= 0) {
             dispatch(updateCurrentStep(nextStep));
         }
@@ -398,7 +407,10 @@ function CreateVisitation() {
                 })
             );
             if (LocationAddress) {
-                if (LocationAddress?.lon && LocationAddress?.lat) {
+                if (
+                    safetyCheck(LocationAddress?.lon) &&
+                    safetyCheck(LocationAddress?.lat)
+                ) {
                     const longitude = Number(LocationAddress?.lon);
                     const latitude = Number(LocationAddress?.lat);
                     dispatch(
@@ -477,8 +489,9 @@ function CreateVisitation() {
         if (
             visitationData.stepperVisitationShouldNotFocused &&
             visitationData.step === 1 &&
-            (visitationData[selectedCustomerType]?.selectedCustomer?.title
-                ?.length > 0 ||
+            ((visitationData[selectedCustomerType]?.selectedCustomer?.title &&
+                visitationData[selectedCustomerType]?.selectedCustomer?.title
+                    ?.length > 0) ||
                 visitationData[selectedCustomerType]?.projectName ||
                 selectedPic ||
                 visitationData[selectedCustomerType]?.customerData?.searchQuery

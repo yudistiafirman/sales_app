@@ -238,6 +238,7 @@ function PriceList() {
                 <CurrentLocation
                     onPress={goToLocation}
                     location={
+                        searchFormattedAddress &&
                         searchFormattedAddress?.length > 0
                             ? searchFormattedAddress
                             : locationDetail?.formattedAddress

@@ -519,9 +519,15 @@ export const visitationSlice = createSlice({
             }
         }));
         builder.addCase(getAllCustomer.fulfilled, (state, { payload }) => {
-            const items = payload.map((v) => ({
-                id: v.id,
-                title: v.displayName
+            const items = payload?.map((v) => ({
+                id: v?.id,
+                title: v?.displayName,
+                chipTitle: v?.type === COMPANY ? "Perusahaan" : "Individu",
+                subtitle:
+                    v?.npwp && v?.npwp?.length > 0
+                        ? `npwp : ${v?.npwp}`
+                        : `nik: ${v?.nik}`,
+                paymentType: v?.paymentType
             }));
 
             const selectedCustomerType =

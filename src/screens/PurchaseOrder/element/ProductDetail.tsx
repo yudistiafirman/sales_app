@@ -55,7 +55,9 @@ function ProductDetail() {
     const calculatedTotalPrice = (): number => {
         const total = selectedProducts
             ?.map((v) =>
-                v?.quantity?.toString()[0] === "0" || v?.quantity?.length === 0
+                v?.quantity?.toString()[0] === "0" ||
+                !v?.quantity ||
+                v?.quantity?.length === 0
                     ? 0
                     : (v?.offeringPrice || 0) * (v?.quantity || 0)
             )
@@ -117,6 +119,7 @@ function ProductDetail() {
                                             tableInputKeyboardType: "numeric",
                                             tableInputValue:
                                                 fiveToSix[0] !== "0" &&
+                                                fiveToSix &&
                                                 fiveToSix?.length > 0
                                                     ? formatCurrency(
                                                           fiveToSix,
@@ -131,6 +134,7 @@ function ProductDetail() {
                                             tableInputKeyboardType: "numeric",
                                             tableInputValue:
                                                 lessThanFive[0] !== "0" &&
+                                                lessThanFive &&
                                                 lessThanFive?.length > 0
                                                     ? formatCurrency(
                                                           lessThanFive,

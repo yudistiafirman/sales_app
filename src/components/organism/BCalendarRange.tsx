@@ -122,6 +122,7 @@ function BCalendarRange({
                 let newMap: MarkedDates = {};
                 newMap = { ...selectedMarkedDates };
                 if (
+                    !selectedMarkedDates ||
                     !Object?.keys(selectedMarkedDates) ||
                     Object?.keys(selectedMarkedDates)?.length === 0
                 ) {

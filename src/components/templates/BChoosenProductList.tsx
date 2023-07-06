@@ -93,7 +93,7 @@ function ChoosenProductList<ProductData extends Products>({
                     pricePerVol={offeringPrice}
                     volume={quantity}
                     item={item}
-                    isOptions={data && data?.length > 1}
+                    isOptions={!!(data && data?.length > 1)}
                     totalPrice={totalPrice}
                     onChecked={() =>
                         hasMultipleCheck && onChecked && onChecked(item)

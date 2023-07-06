@@ -539,9 +539,9 @@ const POMachine =
                 uploadFiles: async (context) => {
                     try {
                         const docsToUpload = context?.files
-                            .filter((v) => v?.projectDocId === null)
-                            .filter((v) => v?.value !== null)
-                            .map((v) => v?.value);
+                            ?.filter((v) => v?.projectDocId === null)
+                            ?.filter((v) => v?.value !== null)
+                            ?.map((v) => v?.value);
                         const response = await uploadFileImage(
                             docsToUpload,
                             "Purchase Order"
@@ -811,7 +811,9 @@ const POMachine =
                         ];
 
                     const newSelectedProducts =
-                        productsData?.length === 1 ? productsData : [];
+                        productsData && productsData?.length === 1
+                            ? productsData
+                            : [];
 
                     return {
                         selectedProducts: newSelectedProducts

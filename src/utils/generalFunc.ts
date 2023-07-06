@@ -336,14 +336,15 @@ export const uniqueStringGenerator = () =>
 export const replaceDot = (value: string) => {
     let count = 0;
     let output = "";
-    for (let i = 0; i < value?.length; i += 1) {
-        if (value[i] === ".") {
-            count += 1;
+    if (value)
+        for (let i = 0; i < value?.length; i += 1) {
+            if (value[i] === ".") {
+                count += 1;
+            }
+            if (count <= 1 && value[0] !== ".") {
+                output += value[i];
+            }
         }
-        if (count <= 1 && value[0] !== ".") {
-            output += value[i];
-        }
-    }
     return output;
 };
 
@@ -419,7 +420,10 @@ export function shouldAllowSPHStateToContinue(
         stepOneCompleted = true;
     }
     const billingAddressFilled =
+        sphState?.billingAddress &&
         !Object?.values(sphState?.billingAddress)?.every((val) => !val) &&
+        sphState?.billingAddress?.addressAutoComplete &&
+        Object?.entries(sphState?.billingAddress?.addressAutoComplete) &&
         Object?.entries(sphState?.billingAddress?.addressAutoComplete)?.length >
             1;
     if (
@@ -502,6 +506,7 @@ export function shouldAllowVisitationStateToContinue(
     }
     if (
         visitationState?.stageProject &&
+        visitationState?.products &&
         visitationState?.products?.length > 0 &&
         visitationState?.estimationDate?.estimationMonth &&
         visitationState?.estimationDate?.estimationWeek &&
@@ -509,13 +514,16 @@ export function shouldAllowVisitationStateToContinue(
     ) {
         stepThreeCompleted = true;
     }
-    if (visitationState?.competitors?.length > 0) {
+    if (
+        visitationState?.competitors &&
+        visitationState?.competitors?.length > 0
+    ) {
         stepFourCompleted = true;
     }
     const filteredImages = visitationState?.images?.filter(
         (it) => it?.file !== null
     );
-    if (filteredImages?.length > 0) {
+    if (filteredImages && filteredImages?.length > 0) {
         stepFifthCompleted = true;
     }
 
@@ -565,11 +573,18 @@ export function getAvailableDepositProject(
     let availableDeposit;
     if (includeCredit && data?.Customer?.paymentType === "CREDIT") {
         availableDeposit =
-            data?.Customer?.Accounts?.length > 0
+            data?.Customer?.Accounts && data?.Customer?.Accounts?.length > 0
                 ? data?.Customer?.Accounts[0]?.pendingBalance
                 : 0;
     } else {
         availableDeposit = data?.Account?.pendingBalance || 0;
     }
     return availableDeposit;
+}
+
+export function safetyCheck(item: any) {
+    if (item !== undefined && item !== null) {
+        return true;
+    }
+    return false;
 }

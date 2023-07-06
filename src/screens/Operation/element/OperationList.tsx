@@ -10,6 +10,7 @@ import {
     DEFAULT_ESTIMATED_LIST_SIZE,
     DEFAULT_ON_END_REACHED_THREHOLD
 } from "@/constants/general";
+import { safetyCheck } from "@/utils/generalFunc";
 
 const style = StyleSheet.create({
     flatList: {
@@ -65,8 +66,16 @@ export default function OperationList({
                 lonlat:
                     userType === EntryType.DRIVER
                         ? {
-                              longitude: item?.project?.ShippingAddress?.lon,
-                              latitude: item?.project?.ShippingAddress?.lat
+                              longitude: safetyCheck(
+                                  item?.project?.ShippingAddress?.lon
+                              )
+                                  ? item?.project?.ShippingAddress?.lon
+                                  : undefined,
+                              latitude: safetyCheck(
+                                  item?.project?.ShippingAddress?.lat
+                              )
+                                  ? item?.project?.ShippingAddress?.lat
+                                  : undefined
                           }
                         : undefined
             }}
