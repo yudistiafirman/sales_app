@@ -139,6 +139,7 @@ const useAsyncConfigSetup = () => {
                     const [key, entry] = $;
                     let value = remoteConfigData?.[key];
                     if (
+                        entry &&
                         Object?.values(entry) &&
                         Object?.values(entry)?.length > 0 &&
                         isJsonString(Object?.values(entry)[0])

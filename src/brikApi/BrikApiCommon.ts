@@ -42,8 +42,8 @@ export default class BrikApiCommon {
     };
 
     static getLocationCoordinates = (
-        longitude: number,
-        latitude: number,
+        longitude?: number,
+        latitude?: number,
         distance?: string
     ) => {
         const url = new URL(`${API_URL}/common/map/coordinates`);

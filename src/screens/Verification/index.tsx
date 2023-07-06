@@ -116,7 +116,7 @@ function Verification() {
     React.useEffect(() => {
         crashlytics().log(VERIFICATION);
 
-        if (otpValue?.length === 6) {
+        if (otpValue && otpValue?.length === 6) {
             onLogin();
         }
     }, [otpValue]);

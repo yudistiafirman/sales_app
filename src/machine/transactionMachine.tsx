@@ -192,7 +192,7 @@ const transactionMachine =
                     return {
                         routes: newTypeData,
                         selectedCategories:
-                            newTypeData?.length > 0
+                            newTypeData && newTypeData?.length > 0
                                 ? newTypeData[0]?.title
                                 : undefined,
                         loadTab: false,
@@ -200,7 +200,7 @@ const transactionMachine =
                     };
                 }),
                 assignTransactionsDataToContext: assign((context, event) => {
-                    if (event?.data?.data?.length > 0) {
+                    if (event?.data?.data && event?.data?.data?.length > 0) {
                         let transactionsData: any[] = [];
                         if (context?.transactionData)
                             transactionsData = [...context.transactionData];

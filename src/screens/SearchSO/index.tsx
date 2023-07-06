@@ -60,8 +60,9 @@ function SearchSO() {
     const onChangeText = (text: string) => {
         setSearchValue(text);
 
-        if (text?.length > 2) send("onRefreshList", { payload: text });
-        else if (text?.length < 1) send("onRefreshList", { payload: "" });
+        if (text && text?.length > 2) send("onRefreshList", { payload: text });
+        else if (!text || text?.length < 1)
+            send("onRefreshList", { payload: "" });
     };
 
     const onClearValue = () => {

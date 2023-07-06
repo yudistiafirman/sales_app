@@ -90,7 +90,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
     hidePicName,
     autoFocus
 }: BCommonSearchListProps) {
-    const isSearching = searchQuery?.length > 2;
+    const isSearching = !!(searchQuery && searchQuery?.length > 2);
     const renderItem: ListRenderItem<ListRenderItemData> = React.useCallback(
         ({ item, idx }) => {
             let picOrCompanyName;

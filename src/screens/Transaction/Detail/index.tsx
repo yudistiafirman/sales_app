@@ -399,7 +399,7 @@ function TransactionDetail() {
             ? data?.SaleOrder?.PoProduct?.RequestedProduct
             : data?.Schedule?.SaleOrder?.PoProduct?.RequestedProduct;
 
-        if (productData?.length > 0) {
+        if (productData && productData?.length > 0) {
             return productData?.map((item, index) =>
                 ListProduct(
                     item,
@@ -410,7 +410,7 @@ function TransactionDetail() {
                         : data?.quantity
                         ? data?.quantity
                         : data?.Schedule?.quantity,
-                    data?.PoProducts?.length > 0
+                    !!(data?.PoProducts && data?.PoProducts?.length > 0)
                 )
             );
         }

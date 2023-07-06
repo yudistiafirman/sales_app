@@ -30,6 +30,7 @@ import {
     BProjectDetailCard
 } from "@/components";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
+import { safetyCheck } from "@/utils/generalFunc";
 import LabelSuccess from "./elements/LabelSuccess";
 
 const styles = StyleSheet.create({
@@ -294,10 +295,8 @@ export default function StepDone({
                             );
                         }}
                         disabled={
-                            locationObj?.locationAddress?.lat === null ||
-                            locationObj?.locationAddress?.lon === null ||
-                            !locationObj?.locationAddress?.lat ||
-                            !locationObj?.locationAddress?.lon
+                            !safetyCheck(locationObj?.locationAddress?.lat) ||
+                            !safetyCheck(locationObj?.locationAddress?.lon)
                         }
                     />
                     <View style={styles.contentDetail}>

@@ -143,7 +143,8 @@ const searchAreaMachine = createMachine(
     },
     {
         guards: {
-            searchLengthAccepted: (context, event) => event?.payload?.length > 2
+            searchLengthAccepted: (context, event) =>
+                !!(event?.payload && event?.payload?.length > 2)
         },
         actions: {
             assignCurrentLocationToContext: assign((context, event) => ({

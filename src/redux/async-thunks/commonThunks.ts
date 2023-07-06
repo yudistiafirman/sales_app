@@ -14,6 +14,7 @@ import { Region, projectResponseType } from "@/interfaces";
 import Geolocation from "react-native-geolocation-service";
 import { COMPANY } from "@/constants/general";
 import { ICustomerListData } from "@/models/Customer";
+import { safetyCheck } from "@/utils/generalFunc";
 
 type ErrorType = {
     success: boolean;
@@ -155,8 +156,12 @@ export const getCoordinateDetails = createAsyncThunk<
     ) => {
         try {
             const response = await getLocationCoordinates(
-                coordinate?.longitude as unknown as number,
-                coordinate?.latitude as unknown as number,
+                safetyCheck(coordinate?.longitude)
+                    ? (coordinate?.longitude as unknown as number)
+                    : undefined,
+                safetyCheck(coordinate?.latitude)
+                    ? (coordinate?.latitude as unknown as number)
+                    : undefined,
                 selectedBatchingPlant,
                 signal
             );
@@ -173,12 +178,12 @@ export const getCoordinateDetails = createAsyncThunk<
                 distance: result?.distance?.value
             };
 
-            if (typeof result?.lon === "string") {
+            if (safetyCheck(result?.lon) && typeof result?.lon === "string") {
                 coordinateToSet.longitude = Number(result.lon);
                 coordinateToSet.lon = Number(result.lon);
             }
 
-            if (typeof result?.lat === "string") {
+            if (safetyCheck(result?.lat) && typeof result?.lat === "string") {
                 coordinateToSet.latitude = Number(result.lat);
                 coordinateToSet.lat = Number(result.lat);
             }
@@ -219,8 +224,12 @@ export const getUserCurrentLocation = createAsyncThunk(
             const result = response?.data?.result;
 
             const coordinate = {
-                longitude: Number(result?.lon),
-                latitude: Number(result?.lat),
+                longitude: safetyCheck(result?.lon)
+                    ? Number(result?.lon)
+                    : undefined,
+                latitude: safetyCheck(result?.lat)
+                    ? Number(result?.lat)
+                    : undefined,
                 formattedAddress: result?.formattedAddress,
                 PostalId: result?.PostalId
             };

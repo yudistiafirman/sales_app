@@ -79,7 +79,10 @@ export default function SecondStep() {
             updateValueOnstep(
                 "stepTwo",
                 "selectedSaleOrder",
-                data?.length > 0 && data[0]?.SaleOrders?.length > 0
+                data &&
+                    data?.length > 0 &&
+                    data[0]?.SaleOrders &&
+                    data[0]?.SaleOrders?.length > 0
                     ? data[0]?.SaleOrders[0]
                     : undefined
             );

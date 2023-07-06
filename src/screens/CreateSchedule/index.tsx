@@ -82,7 +82,7 @@ function CreateScheduleScreen() {
     const stepRender = [<FirstStep />, <SecondStep />];
 
     const next = (nextStep: number) => async () => {
-        const totalStep = stepRender?.length;
+        const totalStep = stepRender ? stepRender?.length : 0;
         if (nextStep < totalStep && nextStep >= 0) {
             action.updateValue("step", nextStep);
         } else {

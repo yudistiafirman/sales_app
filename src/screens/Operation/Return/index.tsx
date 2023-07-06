@@ -19,6 +19,7 @@ import {
     setAllOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
+import { safetyCheck } from "@/utils/generalFunc";
 import OperationList from "../element/OperationList";
 
 const style = StyleSheet.create({
@@ -107,14 +108,12 @@ function Return() {
                     ? item.project.ShippingAddress.line1
                     : "",
                 lonlat: {
-                    longitude:
-                        item?.project?.ShippingAddress?.lon !== undefined
-                            ? Number(item.project.ShippingAddress.lon)
-                            : 0,
-                    latitude:
-                        item?.project?.ShippingAddress?.lat !== undefined
-                            ? Number(item.project.ShippingAddress.lat)
-                            : 0
+                    longitude: safetyCheck(item?.project?.ShippingAddress?.lon)
+                        ? Number(item.project.ShippingAddress.lon)
+                        : 0,
+                    latitude: safetyCheck(item?.project?.ShippingAddress?.lat)
+                        ? Number(item.project.ShippingAddress.lat)
+                        : 0
                 },
                 requestedQuantity: item?.quantity ? item?.quantity : 0,
                 deliveryTime: item?.date ? item?.date : ""

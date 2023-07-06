@@ -42,7 +42,7 @@ function LocationList<ArrayOfObject extends LocationData>({
         if (isLoading) {
             return <LocationListShimmer />;
         }
-        if (searchValue?.length > 2) {
+        if (searchValue && searchValue?.length > 2) {
             return (
                 <EmptyState
                     emptyText={`${searchValue} tidak ditemukan!`}

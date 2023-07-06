@@ -157,7 +157,10 @@ function SubmitForm() {
     const removedAddButtonImage = () => {
         switch (userData?.type) {
             case EntryType.WB: {
-                if (operationData?.photoFiles?.length > 1) {
+                if (
+                    operationData?.photoFiles &&
+                    operationData?.photoFiles?.length > 1
+                ) {
                     let tempImages;
                     if (operationData?.photoFiles)
                         tempImages = [
@@ -171,7 +174,10 @@ function SubmitForm() {
             }
             case EntryType.SECURITY: {
                 if (operationType === EntryType.DISPATCH) {
-                    if (operationData?.photoFiles?.length > 4) {
+                    if (
+                        operationData?.photoFiles &&
+                        operationData?.photoFiles?.length > 4
+                    ) {
                         let tempImages;
                         if (operationData?.photoFiles)
                             tempImages = [
@@ -181,7 +187,10 @@ function SubmitForm() {
                             ];
                         dispatch(setAllOperationPhoto({ file: tempImages }));
                     }
-                } else if (operationData?.photoFiles?.length > 1) {
+                } else if (
+                    operationData?.photoFiles &&
+                    operationData?.photoFiles?.length > 1
+                ) {
                     let tempImages;
                     if (operationData?.photoFiles)
                         tempImages = [

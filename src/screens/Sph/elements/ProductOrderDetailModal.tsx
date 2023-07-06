@@ -207,9 +207,9 @@ export default function ProductCartModal({
             ...curr,
             [key]: val
                 .toString()
-                .split("")
-                .filter((char) => /^\d+$/.test(char))
-                .join("")
+                ?.split("")
+                ?.filter((char) => /^\d+$/.test(char))
+                ?.join("")
         }));
     };
 

@@ -47,6 +47,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { getCoordinateDetails } from "@/redux/async-thunks/commonThunks";
 import { getLocationCoordinates } from "@/actions/CommonActions";
+import { safetyCheck } from "@/utils/generalFunc";
 import { SphContext } from "../context/SphContext";
 
 const style = StyleSheet.create({
@@ -99,7 +100,9 @@ function checkObj(
     distanceFromLegok: number | null
 ) {
     const billingAddressFilled =
+        billingAddress &&
         Object?.values(billingAddress)?.every((val) => val) &&
+        billingAddress?.addressAutoComplete &&
         Object?.entries(billingAddress?.addressAutoComplete) &&
         Object?.entries(billingAddress?.addressAutoComplete)?.length > 1;
 
@@ -168,8 +171,12 @@ export default function SecondStep() {
             dispatch(setUseBillingAddress({ value: false }));
             if (isBiilingAddress) {
                 const response = await getLocationCoordinates(
-                    coordinate.longitude as unknown as number,
-                    coordinate.latitude as unknown as number,
+                    safetyCheck(coordinate.longitude)
+                        ? (coordinate.longitude as unknown as number)
+                        : undefined,
+                    safetyCheck(coordinate.latitude)
+                        ? (coordinate.latitude as unknown as number)
+                        : undefined,
                     selectedBatchingPlant.name,
                     undefined
                 );
@@ -386,33 +393,26 @@ export default function SecondStep() {
 
     useEffect(() => {
         if (projectAddress) {
-            const latitude =
-                projectAddress?.latitude !== undefined
-                    ? +projectAddress.latitude
-                    : 0;
-            const longitude =
-                projectAddress?.longitude !== undefined
-                    ? +projectAddress.longitude
-                    : 0;
+            const latitude = safetyCheck(projectAddress?.latitude)
+                ? +projectAddress.latitude
+                : 0;
+            const longitude = safetyCheck(projectAddress?.longitude)
+                ? +projectAddress.longitude
+                : 0;
             onChangeRegion({ latitude, longitude }, {});
         } else if (selectedCompany) {
-            if (selectedCompany?.LocationAddress) {
-                const latitude =
-                    selectedCompany?.LocationAddress?.lat !== null &&
-                    selectedCompany?.LocationAddress?.lat !== undefined
-                        ? +selectedCompany.LocationAddress.lat
-                        : undefined;
-                const longitude =
-                    selectedCompany?.LocationAddress?.lon !== null &&
-                    selectedCompany?.LocationAddress?.lon !== undefined
-                        ? +selectedCompany.LocationAddress.lon
-                        : undefined;
-                if (
-                    latitude !== null &&
-                    latitude !== undefined &&
-                    longitude !== undefined &&
-                    longitude !== null
+            if (safetyCheck(selectedCompany?.LocationAddress)) {
+                const latitude = safetyCheck(
+                    selectedCompany?.LocationAddress?.lat
                 )
+                    ? +selectedCompany.LocationAddress.lat
+                    : undefined;
+                const longitude = safetyCheck(
+                    selectedCompany?.LocationAddress?.lon
+                )
+                    ? +selectedCompany.LocationAddress.lon
+                    : undefined;
+                if (safetyCheck(latitude) && safetyCheck(longitude))
                     onChangeRegion({ latitude, longitude }, {});
             }
         }
@@ -423,7 +423,7 @@ export default function SecondStep() {
             ? searchedAddress
             : region?.formattedAddress;
         const idx = address?.split(",");
-        if (idx?.length > 1) {
+        if (idx && idx?.length > 1) {
             return idx?.[0];
         }
 

@@ -41,7 +41,7 @@ export default function PillNames({
         return null;
     }
     function nameCount() {
-        if (pilNames?.length > 1) {
+        if (pilNames && pilNames?.length > 1) {
             return (
                 <View style={[style.bluePill]}>
                     <Text style={style.bluePillText}>{`+${
@@ -52,7 +52,8 @@ export default function PillNames({
         }
         return null;
     }
-    const filteredPilNames = pilNames?.filter((it) => it);
+    const filteredPilNames =
+        pilNames && pilNames.length > 0 && pilNames?.filter((it) => it);
     return (
         <View style={style.container}>
             <View

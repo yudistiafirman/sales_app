@@ -77,7 +77,7 @@ function SearchProduct() {
     const onChangeText = (text: string) => {
         setSearchValue(text);
 
-        if (text?.length === 0) {
+        if (!text || text?.length === 0) {
             send("clearInput");
         } else {
             send("searchingProducts", { value: text });

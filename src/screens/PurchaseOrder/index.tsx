@@ -85,8 +85,10 @@ function PurchaseOrder() {
                 return JSON.stringify(choosenSphDataFromModal) === "{}";
             }
             return (
+                !poNumber ||
                 poNumber?.length === 0 ||
                 JSON.stringify(choosenSphDataFromModal) === "{}" ||
+                !poImages ||
                 poImages?.length <= 1
             );
         }
@@ -94,7 +96,10 @@ function PurchaseOrder() {
             return false;
         }
         const hasNoQuantityMultiProducts = selectedProducts?.filter(
-            (v) => v?.quantity?.length === 0 || v?.quantity[0] === "0"
+            (v) =>
+                !v?.quantity ||
+                v?.quantity?.length === 0 ||
+                v?.quantity[0] === "0"
         );
         return (
             (hasNoQuantityMultiProducts &&

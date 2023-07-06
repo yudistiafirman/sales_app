@@ -331,7 +331,12 @@ function InvoiceList() {
                     ) : (
                         <BEmptyState
                             errorMessage={invoiceData?.errorMessage}
-                            isError={invoiceData?.errorMessage?.length > 0}
+                            isError={
+                                !!(
+                                    invoiceData?.errorMessage &&
+                                    invoiceData?.errorMessage?.length > 0
+                                )
+                            }
                             onAction={onRetry}
                             emptyText="Data Tidak Ditemukan"
                         />

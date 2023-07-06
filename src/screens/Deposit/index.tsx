@@ -61,13 +61,13 @@ function stepHandler(
     ) {
         setStepsDone((curr) => [...new Set(curr), 0]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 0));
+        setStepsDone((curr) => curr?.filter((num) => num !== 0));
     }
 
     if (stepTwo?.companyName && stepTwo?.purchaseOrders && existingProjectID) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 1));
+        setStepsDone((curr) => curr?.filter((num) => num !== 1));
     }
 }
 
@@ -98,7 +98,7 @@ function Deposit() {
                 );
                 const photoFiles = values?.stepOne?.deposit?.picts
                     ?.filter((v) => v?.file !== null)
-                    .map((photo) => ({
+                    ?.map((photo) => ({
                         ...photo?.file,
                         uri: photo?.file?.uri?.replace("file:", "file://")
                     }));

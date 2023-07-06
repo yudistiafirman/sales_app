@@ -227,7 +227,9 @@ function FormSO() {
                 isContinueIcon={false}
                 continueText="Upload"
                 backText="Kembali"
-                disableContinue={!(filteredPhotoFiles?.length > 0)}
+                disableContinue={
+                    !(filteredPhotoFiles && filteredPhotoFiles?.length > 0)
+                }
             />
             <PopUpQuestion
                 isVisible={isPopupVisible}

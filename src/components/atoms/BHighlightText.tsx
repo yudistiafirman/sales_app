@@ -55,9 +55,9 @@ export default function HighlightText({
     const regexStr = `(${searchQuery
         .trim()
         .toLowerCase()
-        .split(/\s+/)
-        .map(escapeRegExp)
-        .join("|")})`;
+        ?.split(/\s+/)
+        ?.map(escapeRegExp)
+        ?.join("|")})`;
     const regex = new RegExp(regexStr, "gi");
     const parts = name?.split(regex);
 
@@ -71,26 +71,28 @@ export default function HighlightText({
             ]}
             numberOfLines={numberOfLines}
         >
-            {parts
-                .filter((part) => part)
-                .map((part, i) =>
-                    regex.test(part) ? (
-                        <Text
-                            key={part + i}
-                            style={[
-                                style.normalText,
-                                style.boldText,
-                                fontSize
-                                    ? { fontSize: respFS(fontSize) }
-                                    : { fontSize: font.size.md }
-                            ]}
-                        >
-                            {part}
-                        </Text>
-                    ) : (
-                        part
-                    )
-                )}
+            {parts &&
+                parts.length > 0 &&
+                parts
+                    ?.filter((part) => part)
+                    ?.map((part, i) =>
+                        regex.test(part) ? (
+                            <Text
+                                key={part + i}
+                                style={[
+                                    style.normalText,
+                                    style.boldText,
+                                    fontSize
+                                        ? { fontSize: respFS(fontSize) }
+                                        : { fontSize: font.size.md }
+                                ]}
+                            >
+                                {part}
+                            </Text>
+                        ) : (
+                            part
+                        )
+                    )}
         </Text>
     );
 }

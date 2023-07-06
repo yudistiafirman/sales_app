@@ -42,7 +42,10 @@ import {
 } from "@/redux/reducers/SphReducer";
 import { FlashList } from "@shopify/flash-list";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
-import { shouldAllowSPHStateToContinue } from "@/utils/generalFunc";
+import {
+    safetyCheck,
+    shouldAllowSPHStateToContinue
+} from "@/utils/generalFunc";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { postSph } from "@/actions/OrderActions";
 import StepDone from "../StepDoneModal/StepDone";
@@ -77,11 +80,12 @@ const style = StyleSheet.create({
 
 function countNonNullValues(array) {
     let count = 0;
-    for (let i = 0; i < array?.length; i += 1) {
-        if (array[i] !== null) {
-            count += 1;
+    if (array)
+        for (let i = 0; i < array?.length; i += 1) {
+            if (array[i] !== null) {
+                count += 1;
+            }
         }
-    }
     return count;
 }
 
@@ -145,10 +149,10 @@ function payloadMapper(sphState: SphStateInterface) {
         if (projectAddress?.district) {
             payload.shippingAddress.district = projectAddress?.district;
         }
-        if (projectAddress?.lat) {
+        if (safetyCheck(projectAddress?.lat)) {
             payload.shippingAddress.lat = projectAddress?.lat?.toString();
         }
-        if (projectAddress?.lon) {
+        if (safetyCheck(projectAddress?.lon)) {
             payload.shippingAddress.lon = projectAddress?.lon?.toString();
         }
         if (projectAddress?.formattedAddress) {
@@ -177,7 +181,7 @@ function payloadMapper(sphState: SphStateInterface) {
     }
     if (selectedCompany) {
         payload.projectId = selectedCompany?.id;
-        if (selectedCompany?.Pics?.length > 0) {
+        if (selectedCompany?.Pics && selectedCompany?.Pics?.length > 0) {
             payload.picArr = selectedCompany?.Pics;
         } else {
             const newPicArr = [{ ...selectedCompany?.Pic, isSelected: true }];
@@ -223,11 +227,15 @@ function payloadMapper(sphState: SphStateInterface) {
                 payload.billingAddress.postalId =
                     sphState?.billingAddress?.addressAutoComplete?.PostalId;
             }
-            if (sphState?.billingAddress?.addressAutoComplete?.lat) {
+            if (
+                safetyCheck(sphState?.billingAddress?.addressAutoComplete?.lat)
+            ) {
                 payload.billingAddress.lat =
                     sphState?.billingAddress?.addressAutoComplete?.lat;
             }
-            if (sphState?.billingAddress?.addressAutoComplete?.lon) {
+            if (
+                safetyCheck(sphState?.billingAddress?.addressAutoComplete?.lon)
+            ) {
                 payload.billingAddress.lon =
                     sphState?.billingAddress?.addressAutoComplete?.lon;
             }
