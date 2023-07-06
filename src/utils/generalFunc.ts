@@ -29,10 +29,12 @@ export const getColorStatusTrx = (id: string) => {
             return { color: colors.status.grey, textColor: colors.black };
         case "DALAM PRODUKSI":
             return { color: colors.status.grey, textColor: colors.black };
-        case "SELESAI":
-            return { color: colors.status.grey, textColor: colors.black };
         case "SUBMITTED":
             return { color: colors.status.grey, textColor: colors.black };
+        case "TIBA":
+            return { color: colors.status.lightBlue, textColor: colors.black };
+        case "MENUNGGU MASUK WB":
+            return { color: colors.status.yellow, textColor: colors.black };
         case "CEK BARANG":
             return { color: colors.status.yellow, textColor: colors.black };
         case "PEMERIKSAAN":
@@ -41,33 +43,55 @@ export const getColorStatusTrx = (id: string) => {
             return { color: colors.status.yellow, textColor: colors.black };
         case "PERSIAPAN":
             return { color: colors.status.orange, textColor: colors.black };
+        case "KELUAR WB":
+            return { color: colors.status.orange, textColor: colors.black };
         case "BERLANGSUNG":
             return { color: colors.status.orange, textColor: colors.black };
         case "BONGKAR":
             return { color: colors.status.orange, textColor: colors.black };
+        case "SEDANG PENGIRIMAN":
+            return { color: colors.graySevenEight, textColor: colors.black };
         case "KADALUARSA":
             return { color: colors.status.black, textColor: colors.white };
         case "DITOLAK":
-            return { color: colors.status.red, textColor: colors.black };
+            return { color: colors.status.black, textColor: colors.white };
         case "DISETUJUI":
             return { color: colors.chip.green, textColor: colors.black };
         case "DITERIMA":
-            return { color: colors.chip.green, textColor: colors.black };
+            return { color: colors.blueSail, textColor: colors.white };
         case "DITERBITKAN":
             return { color: colors.chip.green, textColor: colors.black };
+        case "DIBATALKAN":
+            return { color: colors.status.red, textColor: colors.black };
         case "DECLINED":
             return { color: colors.status.red, textColor: colors.black };
+        case "SELESAI":
+            return { color: colors.chip.green, textColor: colors.black };
         default:
             return { color: colors.chip.green, textColor: colors.black };
     }
 };
 
-export const getStatusTrx = (id: string) => {
+export const getStatusTrx = (id?: string) => {
     switch (id?.toUpperCase()) {
         case "DRAFT":
             return "Diterbitkan".toUpperCase();
         case "SUBMITTED":
             return "Diajukan".toUpperCase();
+        case "WB_OUT":
+            return "Keluar WB".toUpperCase();
+        case "ON_DELIVERY":
+            return "Sedang Pengiriman".toUpperCase();
+        case "ARRIVED":
+            return "Tiba".toUpperCase();
+        case "RECEIVED":
+            return "Diterima".toUpperCase();
+        case "AWAIT_WB_IN":
+            return "Menunggu Masuk WB".toUpperCase();
+        case "FINISHED":
+            return "Selesai".toUpperCase();
+        case "REJECTED":
+            return "Ditolak".toUpperCase();
         case "PARTIALLY_PROCESSED":
             return "Persiapan".toUpperCase();
         case "PARTIALLY_PAID":
@@ -77,7 +101,7 @@ export const getStatusTrx = (id: string) => {
         case "PAID":
             return "Diterima".toUpperCase();
         case "CANCELLED":
-            return "Ditolak".toUpperCase();
+            return "Dibatalkan".toUpperCase();
         case "DECLINED":
             return "Ditolak".toUpperCase();
         default:

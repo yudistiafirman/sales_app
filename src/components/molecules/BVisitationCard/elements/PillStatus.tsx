@@ -28,10 +28,12 @@ type PillStatusType = {
     pilStatus?: string;
     color?: string;
     styles?: ViewStyle;
+    textColor?: string;
 };
 export default function PillStatus({
     pilStatus,
     color,
+    textColor,
     styles
 }: PillStatusType) {
     if (!pilStatus) {
@@ -45,7 +47,14 @@ export default function PillStatus({
                     color ? { backgroundColor: color } : null
                 ]}
             >
-                <Text style={style.greenPillText}>{pilStatus}</Text>
+                <Text
+                    style={[
+                        style.greenPillText,
+                        textColor && { color: textColor }
+                    ]}
+                >
+                    {pilStatus}
+                </Text>
             </View>
         </View>
     );

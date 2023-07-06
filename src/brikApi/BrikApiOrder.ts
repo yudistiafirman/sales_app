@@ -204,6 +204,7 @@ export default class BrikApiOrder {
     };
 
     static deliveryOrder = (
+        searchQuery?: string,
         status?: string | string[],
         page?: string,
         size?: string,
@@ -211,6 +212,9 @@ export default class BrikApiOrder {
     ) => {
         const url = new URL(`${API_URL}/order/m/delivery-order`);
         const params = url.searchParams;
+        if (searchQuery) {
+            params.append("search", searchQuery);
+        }
         if (status) {
             const finalStatus =
                 typeof status === "object" ? JSON.stringify(status) : status;

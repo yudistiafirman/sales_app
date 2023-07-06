@@ -38,8 +38,13 @@ function Operation() {
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
-    const { operationListData, isLoadMore, isLoading, isRefreshing } =
-        doListState.context;
+    const {
+        operationListData,
+        isLoadMore,
+        isLoading,
+        isRefreshing,
+        searchQuery
+    } = doListState.context;
 
     useFocusEffect(
         React.useCallback(() => {
@@ -169,6 +174,14 @@ function Operation() {
                     })
                 }
                 userType={userData?.type}
+                searchQuery={searchQuery}
+                onSearch={(text: string) =>
+                    send("onSearch", {
+                        payload: userData?.type,
+                        searchKeyword: text,
+                        selectedBP: selectedBatchingPlant
+                    })
+                }
             />
         </SafeAreaView>
     );

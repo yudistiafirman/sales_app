@@ -83,13 +83,20 @@ export const getScheduleByID = async (id: string) =>
     customRequest(BrikApiOrder.getScheduleByID(id), "GET", undefined, true);
 
 export const getAllDeliveryOrders = async (
+    searchQuery?: string,
     status?: string | string[],
     size?: string,
     page?: string,
     batchingPlantId?: string
 ) =>
     customRequest(
-        BrikApiOrder.deliveryOrder(status, page, size, batchingPlantId),
+        BrikApiOrder.deliveryOrder(
+            searchQuery,
+            status,
+            page,
+            size,
+            batchingPlantId
+        ),
         "GET",
         undefined,
         true
