@@ -83,6 +83,7 @@ export default function OperationList({
         const { color, textColor } = getColorStatusTrx(statusFinal);
         return (
             <BVisitationCard
+                disabled={item?.status === "FINISHED"}
                 onPress={() => onPressList(item)}
                 onLocationPress={(lonlat) =>
                     onLocationPressCheck !== null &&

@@ -116,7 +116,13 @@ export default function BVisitationCard({
 }: VisitationCardType) {
     const actionButton = onLocationPress || null;
     return (
-        <View style={[style.container, customStyle]}>
+        <View
+            style={[
+                style.container,
+                customStyle,
+                disabled && { backgroundColor: colors.textInput.disabled }
+            ]}
+        >
             <TouchableOpacity
                 disabled={disabled}
                 style={style.subContainer}
@@ -177,9 +183,11 @@ export default function BVisitationCard({
                         <VisitStatus status={item?.status} />
                     </View>
                 </View>
-                <View style={style.rightSide}>
-                    {iconRender(isRenderIcon, customIcon)}
-                </View>
+                {!disabled && (
+                    <View style={style.rightSide}>
+                        {iconRender(isRenderIcon, customIcon)}
+                    </View>
+                )}
             </TouchableOpacity>
             {safetyCheck(item?.lonlat?.latitude) &&
                 safetyCheck(item?.lonlat?.longitude) &&
@@ -190,6 +198,7 @@ export default function BVisitationCard({
                             titleStyle={style.locationTextButton}
                             title="Lihat Peta"
                             isOutline
+                            disable={disabled}
                             onPress={() => actionButton(item?.lonlat)}
                         />
                     </View>
