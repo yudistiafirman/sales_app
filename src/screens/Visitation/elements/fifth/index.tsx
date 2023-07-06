@@ -197,6 +197,9 @@ function payloadMapper(
     if (values[selectedCustomerType]?.selectedCustomer?.title) {
         payload.customer.displayName =
             values[selectedCustomerType].selectedCustomer.title;
+    } else {
+        payload.customer.displayName =
+            values[selectedCustomerType].customerData.searchQuery;
     }
 
     if (values?.customerType) {
