@@ -31,6 +31,7 @@ import moment from "moment";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { postSchedule } from "@/actions/OrderActions";
 import { RootState } from "@/redux/store";
+import crashlytics from "@react-native-firebase/crashlytics";
 import FirstStep from "./element/FirstStep";
 import SecondStep from "./element/SecondStep";
 
@@ -211,6 +212,7 @@ function CreateScheduleScreen() {
     );
 
     React.useEffect(() => {
+        crashlytics().log(CREATE_SCHEDULE);
         stepHandler(values, setStepsDone);
 
         if (!values?.stepTwo?.deliveryTime) {

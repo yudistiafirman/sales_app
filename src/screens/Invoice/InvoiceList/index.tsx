@@ -10,8 +10,11 @@ import {
     DEFAULT_ON_END_REACHED_THREHOLD
 } from "@/constants/general";
 import { InvoiceListData } from "@/models/Invoice";
-import { INVOICE_DETAIL, INVOICE_FILTER } from "@/navigation/ScreenNames";
-
+import {
+    INVOICE_DETAIL,
+    INVOICE_FILTER,
+    INVOICE_LIST
+} from "@/navigation/ScreenNames";
 import {
     setErrorMessage,
     setInvoceData,
@@ -35,6 +38,7 @@ import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const styles = StyleSheet.create({
     container: {
@@ -159,6 +163,10 @@ function InvoiceList() {
             }
         }, [invoiceData?.search, invoiceData?.filter])
     );
+
+    React.useEffect(() => {
+        crashlytics().log(INVOICE_LIST);
+    }, []);
 
     const renderShimmerInvoiceList = () => (
         <View style={styles.shimmer}>

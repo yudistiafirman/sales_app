@@ -150,12 +150,12 @@ export default function CustomerDetail() {
 
     useFocusEffect(
         React.useCallback(() => {
-            crashlytics().log(CUSTOMER_DETAIL);
             getCustomerDetail();
         }, [])
     );
 
     useEffect(() => {
+        crashlytics().log(CUSTOMER_DETAIL);
         DeviceEventEmitter.addListener(
             "getCoordinateFromCustomerDetail",
             (data) => {

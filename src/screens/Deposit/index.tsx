@@ -33,6 +33,7 @@ import { CreatePayment } from "@/models/CreatePayment";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { postPayment } from "@/actions/FinanceActions";
 import { RootState } from "@/redux/store";
+import crashlytics from "@react-native-firebase/crashlytics";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -220,6 +221,7 @@ function Deposit() {
     );
 
     React.useEffect(() => {
+        crashlytics().log(CREATE_DEPOSIT);
         stepHandler(values, setStepsDone);
     }, [values]);
 

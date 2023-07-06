@@ -20,10 +20,15 @@ import {
 import SelectPurchaseOrderData from "@/components/templates/SelectPurchaseOrder";
 import { colors, fonts, layout } from "@/constants";
 import { CreateScheduleContext } from "@/context/CreateScheduleContext";
-import { CAMERA, CREATE_DEPOSIT } from "@/navigation/ScreenNames";
+import {
+    CAMERA,
+    CREATE_DEPOSIT,
+    CREATE_SCHEDULE
+} from "@/navigation/ScreenNames";
 import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { resScale } from "@/utils";
 import formatCurrency from "@/utils/formatCurrency";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -98,6 +103,10 @@ export default function FirstStep() {
         }
         setExpandData(newExpandsetExpandData);
     };
+
+    React.useEffect(() => {
+        crashlytics().log(`${CREATE_SCHEDULE}-Step1`);
+    }, []);
 
     return (
         <SafeAreaView style={style.flexFull}>

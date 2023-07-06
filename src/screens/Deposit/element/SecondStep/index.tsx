@@ -23,6 +23,8 @@ import font from "@/constants/fonts";
 import { CreateDepositContext } from "@/context/CreateDepositContext";
 import { resScale } from "@/utils";
 import formatCurrency from "@/utils/formatCurrency";
+import { CREATE_DEPOSIT } from "@/navigation/ScreenNames";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -118,6 +120,10 @@ export default function SecondStep() {
         }
         setExpandData(newExpandedData);
     };
+
+    React.useEffect(() => {
+        crashlytics().log(`${CREATE_DEPOSIT}-Step2`);
+    }, []);
 
     return (
         <SafeAreaView style={style.flexFull}>
