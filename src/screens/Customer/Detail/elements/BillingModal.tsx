@@ -27,6 +27,7 @@ import { useDispatch } from "react-redux";
 import Icons from "react-native-vector-icons/Feather";
 import { updateCustomerBillingAddress } from "@/actions/CommonActions";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
+import { safetyCheck } from "@/utils/generalFunc";
 
 const { height } = Dimensions.get("window");
 
@@ -102,7 +103,7 @@ export default function BillingModal({
             ? region?.formattedAddress
             : region?.line1;
         const idx = address && address?.split(",");
-        if (idx?.length >= 1) {
+        if (idx && idx?.length >= 1) {
             return idx?.[0];
         }
 
@@ -173,15 +174,15 @@ export default function BillingModal({
             } else {
                 body.postalId = region?.Postal;
             }
-            if (region?.longitude) {
+            if (safetyCheck(region?.longitude)) {
                 body.lon = region.longitude;
             } else {
-                body.lon = region?.lon;
+                body.lon = safetyCheck(region?.lon) ? region?.lon : undefined;
             }
-            if (region?.latitude) {
+            if (safetyCheck(region?.latitude)) {
                 body.lat = region.latitude;
             } else {
-                body.lat = region?.lat;
+                body.lat = safetyCheck(region?.lat) ? region?.lat : undefined;
             }
             if (region?.formattedAddress) {
                 body.line1 = region?.formattedAddress;
@@ -330,7 +331,7 @@ export default function BillingModal({
                         <BForm titleBold="500" inputs={inputsData} />
                     </ScrollView>
                     <BButtonPrimary
-                        disable={!isUpdate && region?.longitude === null}
+                        disable={!isUpdate && safetyCheck(region?.longitude)}
                         onPress={onPressAddAddress}
                         title={`${isUpdate ? "Edit" : "Tambah"} Alamat`}
                     />

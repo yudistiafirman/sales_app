@@ -3,8 +3,8 @@ import { customRequest } from "@/networking/request";
 import { GenericAbortSignal } from "axios";
 
 export const getLocationCoordinates = async (
-    longitude: number,
-    latitude: number,
+    longitude?: number,
+    latitude?: number,
     distance?: string,
     signal?: GenericAbortSignal
 ) =>

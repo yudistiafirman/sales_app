@@ -18,6 +18,7 @@ import {
 } from "@/navigation/ScreenNames";
 import { deleteImage } from "@/redux/reducers/cameraReducer";
 import { RootState } from "@/redux/store";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -116,6 +117,10 @@ export default function FirstStep() {
             stateOne?.deposit?.createdAt
         ])
     );
+
+    React.useEffect(() => {
+        crashlytics().log(`${CREATE_DEPOSIT}-Step1`);
+    }, []);
 
     return (
         <SafeAreaView style={style.flexFull}>

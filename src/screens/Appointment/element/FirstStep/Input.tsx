@@ -71,7 +71,7 @@ function Inputs() {
             ? appointmentState?.stepOne?.company?.customerData?.searchQuery
             : appointmentState?.stepOne?.individu?.customerData?.searchQuery;
 
-        if (searchValue?.length > 2) {
+        if (searchValue && searchValue?.length > 2) {
             fetchDebounce(searchValue);
         } else {
             dispatch(
@@ -128,7 +128,10 @@ function Inputs() {
             }
         ];
 
-        if (appointmentState?.stepOne?.customerType?.length > 0) {
+        if (
+            appointmentState?.stepOne?.customerType &&
+            appointmentState?.stepOne?.customerType?.length > 0
+        ) {
             const additionalInput: Input[] = [
                 {
                     label: "Nama Pelanggan",
@@ -184,8 +187,10 @@ function Inputs() {
                 {
                     label: "Nama Proyek",
                     isRequire: true,
-                    isError:
-                        appointmentState?.stepOne?.errorProject?.length > 0,
+                    isError: !!(
+                        appointmentState?.stepOne?.errorProject &&
+                        appointmentState?.stepOne?.errorProject?.length > 0
+                    ),
                     customerErrorMsg: appointmentState?.stepOne?.errorProject,
                     type: "textInput",
                     placeholder: "Masukan Nama Proyek",
@@ -204,7 +209,10 @@ function Inputs() {
                 {
                     label: "PIC",
                     isRequire: true,
-                    isError: appointmentState?.stepOne?.errorPics?.length > 0,
+                    isError: !!(
+                        appointmentState?.stepOne?.errorPics &&
+                        appointmentState?.stepOne?.errorPics?.length > 0
+                    ),
                     customerErrorMsg: appointmentState?.stepOne?.errorPics,
                     type: "PIC",
                     value: isCompany

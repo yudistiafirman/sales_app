@@ -8,6 +8,7 @@ import { visitationDataType } from "@/interfaces";
 import { Text } from "react-native-paper";
 import BSpacer from "@/components/atoms/BSpacer";
 import BButtonPrimary from "@/components/atoms/BButtonPrimary";
+import { safetyCheck } from "@/utils/generalFunc";
 import Unit from "./elements/Unit";
 import HighlightText from "../../atoms/BHighlightText";
 import PillNames from "./elements/PillNames";
@@ -174,8 +175,8 @@ export default function BVisitationCard({
                     {iconRender(isRenderIcon, customIcon)}
                 </View>
             </TouchableOpacity>
-            {item?.lonlat?.latitude &&
-                item?.lonlat?.longitude &&
+            {safetyCheck(item?.lonlat?.latitude) &&
+                safetyCheck(item?.lonlat?.longitude) &&
                 actionButton !== null && (
                     <View style={style.location}>
                         <BButtonPrimary

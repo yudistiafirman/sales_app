@@ -228,7 +228,7 @@ function SecondStep({ openBottomSheet }: IProps) {
                     const picsValue = isCompany
                         ? visitationData.company.pics
                         : visitationData.individu.pics;
-                    const newPicList = picsValue.map((el, _index) => ({
+                    const newPicList = picsValue?.map((el, _index) => ({
                         ...el,
                         isSelected: _index === index
                     }));

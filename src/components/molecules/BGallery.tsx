@@ -129,14 +129,15 @@ export default function BGallery({
                         />
                     </TouchableOpacity>
                 )}
-                {item?.attachType && (
-                    <View style={style.attachType}>
-                        <BSpacer size="verySmall" />
-                        <BText bold="300" sizeInNumber={10}>
-                            {item?.attachType}
-                        </BText>
-                    </View>
-                )}
+                {item?.attachType !== undefined &&
+                    item?.attachType !== null && (
+                        <View style={style.attachType}>
+                            <BSpacer size="verySmall" />
+                            <BText bold="300" sizeInNumber={10}>
+                                {item?.attachType}
+                            </BText>
+                        </View>
+                    )}
             </View>
         ),
         []

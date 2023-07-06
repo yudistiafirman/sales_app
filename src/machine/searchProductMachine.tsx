@@ -162,6 +162,7 @@ const searchProductMachine =
                         chipPosition: "right"
                     }));
                     const selectedCategory =
+                        _context?.selectedCategories &&
                         _context?.selectedCategories?.length > 0
                             ? _context?.selectedCategories
                             : newCategoriesData[0]?.title;
@@ -201,7 +202,7 @@ const searchProductMachine =
             },
             guards: {
                 searchValueLengthAccepted: (_context, event) =>
-                    event?.value?.length > 2
+                    !!(event?.value && event?.value?.length > 2)
             },
             services: {
                 getCategoriesData: async (context) => {
@@ -229,9 +230,9 @@ const searchProductMachine =
                             batchingPlantId
                         } = context;
                         const filteredValue = searchValue
-                            .split("")
-                            .filter((char) => /^[A-Za-z0-9]*$/.test(char))
-                            .join("");
+                            ?.split("")
+                            ?.filter((char) => /^[A-Za-z0-9]*$/.test(char))
+                            ?.join("");
                         const response = await getAllBrikProducts(
                             page,
                             size,

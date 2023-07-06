@@ -61,6 +61,7 @@ import {
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasLocationPermission } from "@/utils/permissions";
+import { safetyCheck } from "@/utils/generalFunc";
 
 const styles = StyleSheet.create({
     parent: {
@@ -168,7 +169,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             hasLocationPermission().then((result) => {
                 if (result) {
                     getCurrentLocation().then((longlat) => {
-                        latlongResult = `${longlat?.latitude}, ${longlat?.longitude}`;
+                        latlongResult =
+                            safetyCheck(longlat?.latitude) &&
+                            safetyCheck(longlat?.longitude)
+                                ? `${longlat?.latitude}, ${longlat?.longitude}`
+                                : "";
                     });
                 }
             });

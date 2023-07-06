@@ -23,6 +23,7 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { hasLocationPermission } from "@/utils/permissions";
 import { layout } from "@/constants";
 import { RootState } from "@/redux/store";
+import { safetyCheck } from "@/utils/generalFunc";
 import LocationList from "./element/LocationList";
 import CurrentLocation from "./element/SearchAreaCurrentLocation";
 import SearchAreaStyles from "./styles";
@@ -57,11 +58,15 @@ function SearchAreaProject({ route }: { route: any }) {
                     };
 
                     if (typeof data?.lon === "string") {
-                        coordinate.longitude = Number(data?.lon || "0");
+                        coordinate.longitude = safetyCheck(data?.lon)
+                            ? Number(data?.lon)
+                            : undefined;
                     }
 
                     if (typeof data?.lat === "string") {
-                        coordinate.latitude = Number(data?.lat || "0");
+                        coordinate.latitude = safetyCheck(data?.lat)
+                            ? Number(data?.lat)
+                            : undefined;
                     }
                     if (
                         from === CREATE_VISITATION ||

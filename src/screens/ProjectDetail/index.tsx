@@ -86,7 +86,9 @@ export default function ProjectDetailPage() {
     );
     const [projectExisting, setExistingProject] = useState(null);
     const dataNotLoadedYet = JSON.stringify(customerData) === "{}";
-    const updateAddressProject = projectAddress?.length > 0;
+    const updateAddressProject = !!(
+        projectAddress && projectAddress?.length > 0
+    );
     const { isFromCustomerPage, projectId } = route.params;
 
     const getProjectDetail = useCallback(

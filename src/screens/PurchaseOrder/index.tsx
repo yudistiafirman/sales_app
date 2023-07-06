@@ -20,6 +20,7 @@ import { useKeyboardActive } from "@/hooks";
 import { PO, TAB_ROOT } from "@/navigation/ScreenNames";
 import { AppDispatch, RootState } from "@/redux/store";
 import { BatchingPlant } from "@/models/BatchingPlant";
+import crashlytics from "@react-native-firebase/crashlytics";
 import DetailProduk from "./element/ProductDetail";
 import UploadFiles from "./element/PaymentDetail";
 import CreatePo from "./element/CreatePo";
@@ -84,8 +85,10 @@ function PurchaseOrder() {
                 return JSON.stringify(choosenSphDataFromModal) === "{}";
             }
             return (
+                !poNumber ||
                 poNumber?.length === 0 ||
                 JSON.stringify(choosenSphDataFromModal) === "{}" ||
+                !poImages ||
                 poImages?.length <= 1
             );
         }
@@ -93,7 +96,10 @@ function PurchaseOrder() {
             return false;
         }
         const hasNoQuantityMultiProducts = selectedProducts?.filter(
-            (v) => v?.quantity?.length === 0 || v?.quantity[0] === "0"
+            (v) =>
+                !v?.quantity ||
+                v?.quantity?.length === 0 ||
+                v?.quantity[0] === "0"
         );
         return (
             (hasNoQuantityMultiProducts &&
@@ -196,6 +202,10 @@ function PurchaseOrder() {
     const selectedBPBadges = (selectedBP: BatchingPlant, title: string) => (
         <BSelectedBPBadges selectedBP={selectedBP} title={title} alignLeft />
     );
+
+    React.useEffect(() => {
+        crashlytics().log(PO);
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {

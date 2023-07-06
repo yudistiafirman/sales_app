@@ -37,6 +37,7 @@ import {
     StepOne,
     toggleModalPics
 } from "@/redux/reducers/appointmentReducer";
+import { safetyCheck } from "@/utils/generalFunc";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -79,9 +80,11 @@ export default function Appointment() {
     } = appointmentState;
     const customerType =
         stepOne?.customerType === "company" ? "company" : "individu";
-    const btnShown =
+    const btnShown = !!(
         (!searchQuery || searchQuery?.length === 0) &&
-        stepOne?.customerType?.length > 0;
+        stepOne?.customerType &&
+        stepOne?.customerType?.length > 0
+    );
     const labels = ["Data Pelanggan", "Tanggal Kunjungan"];
     const inCustomerDataStep = step === 0;
     const inVisitationDateStep = step === 1;
@@ -194,11 +197,11 @@ export default function Appointment() {
                 payload.project.location.formattedAddress =
                     stepOne[customerType]?.locationAddress?.formattedAddress;
             }
-            if (stepOne[customerType]?.locationAddress?.lon !== undefined) {
+            if (safetyCheck(stepOne[customerType]?.locationAddress?.lon)) {
                 payload.project.location.lon =
                     stepOne[customerType]?.locationAddress?.lon;
             }
-            if (stepOne[customerType]?.locationAddress?.lat !== undefined) {
+            if (safetyCheck(stepOne[customerType]?.locationAddress?.lat)) {
                 payload.project.location.lat =
                     stepOne[customerType]?.locationAddress?.lat;
             }
@@ -314,6 +317,7 @@ export default function Appointment() {
 
         if (customerTypeCondition === "company") {
             return (
+                selectedCompanyCustomerCondition &&
                 selectedCompanyCustomerCondition?.length > 0 &&
                 !!projectNameConditionCompany &&
                 picCompany &&
@@ -323,7 +327,9 @@ export default function Appointment() {
         if (customerTypeCondition === "individu") {
             return (
                 !!projectNameConditionIndividu &&
+                picIndividu &&
                 picIndividu?.length > 0 &&
+                selectedIndividuCustomerCondition &&
                 selectedIndividuCustomerCondition?.length > 0
             );
         }

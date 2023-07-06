@@ -84,7 +84,9 @@ export default function SelectedPOModal({
     React.useEffect(() => {
         const listData =
             poData?.listData && dataToGet === "SCHEDULEDATA"
-                ? poData?.listData?.filter((v) => v?.SaleOrders?.length > 0)
+                ? poData?.listData?.filter(
+                      (v) => v?.SaleOrders && v?.SaleOrders?.length > 0
+                  )
                 : poData?.listData;
         setSphData(listData);
     }, [poData?.listData]);
@@ -126,12 +128,12 @@ export default function SelectedPOModal({
     };
 
     const onSaveSelectedPo = () => {
-        if (sphData?.length === 1) {
+        if (sphData && sphData?.length === 1) {
             onPressCompleted(sphData);
             onCloseSelectedPoModal();
         } else {
             const selectedSphData = sphData?.filter((v) => v?.isSelected);
-            if (selectedSphData?.length > 0) {
+            if (selectedSphData && selectedSphData?.length > 0) {
                 onPressCompleted(selectedSphData);
                 onCloseSelectedPoModal();
             } else {

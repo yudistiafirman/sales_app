@@ -107,7 +107,7 @@ function SearchingCustomer() {
             {
                 key: "first",
                 title: "Proyek",
-                totalItems: projects?.length,
+                totalItems: projects ? projects?.length : 0,
                 chipPosition: "right"
             }
         ],

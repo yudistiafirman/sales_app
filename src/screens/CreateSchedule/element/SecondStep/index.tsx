@@ -15,6 +15,8 @@ import { METHOD_LIST } from "@/constants/dropdown";
 import { RadioButton } from "react-native-paper";
 import moment from "moment";
 import { SalesOrdersData } from "@/interfaces/SelectConfirmedPO";
+import { CREATE_SCHEDULE } from "@/navigation/ScreenNames";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -215,6 +217,10 @@ export default function SecondStep() {
 
         return total;
     };
+
+    React.useEffect(() => {
+        crashlytics().log(`${CREATE_SCHEDULE}-Step2`);
+    }, []);
 
     const getDisplayName = (salesOrder: SalesOrdersData) =>
         // BE bugs -> response category.`parent` should be `Parent`

@@ -155,7 +155,7 @@ export default function FourthStep() {
     useEffect(() => {
         crashlytics().log(`${SPH}-Step4`);
 
-        if (productsRedux?.length > 0) {
+        if (productsRedux && productsRedux?.length > 0) {
             setChosenProducts(productsRedux);
         }
         DeviceEventEmitter.addListener("event.testEvent", getProduct);

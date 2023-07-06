@@ -37,6 +37,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import cbd from "@/assets/icon/Visitation/cbd.png";
 import credit from "@/assets/icon/Visitation/cbd.png";
+import { safetyCheck } from "@/utils/generalFunc";
 import ProductDetailModal from "./ProductDetailModal";
 import ProductChip from "./ProductChip";
 
@@ -313,17 +314,15 @@ function ThirdStep() {
                 onPress={() => {
                     const coordinate = {
                         longitude:
+                            safetyCheck(visitationData?.locationAddress?.lon) &&
                             visitationData?.locationAddress?.lon !== 0
                                 ? Number(visitationData?.locationAddress?.lon)
-                                : Number(
-                                      visitationData?.createdLocation?.lon || 0
-                                  ),
+                                : 0,
                         latitude:
+                            safetyCheck(visitationData?.locationAddress?.lat) &&
                             visitationData?.locationAddress?.lat !== 0
                                 ? Number(visitationData?.locationAddress?.lat)
-                                : Number(
-                                      visitationData?.createdLocation?.lat || 0
-                                  )
+                                : 0
                     };
                     navigation.navigate(ALL_PRODUCT, {
                         coordinate,
@@ -370,7 +369,7 @@ function ThirdStep() {
                 />
             </View>
             <BSpacer size="extraSmall" />
-            {visitationData?.products?.length ? (
+            {visitationData?.products && visitationData?.products?.length ? (
                 <>
                     <ScrollView
                         horizontal

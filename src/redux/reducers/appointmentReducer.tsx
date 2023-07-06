@@ -490,7 +490,7 @@ export const appointmentSlice = createSlice({
                     ],
                     customerData: {
                         ...state.stepOne[
-                            state.stepOne.customerType ===  COMPANY.toLowerCase()
+                            state.stepOne.customerType === COMPANY.toLowerCase()
                                 ? "company"
                                 : "individu"
                         ].customerData,
@@ -500,13 +500,18 @@ export const appointmentSlice = createSlice({
             }
         }));
         builder.addCase(getAllCustomer.fulfilled, (state, { payload }) => {
-            const items = payload.map((v) => ({
-                id: v.id,
-                title: v.displayName,
-                chipTitle: v.type === COMPANY.toLowerCase() ? "Perusahaan" : "Individu",
+            const items = payload?.map((v) => ({
+                id: v?.id,
+                title: v?.displayName,
+                chipTitle:
+                    v?.type === COMPANY.toLowerCase()
+                        ? "Perusahaan"
+                        : "Individu",
                 subtitle:
-                    v.npwp.length > 0 ? `npwp : ${v.npwp}` : `nik: ${v.nik}`,
-                paymentType: v.paymentType
+                    v?.npwp && v?.npwp?.length > 0
+                        ? `npwp : ${v?.npwp}`
+                        : `nik: ${v?.nik}`,
+                paymentType: v?.paymentType
             }));
 
             const selectedCustomerType =
@@ -533,12 +538,12 @@ export const appointmentSlice = createSlice({
                                               ].customerData.searchQuery,
                                               subtitle:
                                                   state.stepOne.customerType ===
-                                                 COMPANY.toLowerCase()
+                                                  COMPANY.toLowerCase()
                                                       ? "npwp : -"
                                                       : "nik : -",
                                               chipTitle:
                                                   state.stepOne.customerType ===
-                                                 COMPANY.toLowerCase()
+                                                  COMPANY.toLowerCase()
                                                       ? "Perusahaan"
                                                       : "Individu",
                                               paymentType: ""

@@ -23,6 +23,8 @@ import font from "@/constants/fonts";
 import { CreateDepositContext } from "@/context/CreateDepositContext";
 import { resScale } from "@/utils";
 import formatCurrency from "@/utils/formatCurrency";
+import { CREATE_DEPOSIT } from "@/navigation/ScreenNames";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -77,7 +79,10 @@ export default function SecondStep() {
             updateValueOnstep(
                 "stepTwo",
                 "selectedSaleOrder",
-                data?.length > 0 && data[0]?.SaleOrders?.length > 0
+                data &&
+                    data?.length > 0 &&
+                    data[0]?.SaleOrders &&
+                    data[0]?.SaleOrders?.length > 0
                     ? data[0]?.SaleOrders[0]
                     : undefined
             );
@@ -118,6 +123,10 @@ export default function SecondStep() {
         }
         setExpandData(newExpandedData);
     };
+
+    React.useEffect(() => {
+        crashlytics().log(`${CREATE_DEPOSIT}-Step2`);
+    }, []);
 
     return (
         <SafeAreaView style={style.flexFull}>

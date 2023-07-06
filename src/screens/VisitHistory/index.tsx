@@ -9,6 +9,8 @@ import { StyleSheet, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { VISIT_HISTORY } from "@/navigation/ScreenNames";
+import crashlytics from "@react-native-firebase/crashlytics";
 import HistoryDetails from "./elements/HistoryDetails";
 import HistoryHeader from "./elements/HistoryHeader";
 import LocationText from "./elements/LocationText";
@@ -68,6 +70,10 @@ function VisitHistory() {
             selectedBP: selectedBatchingPlant
         });
     };
+
+    React.useEffect(() => {
+        crashlytics().log(VISIT_HISTORY);
+    }, []);
 
     const {
         selectedVisitationByIdx,

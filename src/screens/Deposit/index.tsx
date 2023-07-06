@@ -33,6 +33,7 @@ import { CreatePayment } from "@/models/CreatePayment";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { postPayment } from "@/actions/FinanceActions";
 import { RootState } from "@/redux/store";
+import crashlytics from "@react-native-firebase/crashlytics";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -60,13 +61,13 @@ function stepHandler(
     ) {
         setStepsDone((curr) => [...new Set(curr), 0]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 0));
+        setStepsDone((curr) => curr?.filter((num) => num !== 0));
     }
 
     if (stepTwo?.companyName && stepTwo?.purchaseOrders && existingProjectID) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
-        setStepsDone((curr) => curr.filter((num) => num !== 1));
+        setStepsDone((curr) => curr?.filter((num) => num !== 1));
     }
 }
 
@@ -97,7 +98,7 @@ function Deposit() {
                 );
                 const photoFiles = values?.stepOne?.deposit?.picts
                     ?.filter((v) => v?.file !== null)
-                    .map((photo) => ({
+                    ?.map((photo) => ({
                         ...photo?.file,
                         uri: photo?.file?.uri?.replace("file:", "file://")
                     }));
@@ -220,6 +221,7 @@ function Deposit() {
     );
 
     React.useEffect(() => {
+        crashlytics().log(CREATE_DEPOSIT);
         stepHandler(values, setStepsDone);
     }, [values]);
 

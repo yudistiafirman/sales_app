@@ -26,13 +26,13 @@ import {
     formatRawDateToMonthDateYearWithSlashed,
     translatePaymentStatus
 } from "@/utils/generalFunc";
-
 import formatCurrency from "@/utils/formatCurrency";
 import { InvoiceDetailTypeData } from "@/models/Invoice";
-import { CUSTOMER_DETAIL } from "@/navigation/ScreenNames";
+import { CUSTOMER_DETAIL, INVOICE_DETAIL } from "@/navigation/ScreenNames";
 import { resScale } from "@/utils";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { RootState } from "@/redux/store";
+import crashlytics from "@react-native-firebase/crashlytics";
 import InvoiceDetailLoader from "./InvoiceDetailLoader";
 
 const styles = StyleSheet.create({
@@ -251,6 +251,7 @@ function InvoiceDetail() {
     };
 
     useEffect(() => {
+        crashlytics().log(INVOICE_DETAIL);
         getOneInvoiceData();
     }, []);
 
