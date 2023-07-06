@@ -324,6 +324,7 @@ export default function Appointment() {
         if (customerTypeCondition === "company") {
             return (
                 !!projectNameConditionCompany &&
+                picCompany &&
                 picCompany?.length > 0 &&
                 ((selectedCompanyCustomerCondition &&
                     selectedCompanyCustomerCondition?.length > 0) ||

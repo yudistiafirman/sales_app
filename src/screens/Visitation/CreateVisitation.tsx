@@ -109,7 +109,9 @@ function stepHandler(
     if (
         (state[selectedCustomerType]?.selectedCustomer?.title &&
             state[selectedCustomerType]?.selectedCustomer?.title?.length > 0) ||
-        (state[selectedCustomerType]?.customerData?.searchQuery?.length > 2 &&
+        (state[selectedCustomerType]?.customerData?.searchQuery &&
+            state[selectedCustomerType]?.customerData?.searchQuery?.length >
+                2 &&
             state[selectedCustomerType]?.projectName &&
             selectedPic &&
             selectedPic?.length > 0)
