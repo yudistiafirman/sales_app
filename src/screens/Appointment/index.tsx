@@ -231,6 +231,9 @@ export default function Appointment() {
             if (stepOne[customerType]?.selectedCustomer?.title) {
                 payload.customer.displayName =
                     stepOne[customerType].selectedCustomer.title;
+            } else {
+                payload.customer.displayName =
+                    stepOne[customerType].customerData.searchQuery;
             }
             if (stepOne[customerType]?.selectedCustomer?.paymentType) {
                 payload.customer.paymentType =
@@ -305,6 +308,9 @@ export default function Appointment() {
             stepOne?.company?.selectedCustomer?.title;
         const selectedIndividuCustomerCondition =
             stepOne?.individu?.selectedCustomer?.title;
+        const searchQueryIndividu =
+            stepOne?.individu?.customerData?.searchQuery;
+        const searchQueryCustomer = stepOne?.company?.customerData?.searchQuery;
         const projectNameConditionIndividu = stepOne?.individu?.name;
         const projectNameConditionCompany = stepOne?.company?.name;
         const picIndividu = stepOne?.individu?.Pics
@@ -314,17 +320,18 @@ export default function Appointment() {
 
         if (customerTypeCondition === "company") {
             return (
-                selectedCompanyCustomerCondition?.length > 0 &&
                 !!projectNameConditionCompany &&
-                picCompany &&
-                picCompany?.length > 0
+                picCompany?.length > 0 &&
+                (selectedCompanyCustomerCondition?.length > 0 ||
+                    searchQueryCustomer?.length > 2)
             );
         }
         if (customerTypeCondition === "individu") {
             return (
                 !!projectNameConditionIndividu &&
                 picIndividu?.length > 0 &&
-                selectedIndividuCustomerCondition?.length > 0
+                (selectedIndividuCustomerCondition?.length > 0 ||
+                    searchQueryIndividu?.length > 2)
             );
         }
 

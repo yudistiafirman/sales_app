@@ -490,7 +490,7 @@ export const appointmentSlice = createSlice({
                     ],
                     customerData: {
                         ...state.stepOne[
-                            state.stepOne.customerType ===  COMPANY.toLowerCase()
+                            state.stepOne.customerType === COMPANY.toLowerCase()
                                 ? "company"
                                 : "individu"
                         ].customerData,
@@ -503,7 +503,10 @@ export const appointmentSlice = createSlice({
             const items = payload.map((v) => ({
                 id: v.id,
                 title: v.displayName,
-                chipTitle: v.type === COMPANY.toLowerCase() ? "Perusahaan" : "Individu",
+                chipTitle:
+                    v.type === COMPANY.toLowerCase()
+                        ? "Perusahaan"
+                        : "Individu",
                 subtitle:
                     v.npwp.length > 0 ? `npwp : ${v.npwp}` : `nik: ${v.nik}`,
                 paymentType: v.paymentType
@@ -522,28 +525,7 @@ export const appointmentSlice = createSlice({
                         ...state.stepOne[selectedCustomerType],
                         customerData: {
                             ...state.stepOne[selectedCustomerType].customerData,
-                            items:
-                                items.length > 0
-                                    ? items
-                                    : [
-                                          {
-                                              id: null,
-                                              title: state.stepOne[
-                                                  selectedCustomerType
-                                              ].customerData.searchQuery,
-                                              subtitle:
-                                                  state.stepOne.customerType ===
-                                                 COMPANY.toLowerCase()
-                                                      ? "npwp : -"
-                                                      : "nik : -",
-                                              chipTitle:
-                                                  state.stepOne.customerType ===
-                                                 COMPANY.toLowerCase()
-                                                      ? "Perusahaan"
-                                                      : "Individu",
-                                              paymentType: ""
-                                          }
-                                      ],
+                            items,
                             loading: "idle"
                         }
                     }

@@ -153,6 +153,14 @@ function SecondStep({ openBottomSheet }: IProps) {
                 isError: false,
                 type: "autocomplete",
                 onChange: onChangeText,
+
+                isError:
+                    visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery?.length > 0 &&
+                    visitationData[selectedCustomerType]?.customerData
+                        ?.searchQuery?.length < 3,
+                customerErrorMsg:
+                    "Mohon untuk tidak menggunakan nama singkatan",
                 value: isCompany
                     ? visitationData.company.customerData.searchQuery
                     : visitationData.individu.customerData.searchQuery,
@@ -259,7 +267,6 @@ function SecondStep({ openBottomSheet }: IProps) {
             {!visitationData.isSearchProject && (
                 <KeyboardAvoidingView style={{ flex: 1 }} enabled>
                     <ScrollView
-                        nestedScrollEnabled
                         keyboardDismissMode="on-drag"
                         keyboardShouldPersistTaps="handled"
                         contentInsetAdjustmentBehavior="automatic"

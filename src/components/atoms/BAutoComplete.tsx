@@ -157,9 +157,7 @@ function BAutoComplete({
                 keyExtractor(item, index) {
                     return item.id;
                 },
-                ListEmptyComponent: loading
-                    ? renderLoading
-                    : renderEmptyComponent
+                ListEmptyComponent: loading ? renderLoading : null
             }}
             dataSet={itemSet}
             useFilter={false}

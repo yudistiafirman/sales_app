@@ -357,7 +357,11 @@ export const visitationSlice = createSlice({
             ...state,
             [actions.payload.customerType]: {
                 ...state[actions.payload.customerType],
-                selectedCustomer: actions.payload.value
+                selectedCustomer: actions.payload.value,
+                customerData: {
+                    ...state[actions.payload.customerType].customerData,
+                    loading: "idle"
+                }
             }
         }),
         updateDataVisitation: (
@@ -517,11 +521,7 @@ export const visitationSlice = createSlice({
         builder.addCase(getAllCustomer.fulfilled, (state, { payload }) => {
             const items = payload.map((v) => ({
                 id: v.id,
-                title: v.displayName,
-                chipTitle: v.type === COMPANY ? "Perusahaan" : "Individu",
-                subtitle:
-                    v.npwp.length > 0 ? `npwp : ${v.npwp}` : `nik: ${v.nik}`,
-                paymentType: v.paymentType
+                title: v.displayName
             }));
 
             const selectedCustomerType =
@@ -533,25 +533,7 @@ export const visitationSlice = createSlice({
                     ...state[selectedCustomerType],
                     customerData: {
                         ...state[selectedCustomerType].customerData,
-                        items:
-                            items.length > 0
-                                ? items
-                                : [
-                                      {
-                                          id: null,
-                                          title: state[selectedCustomerType]
-                                              .customerData.searchQuery,
-                                          subtitle:
-                                              state.customerType === "COMPANY"
-                                                  ? "npwp : -"
-                                                  : "nik : -",
-                                          chipTitle:
-                                              state.customerType === "COMPANY"
-                                                  ? "Perusahaan"
-                                                  : "Individu",
-                                          paymentType: ""
-                                      }
-                                  ],
+                        items,
                         loading: "idle"
                     }
                 }
