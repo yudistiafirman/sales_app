@@ -156,7 +156,7 @@ function SecondStep({ openBottomSheet }: IProps) {
 
                 isError:
                     visitationData[selectedCustomerType]?.customerData
-                        ?.searchQuery?.length > 0 &&
+                        ?.searchQuery?.length > 1 &&
                     visitationData[selectedCustomerType]?.customerData
                         ?.searchQuery?.length < 3,
                 customerErrorMsg:
