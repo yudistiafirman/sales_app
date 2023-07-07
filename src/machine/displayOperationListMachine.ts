@@ -25,6 +25,7 @@ const displayOperationListMachine = createMachine(
                 totalPage: number;
                 userType: string;
                 tabActive: "left" | "right";
+                searchQuery: string;
             },
             services: {} as {
                 fetchOperationListData: {
@@ -64,6 +65,15 @@ const displayOperationListMachine = createMachine(
                       };
                   }
                 | {
+                      type: "onSearch";
+                      value: {
+                          payload: string;
+                          tabActive: string;
+                          searchKeyword: string;
+                      };
+                      selectedBP: BatchingPlant;
+                  }
+                | {
                       type: "onRefreshList";
                       value: {
                           payload: string;
@@ -85,7 +95,8 @@ const displayOperationListMachine = createMachine(
             size: 10,
             totalPage: 0,
             userType: "",
-            tabActive: "left"
+            tabActive: "left",
+            searchQuery: ""
         },
 
         states: {
@@ -122,6 +133,10 @@ const displayOperationListMachine = createMachine(
 
             listLoaded: {
                 on: {
+                    onSearch: {
+                        target: "fetchingListData",
+                        actions: "handleSearch"
+                    },
                     onRefreshList: {
                         target: "fetchingListData",
                         actions: "handleRefresh"
@@ -154,53 +169,59 @@ const displayOperationListMachine = createMachine(
         services: {
             fetchOperationListData: async (context, event) => {
                 try {
-                    let response: any;
-                    switch (context?.userType) {
-                        case EntryType.SECURITY:
-                            if (context?.tabActive === "left") {
-                                response = await getAllDeliveryOrders(
-                                    "WB_OUT",
-                                    context?.size?.toString(),
-                                    context?.page?.toString(),
-                                    context?.batchingPlantId
-                                );
-                            } else {
-                                response = await getAllDeliveryOrders(
-                                    "RECEIVED",
-                                    context?.size?.toString(),
-                                    context?.page?.toString(),
-                                    context?.batchingPlantId
-                                );
-                            }
-                            break;
-                        case EntryType.WB:
-                            if (context?.tabActive === "left") {
-                                response = await getAllDeliveryOrders(
-                                    "SUBMITTED",
-                                    context?.size?.toString(),
-                                    context?.page?.toString(),
-                                    context?.batchingPlantId
-                                );
-                            } else {
-                                response = await getAllDeliveryOrders(
-                                    "AWAIT_WB_IN",
-                                    context?.size?.toString(),
-                                    context?.page?.toString(),
-                                    context?.batchingPlantId
-                                );
-                            }
-                            break;
-                        case EntryType.DRIVER:
-                            response = await getAllDeliveryOrders(
-                                ["ON_DELIVERY", "ARRIVED"],
-                                context?.size?.toString(),
-                                context?.page?.toString(),
-                                context?.batchingPlantId
-                            );
-                            break;
-                        default:
-                            break;
-                    }
+                    const response = await getAllDeliveryOrders(
+                        context.searchQuery,
+                        undefined,
+                        context?.size?.toString(),
+                        context?.page?.toString(),
+                        context?.batchingPlantId
+                    );
+                    // switch (context?.userType) {
+                    //     case EntryType.SECURITY:
+                    //         if (context?.tabActive === "left") {
+                    //             response = await getAllDeliveryOrders(
+                    //                 "WB_OUT",
+                    //                 context?.size?.toString(),
+                    //                 context?.page?.toString(),
+                    //                 context?.batchingPlantId
+                    //             );
+                    //         } else {
+                    //             response = await getAllDeliveryOrders(
+                    //                 "RECEIVED",
+                    //                 context?.size?.toString(),
+                    //                 context?.page?.toString(),
+                    //                 context?.batchingPlantId
+                    //             );
+                    //         }
+                    //         break;
+                    //     case EntryType.WB:
+                    //         if (context?.tabActive === "left") {
+                    //             response = await getAllDeliveryOrders(
+                    //                 "SUBMITTED",
+                    //                 context?.size?.toString(),
+                    //                 context?.page?.toString(),
+                    //                 context?.batchingPlantId
+                    //             );
+                    //         } else {
+                    //             response = await getAllDeliveryOrders(
+                    //                 "AWAIT_WB_IN",
+                    //                 context?.size?.toString(),
+                    //                 context?.page?.toString(),
+                    //                 context?.batchingPlantId
+                    //             );
+                    //         }
+                    //         break;
+                    //     case EntryType.DRIVER:
+                    //         response = await getAllDeliveryOrders(
+                    //             ["ON_DELIVERY", "ARRIVED"],
+                    //             context?.size?.toString(),
+                    //             context?.page?.toString(),
+                    //             context?.batchingPlantId
+                    //         );
+                    //         break;
+                    //     default:
+                    //         break;
+                    // }
 
                     return response?.data;
                 } catch (error) {
@@ -232,13 +253,23 @@ const displayOperationListMachine = createMachine(
                 isLoadMore: false,
                 isRefreshing: false
             })),
+            handleSearch: assign((context, event) => ({
+                page: 1,
+                isRefreshing: true,
+                operationListData: [],
+                userType: event?.payload,
+                tabActive: event?.tabActive,
+                batchingPlantId: event?.selectedBP?.id,
+                searchQuery: event?.searchKeyword
+            })),
             handleRefresh: assign((context, event) => ({
                 page: 1,
                 isRefreshing: true,
                 operationListData: [],
                 userType: event?.payload,
                 tabActive: event?.tabActive,
-                batchingPlantId: event?.selectedBP?.id
+                batchingPlantId: event?.selectedBP?.id,
+                searchQuery: ""
             })),
             handleEndReached: assign((context, event) => ({
                 page: (context?.page || 0) + 1,
@@ -263,7 +294,8 @@ const displayOperationListMachine = createMachine(
                 isLoading: false,
                 isLoadMore: false,
                 operationListData: [],
-                batchingPlantId: event?.selectedBP?.id
+                batchingPlantId: event?.selectedBP?.id,
+                searchQuery: ""
             }))
         }
     }

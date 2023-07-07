@@ -30,6 +30,7 @@ export interface Typegen0 {
         assignUserDataToContext: "assignUserData";
         handleEndReached: "onEndReached";
         handleRefresh: "onRefreshList";
+        handleSearch: "onSearch";
         resetProduct: "backToGetDO";
     };
     eventsCausingDelays: {};
@@ -42,6 +43,7 @@ export interface Typegen0 {
             | "backToGetDO"
             | "onEndReached"
             | "onRefreshList"
+            | "onSearch"
             | "retryGettingList";
     };
     matchesStates:
