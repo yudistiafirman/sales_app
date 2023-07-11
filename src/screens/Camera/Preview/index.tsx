@@ -238,12 +238,24 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         file: LocalFileType | undefined
     ) => {
         const photoFilestoUpload: any[] = [];
-        photoFilestoUpload.push(file?.file.uri.replace("file:", "file://"));
+        const tempFile = { ...file?.file };
+        tempFile?.uri?.replace("file:", "file://");
+        photoFilestoUpload.push(tempFile);
+        const payload = {} as UpdateDeliverOrder;
 
-        let responseFiles;
-        if (photoFilestoUpload && photoFilestoUpload?.length > 0) {
-            responseFiles = await uploadFileImage(photoFilestoUpload, type);
-        }
+        const responseFile = await uploadFileImage(
+            photoFilestoUpload,
+            "Update Delivery Order"
+        );
+        const newFileData = responseFile?.data?.data?.map((v, i) => ({
+            fileId: v?.id,
+            type
+        }));
+        payload.doFiles = newFileData;
+        await updateDeliveryOrder(
+            payload,
+            operationData?.projectDetails?.deliveryOrderId
+        );
     };
 
     const savePhoto = () => {
@@ -371,46 +383,27 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
-                if (operationAddedStep === "DO") {
-                    uploadEachPhoto(securityDispatchFileType[0], localFile);
-                    navigation.navigate(SUBMIT_FORM, {
-                        operationType: EntryType.DISPATCH
-                    });
-                } else {
-                    switch (photoTitle) {
-                        case "DO":
-                            uploadEachPhoto(
-                                securityDispatchFileType[0],
-                                localFile
-                            );
-                            break;
-                        case "Driver":
-                            uploadEachPhoto(
-                                securityDispatchFileType[1],
-                                localFile
-                            );
-                            break;
-                        case "No Polisi TM":
-                            uploadEachPhoto(
-                                securityDispatchFileType[2],
-                                localFile
-                            );
-                            break;
-                        case "Segel":
-                            uploadEachPhoto(
-                                securityDispatchFileType[3],
-                                localFile
-                            );
-                            break;
-                        case "Kondom":
-                            uploadEachPhoto(
-                                securityDispatchFileType[4],
-                                localFile
-                            );
-                            break;
-                        default:
-                            break;
-                    }
+                switch (photoTitle) {
+                    case "DO":
+                        uploadEachPhoto(securityDispatchFileType[0], localFile);
+                        navigation.navigate(SUBMIT_FORM, {
+                            operationType: EntryType.DISPATCH
+                        });
+                        break;
+                    case "Driver":
+                        uploadEachPhoto(securityDispatchFileType[1], localFile);
+                        break;
+                    case "No Polisi TM":
+                        uploadEachPhoto(securityDispatchFileType[2], localFile);
+                        break;
+                    case "Segel":
+                        uploadEachPhoto(securityDispatchFileType[3], localFile);
+                        break;
+                    case "Kondom":
+                        uploadEachPhoto(securityDispatchFileType[4], localFile);
+                        break;
+                    default:
+                        break;
                 }
                 return;
             }
@@ -427,41 +420,37 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
-                if (operationAddedStep === "Tiba di lokasi") {
-                    uploadEachPhoto(driversFileType[0], localFile);
-                    onArrivedDriver();
-                    navigation.navigate(SUBMIT_FORM, {
-                        operationType: EntryType.DRIVER
-                    });
-                } else {
-                    switch (photoTitle) {
-                        case "Tiba di lokasi":
-                            uploadEachPhoto(driversFileType[0], localFile);
-                            break;
-                        case "Dalam gentong isi":
-                            uploadEachPhoto(driversFileType[1], localFile);
-                            break;
-                        case "Tuang beton":
-                            uploadEachPhoto(driversFileType[2], localFile);
-                            break;
-                        case "Cuci gentong":
-                            uploadEachPhoto(driversFileType[3], localFile);
-                            break;
-                        case "DO":
-                            uploadEachPhoto(driversFileType[4], localFile);
-                            break;
-                        case "Penerima":
-                            uploadEachPhoto(driversFileType[5], localFile);
-                            break;
-                        case "Penambahan air":
-                            uploadEachPhoto(driversFileType[6], localFile);
-                            break;
-                        case "Tambahan":
-                            uploadEachPhoto(driversFileType[7], localFile);
-                            break;
-                        default:
-                            break;
-                    }
+                switch (photoTitle) {
+                    case "Tiba di lokasi":
+                        uploadEachPhoto(driversFileType[0], localFile);
+                        onArrivedDriver();
+                        navigation.navigate(SUBMIT_FORM, {
+                            operationType: EntryType.DRIVER
+                        });
+                        break;
+                    case "Dalam gentong isi":
+                        uploadEachPhoto(driversFileType[1], localFile);
+                        break;
+                    case "Tuang beton":
+                        uploadEachPhoto(driversFileType[2], localFile);
+                        break;
+                    case "Cuci gentong":
+                        uploadEachPhoto(driversFileType[3], localFile);
+                        break;
+                    case "DO":
+                        uploadEachPhoto(driversFileType[4], localFile);
+                        break;
+                    case "Penerima":
+                        uploadEachPhoto(driversFileType[5], localFile);
+                        break;
+                    case "Penambahan air":
+                        uploadEachPhoto(driversFileType[6], localFile);
+                        break;
+                    case "Tambahan":
+                        uploadEachPhoto(driversFileType[7], localFile);
+                        break;
+                    default:
+                        break;
                 }
                 return;
             }
@@ -478,22 +467,18 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
-                if (operationAddedStep === "DO") {
-                    uploadEachPhoto(wbsInFileType[0], localFile);
-                    navigation.navigate(SUBMIT_FORM, {
-                        operationType: EntryType.IN
-                    });
-                } else {
-                    switch (photoTitle) {
-                        case "DO":
-                            uploadEachPhoto(wbsInFileType[0], localFile);
-                            break;
-                        case "Hasil":
-                            uploadEachPhoto(wbsInFileType[1], localFile);
-                            break;
-                        default:
-                            break;
-                    }
+                switch (photoTitle) {
+                    case "DO":
+                        uploadEachPhoto(wbsInFileType[0], localFile);
+                        navigation.navigate(SUBMIT_FORM, {
+                            operationType: EntryType.IN
+                        });
+                        break;
+                    case "Hasil":
+                        uploadEachPhoto(wbsInFileType[1], localFile);
+                        break;
+                    default:
+                        break;
                 }
                 return;
             }
@@ -510,22 +495,18 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
-                if (operationAddedStep === "DO") {
-                    uploadEachPhoto(wbsOutFileType[0], localFile);
-                    navigation.navigate(SUBMIT_FORM, {
-                        operationType: EntryType.OUT
-                    });
-                } else {
-                    switch (photoTitle) {
-                        case "DO":
-                            uploadEachPhoto(wbsOutFileType[0], localFile);
-                            break;
-                        case "Hasil":
-                            uploadEachPhoto(wbsOutFileType[1], localFile);
-                            break;
-                        default:
-                            break;
-                    }
+                switch (photoTitle) {
+                    case "DO":
+                        uploadEachPhoto(wbsOutFileType[0], localFile);
+                        navigation.navigate(SUBMIT_FORM, {
+                            operationType: EntryType.OUT
+                        });
+                        break;
+                    case "Hasil":
+                        uploadEachPhoto(wbsOutFileType[1], localFile);
+                        break;
+                    default:
+                        break;
                 }
                 return;
             }
@@ -542,28 +523,18 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
-                if (operationAddedStep === "DO") {
-                    uploadEachPhoto(securityReturnFileType[0], localFile);
-                    navigation.navigate(SUBMIT_FORM, {
-                        operationType: EntryType.RETURN
-                    });
-                } else {
-                    switch (photoTitle) {
-                        case "DO":
-                            uploadEachPhoto(
-                                securityReturnFileType[0],
-                                localFile
-                            );
-                            break;
-                        case "Kondisi TM":
-                            uploadEachPhoto(
-                                securityReturnFileType[1],
-                                localFile
-                            );
-                            break;
-                        default:
-                            break;
-                    }
+                switch (photoTitle) {
+                    case "DO":
+                        uploadEachPhoto(securityReturnFileType[0], localFile);
+                        navigation.navigate(SUBMIT_FORM, {
+                            operationType: EntryType.RETURN
+                        });
+                        break;
+                    case "Kondisi TM":
+                        uploadEachPhoto(securityReturnFileType[1], localFile);
+                        break;
+                    default:
+                        break;
                 }
                 return;
             }
