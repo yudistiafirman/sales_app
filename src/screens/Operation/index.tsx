@@ -11,7 +11,8 @@ import {
     CAMERA,
     LOCATION,
     OPERATION,
-    SUBMIT_FORM
+    SUBMIT_FORM,
+    driversFileName
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
@@ -113,22 +114,22 @@ function Operation() {
             dispatch(
                 setAllOperationPhoto({
                     file: [
-                        { file: null, attachType: "Tiba di lokasi" },
-                        { file: null, attachType: "Dalam gentong isi" },
-                        { file: null, attachType: "Tuang beton" },
-                        { file: null, attachType: "Cuci gentong" },
-                        { file: null, attachType: "DO" },
-                        { file: null, attachType: "Penerima" },
-                        { file: null, attachType: "Penambahan air" },
-                        { file: null, attachType: "Tambahan" }
+                        { file: null, attachType: driversFileName[0] },
+                        { file: null, attachType: driversFileName[1] },
+                        { file: null, attachType: driversFileName[2] },
+                        { file: null, attachType: driversFileName[3] },
+                        { file: null, attachType: driversFileName[4] },
+                        { file: null, attachType: driversFileName[5] },
+                        { file: null, attachType: driversFileName[6] },
+                        { file: null, attachType: driversFileName[7] }
                     ]
                 })
             );
             navigation.navigate(CAMERA, {
-                photoTitle: "Tiba di lokasi",
+                photoTitle: driversFileName[0],
                 closeButton: true,
                 navigateTo: EntryType.DRIVER,
-                operationAddedStep: "Tiba di lokasi"
+                operationAddedStep: driversFileName[0]
             });
         }
     };

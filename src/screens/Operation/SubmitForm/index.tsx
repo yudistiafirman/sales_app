@@ -31,10 +31,14 @@ import {
 import crashlytics from "@react-native-firebase/crashlytics";
 import {
     CAMERA,
-    GALLERY_OPERATION,
     SUBMIT_FORM,
     TAB_DISPATCH_TITLE,
-    TAB_RETURN_TITLE
+    TAB_RETURN_TITLE,
+    driversFileType,
+    securityDispatchFileType,
+    securityReturnFileType,
+    wbsInFileType,
+    wbsOutFileType
 } from "@/navigation/ScreenNames";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -44,15 +48,13 @@ import {
     onChangeInputValue,
     removeDriverPhoto,
     removeOperationPhoto,
-    resetOperationState,
-    setAllOperationPhoto
+    resetOperationState
 } from "@/redux/reducers/operationReducer";
 import { useKeyboardActive } from "@/hooks";
 import moment from "moment";
 import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { uploadFileImage } from "@/actions/CommonActions";
-import { OperationFileType } from "@/interfaces/Operation";
 import {
     updateDeliveryOrder,
     updateDeliveryOrderWeight
@@ -113,36 +115,6 @@ function SubmitForm() {
     const operationData = useSelector((state: RootState) => state.operation);
     const { keyboardVisible } = useKeyboardActive();
     const operationType = route?.params?.operationType;
-    const driversFileType = [
-        OperationFileType.DO_DRIVER_ARRIVE_PROJECT,
-        OperationFileType.DO_DRIVER_BNIB,
-        OperationFileType.DO_DRIVER_UNBOXING,
-        OperationFileType.DO_DRIVER_EMPTY,
-        OperationFileType.DO_DRIVER_DO,
-        OperationFileType.DO_DRIVER_RECEIPIENT,
-        OperationFileType.DO_DRIVER_WATER,
-        OperationFileType.DO_DRIVER_FINISH_PROJECT
-    ];
-    const wbsFileType = [
-        operationType === EntryType.OUT
-            ? OperationFileType.WB_OUT_DO
-            : OperationFileType.DO_WEIGHT_IN,
-        operationType === EntryType.OUT
-            ? OperationFileType.WB_OUT_RESULT
-            : OperationFileType.WEIGHT_IN
-    ];
-
-    const securityDispatchFileType = [
-        OperationFileType.DO_SECURITY,
-        OperationFileType.DO_DRIVER_SECURITY,
-        OperationFileType.DO_LICENSE_SECURITY,
-        OperationFileType.DO_SEAL_SECURITY,
-        OperationFileType.DO_KONDOM_SECURITY
-    ];
-    const securityReturnFileType = [
-        OperationFileType.DO_RETURN_SECURITY,
-        OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY
-    ];
 
     const securityFileType =
         operationType === EntryType.DISPATCH
@@ -326,7 +298,10 @@ function SubmitForm() {
                     const newFileData = responseFiles?.data?.data?.map(
                         (v, i) => ({
                             fileId: v?.id,
-                            type: wbsFileType[i]
+                            type:
+                                operationType === EntryType.OUT
+                                    ? wbsOutFileType[i]
+                                    : wbsInFileType[i]
                         })
                     );
                     payload.doFiles = newFileData;

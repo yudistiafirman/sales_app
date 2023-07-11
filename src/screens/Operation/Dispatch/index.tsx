@@ -13,7 +13,9 @@ import {
     CAMERA,
     SUBMIT_FORM,
     TAB_DISPATCH,
-    TAB_WB_OUT
+    TAB_WB_OUT,
+    securityDispatchFileName,
+    wbsInFileName
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
@@ -120,11 +122,26 @@ function Dispatch() {
                 dispatch(
                     setAllOperationPhoto({
                         file: [
-                            { file: null, attachType: "DO" },
-                            { file: null, attachType: "Driver" },
-                            { file: null, attachType: "No Polisi TM" },
-                            { file: null, attachType: "Segel" },
-                            { file: null, attachType: "Kondom" }
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[0]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[1]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[2]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[3]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[4]
+                            }
                         ]
                     })
                 );
@@ -132,8 +149,8 @@ function Dispatch() {
                 dispatch(
                     setAllOperationPhoto({
                         file: [
-                            { file: null, attachType: "DO" },
-                            { file: null, attachType: "Hasil" }
+                            { file: null, attachType: wbsInFileName[0] },
+                            { file: null, attachType: wbsInFileName[1] }
                         ]
                     })
                 );

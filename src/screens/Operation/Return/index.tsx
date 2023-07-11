@@ -12,7 +12,9 @@ import {
     CAMERA,
     SUBMIT_FORM,
     TAB_RETURN,
-    TAB_WB_IN
+    TAB_WB_IN,
+    securityReturnFileName,
+    wbsOutFileName
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
@@ -119,8 +121,14 @@ function Return() {
                 dispatch(
                     setAllOperationPhoto({
                         file: [
-                            { file: null, attachType: "DO" },
-                            { file: null, attachType: "Kondisi TM" }
+                            {
+                                file: null,
+                                attachType: securityReturnFileName[0]
+                            },
+                            {
+                                file: null,
+                                attachType: securityReturnFileName[1]
+                            }
                         ]
                     })
                 );
@@ -128,8 +136,8 @@ function Return() {
                 dispatch(
                     setAllOperationPhoto({
                         file: [
-                            { file: null, attachType: "DO" },
-                            { file: null, attachType: "Hasil" }
+                            { file: null, attachType: wbsOutFileName[0] },
+                            { file: null, attachType: wbsOutFileName[1] }
                         ]
                     })
                 );
