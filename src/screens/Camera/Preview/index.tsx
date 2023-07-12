@@ -194,11 +194,11 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 navigateTo !== GALLERY_VISITATION &&
                 navigateTo !== GALLERY_DEPOSIT &&
                 navigateTo !== PO &&
-                navigateTo !== EntryType.DRIVER &&
-                navigateTo !== EntryType.DISPATCH &&
-                navigateTo !== EntryType.RETURN &&
-                navigateTo !== EntryType.IN &&
-                navigateTo !== EntryType.OUT &&
+                // navigateTo !== EntryType.DRIVER &&
+                // navigateTo !== EntryType.DISPATCH &&
+                // navigateTo !== EntryType.RETURN &&
+                // navigateTo !== EntryType.IN &&
+                // navigateTo !== EntryType.OUT &&
                 navigateTo !== GALLERY_OPERATION &&
                 navigateTo !== FORM_SO &&
                 navigateTo !== GALLERY_SO
@@ -235,7 +235,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
     const uploadEachPhoto = async (
         type: string,
-        file: LocalFileType | undefined
+        file: LocalFileType | undefined,
+        localFiles: LocalFileType[] | undefined
     ) => {
         const photoFilestoUpload: any[] = [];
         const tempFile = { ...file?.file };
@@ -247,16 +248,46 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             photoFilestoUpload,
             "Update Delivery Order"
         );
-        const newFileData = responseFile?.data?.data?.map((v, i) => ({
-            fileId: v?.id,
-            type
-        }));
+        const newFileData = responseFile?.data?.data?.map(
+            (v: any, i: number) => ({
+                fileId: v?.id,
+                type,
+                url: v?.url
+            })
+        );
         payload.batchingPlantId = authState.selectedBatchingPlant?.id;
         payload.doFiles = newFileData;
-        await updateDeliveryOrder(
+        const responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData?.projectDetails?.deliveryOrderId
         );
+
+        console.log("tomtom:: ", localFiles);
+        if (
+            responseUpdateDeliveryOrder?.data?.success &&
+            responseUpdateDeliveryOrder?.data?.success !== false
+        ) {
+            const newPhotoFiles: LocalFileType[] = [];
+            localFiles?.forEach((it) => {
+                if (it?.file !== null) {
+                    newPhotoFiles.push({
+                        ...it,
+                        file: {
+                            ...it?.file,
+                            uri:
+                                newFileData && newFileData?.length > 0
+                                    ? newFileData[0]?.url
+                                    : it?.file?.uri
+                        }
+                    });
+                } else {
+                    newPhotoFiles.push(it);
+                }
+            });
+            dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
+        } else {
+            dispatch(setAllOperationPhoto({ file: localFiles }));
+        }
     };
 
     const savePhoto = () => {
@@ -381,29 +412,49 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
                     if (selectedItem) newPhotoFiles?.push(selectedItem);
                 });
-                dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
                     case "DO":
-                        uploadEachPhoto(securityDispatchFileType[0], localFile);
+                        uploadEachPhoto(
+                            securityDispatchFileType[0],
+                            localFile,
+                            newPhotoFiles
+                        );
                         navigation.navigate(SUBMIT_FORM, {
                             operationType: EntryType.DISPATCH
                         });
                         break;
                     case "Driver":
-                        uploadEachPhoto(securityDispatchFileType[1], localFile);
+                        uploadEachPhoto(
+                            securityDispatchFileType[1],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "No Polisi TM":
-                        uploadEachPhoto(securityDispatchFileType[2], localFile);
+                        uploadEachPhoto(
+                            securityDispatchFileType[2],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Segel":
-                        uploadEachPhoto(securityDispatchFileType[3], localFile);
+                        uploadEachPhoto(
+                            securityDispatchFileType[3],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Kondom":
-                        uploadEachPhoto(securityDispatchFileType[4], localFile);
+                        uploadEachPhoto(
+                            securityDispatchFileType[4],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     default:
+                        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
                         break;
                 }
                 return;
@@ -418,39 +469,71 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
                     if (selectedItem) newPhotoFiles?.push(selectedItem);
                 });
-                dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
                     case "Tiba di lokasi":
-                        uploadEachPhoto(driversFileType[0], localFile);
+                        uploadEachPhoto(
+                            driversFileType[0],
+                            localFile,
+                            newPhotoFiles
+                        );
                         onArrivedDriver();
                         navigation.navigate(SUBMIT_FORM, {
                             operationType: EntryType.DRIVER
                         });
                         break;
                     case "Dalam gentong isi":
-                        uploadEachPhoto(driversFileType[1], localFile);
+                        uploadEachPhoto(
+                            driversFileType[1],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Tuang beton":
-                        uploadEachPhoto(driversFileType[2], localFile);
+                        uploadEachPhoto(
+                            driversFileType[2],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Cuci gentong":
-                        uploadEachPhoto(driversFileType[3], localFile);
+                        uploadEachPhoto(
+                            driversFileType[3],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "DO":
-                        uploadEachPhoto(driversFileType[4], localFile);
+                        uploadEachPhoto(
+                            driversFileType[4],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Penerima":
-                        uploadEachPhoto(driversFileType[5], localFile);
+                        uploadEachPhoto(
+                            driversFileType[5],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Penambahan air":
-                        uploadEachPhoto(driversFileType[6], localFile);
+                        uploadEachPhoto(
+                            driversFileType[6],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     case "Tambahan":
-                        uploadEachPhoto(driversFileType[7], localFile);
+                        uploadEachPhoto(
+                            driversFileType[7],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     default:
+                        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
                         break;
                 }
                 return;
@@ -465,20 +548,28 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
                     if (selectedItem) newPhotoFiles?.push(selectedItem);
                 });
-                dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
                     case "DO":
-                        uploadEachPhoto(wbsInFileType[0], localFile);
+                        uploadEachPhoto(
+                            wbsInFileType[0],
+                            localFile,
+                            newPhotoFiles
+                        );
                         navigation.navigate(SUBMIT_FORM, {
                             operationType: EntryType.IN
                         });
                         break;
                     case "Hasil":
-                        uploadEachPhoto(wbsInFileType[1], localFile);
+                        uploadEachPhoto(
+                            wbsInFileType[1],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     default:
+                        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
                         break;
                 }
                 return;
@@ -493,20 +584,28 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
                     if (selectedItem) newPhotoFiles?.push(selectedItem);
                 });
-                dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
                     case "DO":
-                        uploadEachPhoto(wbsOutFileType[0], localFile);
+                        uploadEachPhoto(
+                            wbsOutFileType[0],
+                            localFile,
+                            newPhotoFiles
+                        );
                         navigation.navigate(SUBMIT_FORM, {
                             operationType: EntryType.OUT
                         });
                         break;
                     case "Hasil":
-                        uploadEachPhoto(wbsOutFileType[1], localFile);
+                        uploadEachPhoto(
+                            wbsOutFileType[1],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     default:
+                        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
                         break;
                 }
                 return;
@@ -521,20 +620,28 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
                     if (selectedItem) newPhotoFiles?.push(selectedItem);
                 });
-                dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
                     case "DO":
-                        uploadEachPhoto(securityReturnFileType[0], localFile);
+                        uploadEachPhoto(
+                            securityReturnFileType[0],
+                            localFile,
+                            newPhotoFiles
+                        );
                         navigation.navigate(SUBMIT_FORM, {
                             operationType: EntryType.RETURN
                         });
                         break;
                     case "Kondisi TM":
-                        uploadEachPhoto(securityReturnFileType[1], localFile);
+                        uploadEachPhoto(
+                            securityReturnFileType[1],
+                            localFile,
+                            newPhotoFiles
+                        );
                         break;
                     default:
+                        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
                         break;
                 }
                 return;

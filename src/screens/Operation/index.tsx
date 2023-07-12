@@ -17,12 +17,13 @@ import {
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
+    onChangeInputValue,
     onChangeProjectDetails,
     setAllOperationPhoto,
     setExistingFiles
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
-import { safetyCheck } from "@/utils/generalFunc";
+import { mapDOPhotoFromBE, safetyCheck } from "@/utils/generalFunc";
 import OperationList from "./element/OperationList";
 
 const style = StyleSheet.create({
@@ -86,34 +87,123 @@ function Operation() {
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         // NOTE: currently driver only
 
-        dispatch(setExistingFiles({ files: item.DeliveryOrderFile }));
-        if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
+        dispatch(setExistingFiles({ files: item?.DeliveryOrderFile }));
+        dispatch(
+            onChangeInputValue({
+                inputType: "recepientName",
+                value: item?.recipientName
+            })
+        );
+        dispatch(
+            onChangeInputValue({
+                inputType: "recepientPhoneNumber",
+                value: item?.recipientNumber
+            })
+        );
+        const dataToDeliver: OperationProjectDetails = {
+            deliveryOrderId: item?.id ? item?.id : "",
+            doNumber: item?.number ? item?.number : "",
+            projectName: item?.project?.projectName
+                ? item.project.projectName
+                : "",
+            address: item?.project?.ShippingAddress?.line1
+                ? item.project.ShippingAddress.line1
+                : "",
+            lonlat: {
+                longitude: safetyCheck(item?.project?.ShippingAddress?.lon)
+                    ? Number(item.project.ShippingAddress.lon)
+                    : 0,
+                latitude: safetyCheck(item?.project?.ShippingAddress?.lat)
+                    ? Number(item.project.ShippingAddress.lat)
+                    : 0
+            },
+            requestedQuantity: item?.quantity ? item?.quantity : 0,
+            deliveryTime: item?.date ? item?.date : ""
+        };
+        dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+
+        const existingFirstPhoto = item?.DeliveryOrderFile?.filter(
+            (it) => it?.type === driversFileType[0]
+        );
+        if (existingFirstPhoto && existingFirstPhoto?.length > 0) {
+            const BEFiles = mapDOPhotoFromBE(
+                item?.DeliveryOrderFile,
+                userData?.type
+            );
+            dispatch(
+                setAllOperationPhoto({
+                    file: [
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[0]
+                                )?.file || null,
+                            attachType: driversFileName[0]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[1]
+                                )?.file || null,
+                            attachType: driversFileName[1]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[2]
+                                )?.file || null,
+                            attachType: driversFileName[2]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[3]
+                                )?.file || null,
+                            attachType: driversFileName[3]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[4]
+                                )?.file || null,
+                            attachType: driversFileName[4]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[5]
+                                )?.file || null,
+                            attachType: driversFileName[5]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[6]
+                                )?.file || null,
+                            attachType: driversFileName[6]
+                        },
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[7]
+                                )?.file || null,
+                            attachType: driversFileName[7]
+                        }
+                    ]
+                })
+            );
             navigation.navigate(SUBMIT_FORM, {
                 operationType: userData?.type
             });
         } else {
-            const dataToDeliver: OperationProjectDetails = {
-                deliveryOrderId: item?.id ? item?.id : "",
-                doNumber: item?.number ? item?.number : "",
-                projectName: item?.project?.projectName
-                    ? item.project.projectName
-                    : "",
-                address: item?.project?.ShippingAddress?.line1
-                    ? item.project.ShippingAddress.line1
-                    : "",
-                lonlat: {
-                    longitude: safetyCheck(item?.project?.ShippingAddress?.lon)
-                        ? Number(item.project.ShippingAddress.lon)
-                        : 0,
-                    latitude: safetyCheck(item?.project?.ShippingAddress?.lat)
-                        ? Number(item.project.ShippingAddress.lat)
-                        : 0
-                },
-                requestedQuantity: item?.quantity ? item?.quantity : 0,
-                deliveryTime: item?.date ? item?.date : ""
-            };
-
-            dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
             dispatch(
                 setAllOperationPhoto({
                     file: [
@@ -128,22 +218,12 @@ function Operation() {
                     ]
                 })
             );
-
-            const existingFirstPhoto = item.DeliveryOrderFile.filter(
-                (it) => it.type === driversFileType[0]
-            );
-            if (existingFirstPhoto.length > 0) {
-                navigation.navigate(SUBMIT_FORM, {
-                    operationType: userData?.type
-                });
-            } else {
-                navigation.navigate(CAMERA, {
-                    photoTitle: driversFileName[0],
-                    closeButton: true,
-                    navigateTo: EntryType.DRIVER,
-                    operationAddedStep: driversFileName[0]
-                });
-            }
+            navigation.navigate(CAMERA, {
+                photoTitle: driversFileName[0],
+                closeButton: true,
+                navigateTo: EntryType.DRIVER,
+                operationAddedStep: driversFileName[0]
+            });
         }
     };
 

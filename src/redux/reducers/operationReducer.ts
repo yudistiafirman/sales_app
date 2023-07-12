@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import LocalFileType from "@/interfaces/LocalFileType";
+import { OperationsDeliveryOrderFileResponse } from "@/interfaces/Operation";
 
 interface InputsValue {
     recepientName: string;
@@ -24,7 +25,7 @@ export interface OperationInitState {
     inputsValue: InputsValue;
     projectDetails: OperationProjectDetails;
     isLoading: boolean;
-    existingFiles: any[];
+    existingFiles: OperationsDeliveryOrderFileResponse[];
 }
 
 const initialState: OperationInitState = {
@@ -139,7 +140,12 @@ export const operationSlice = createSlice({
                 photoFiles: [...currentImages]
             };
         },
-        setExistingFiles: (state, actions: PayloadAction<{ files: any[] }>) => {
+        setExistingFiles: (
+            state,
+            actions: PayloadAction<{
+                files: OperationsDeliveryOrderFileResponse[];
+            }>
+        ) => {
             let tempState = state.existingFiles;
             if (actions.payload?.files) tempState = actions.payload?.files;
             return {

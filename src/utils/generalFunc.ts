@@ -12,6 +12,24 @@ import moment from "moment";
 import { NativeModules, Platform } from "react-native";
 import "moment/locale/id";
 import { PIC } from "@/interfaces";
+import LocalFileType from "@/interfaces/LocalFileType";
+import EntryType from "@/models/EnumModel";
+import {
+    driversFileName,
+    driversFileType,
+    securityDispatchFileName,
+    securityDispatchFileType,
+    securityReturnFileName,
+    securityReturnFileType,
+    wbsInFileName,
+    wbsInFileType,
+    wbsOutFileName,
+    wbsOutFileType
+} from "@/navigation/ScreenNames";
+import {
+    OperationFileType,
+    OperationsDeliveryOrderFileResponse
+} from "@/interfaces/Operation";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -514,7 +532,9 @@ export function shouldAllowVisitationStateToContinue(
     ) {
         stepOneCompleted = true;
     }
-    const selectedPic = visitationState?.pics?.filter((v) => v?.isSelected);
+    const selectedPic = visitationState?.pics?.filter(
+        (v: any) => v?.isSelected
+    );
     const customerTypeCond =
         visitationState?.customerType === "COMPANY"
             ? !!visitationState?.companyName
@@ -545,7 +565,7 @@ export function shouldAllowVisitationStateToContinue(
         stepFourCompleted = true;
     }
     const filteredImages = visitationState?.images?.filter(
-        (it) => it?.file !== null
+        (it: any) => it?.file !== null
     );
     if (filteredImages && filteredImages?.length > 0) {
         stepFifthCompleted = true;
@@ -611,4 +631,283 @@ export function safetyCheck(item: any) {
         return true;
     }
     return false;
+}
+
+export function photoIsFromInternet(photo?: string): boolean {
+    return photo ? photo.startsWith("http") : false;
+}
+
+export function getFileGalleryFromBE(files: any[], types: any[]): any[] {
+    const filteredFiles: any[] = [];
+    files.forEach((it) => {
+        types.forEach((type) => {
+            if (it.type === type) {
+                filteredFiles.push(it);
+            }
+        });
+    });
+    const result = Array.from(new Set(filteredFiles.map((s) => s.type))).map(
+        (ty) => ({
+            type: ty,
+            ...filteredFiles.filter((f) => f.type === ty)[0]
+        })
+    );
+    return result;
+}
+
+export function mapFileFromBEToGallery(files: any[]): LocalFileType[] {
+    const finalGalleryFiles: LocalFileType[] = [];
+    files.forEach((it) => {
+        finalGalleryFiles.push({
+            attachType: it.type,
+            isFromPicker: false,
+            file: {
+                name: it.File?.name,
+                uri: it.File?.url,
+                type: it.File?.type,
+                datetime: it.File?.datetime,
+                longlat: it.File?.longlat
+            }
+        } as LocalFileType);
+    });
+    return finalGalleryFiles;
+}
+
+export function mapFileTypeToNameDO(type: string, attachType?: string): string {
+    let finalName = "";
+    switch (type) {
+        case EntryType.DRIVER:
+            if (attachType === OperationFileType.DO_DRIVER_ARRIVE_PROJECT) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[0];
+            } else if (attachType === OperationFileType.DO_DRIVER_BNIB) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[1];
+            } else if (attachType === OperationFileType.DO_DRIVER_UNBOXING) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[2];
+            } else if (attachType === OperationFileType.DO_DRIVER_EMPTY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[3];
+            } else if (attachType === OperationFileType.DO_DRIVER_DO) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[4];
+            } else if (attachType === OperationFileType.DO_DRIVER_RECEIPIENT) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[5];
+            } else if (attachType === OperationFileType.DO_DRIVER_WATER) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[6];
+            } else if (
+                attachType === OperationFileType.DO_DRIVER_FINISH_PROJECT
+            ) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = driversFileName[7];
+            }
+            break;
+        case EntryType.DISPATCH:
+            if (attachType === OperationFileType.DO_SECURITY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityDispatchFileName[0];
+            } else if (attachType === OperationFileType.DO_DRIVER_SECURITY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityDispatchFileName[1];
+            } else if (attachType === OperationFileType.DO_LICENSE_SECURITY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityDispatchFileName[2];
+            } else if (attachType === OperationFileType.DO_SEAL_SECURITY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityDispatchFileName[3];
+            } else if (attachType === OperationFileType.DO_KONDOM_SECURITY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityDispatchFileName[4];
+            }
+            break;
+        case EntryType.RETURN:
+            if (attachType === OperationFileType.DO_RETURN_SECURITY) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityReturnFileName[0];
+            } else if (
+                attachType ===
+                OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY
+            ) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = securityReturnFileName[1];
+            }
+            break;
+        case EntryType.IN:
+            if (attachType === OperationFileType.DO_WEIGHT_IN) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = wbsInFileName[0];
+            } else if (attachType === OperationFileType.WEIGHT_IN) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = wbsInFileName[1];
+            }
+            break;
+        case EntryType.OUT:
+            if (attachType === OperationFileType.WB_OUT_DO) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = wbsOutFileName[0];
+            } else if (attachType === OperationFileType.WB_OUT_RESULT) {
+                // eslint-disable-next-line prefer-destructuring
+                finalName = wbsOutFileName[1];
+            }
+            break;
+        default:
+            break;
+    }
+    return finalName;
+}
+
+export function mapFileNameToTypeDO(type: string, attachType?: string): string {
+    let finalName = "";
+    switch (type) {
+        case EntryType.DRIVER:
+            if (attachType === driversFileName[0]) {
+                finalName = OperationFileType.DO_DRIVER_ARRIVE_PROJECT;
+            } else if (attachType === driversFileName[1]) {
+                finalName = OperationFileType.DO_DRIVER_BNIB;
+            } else if (attachType === driversFileName[2]) {
+                finalName = OperationFileType.DO_DRIVER_UNBOXING;
+            } else if (attachType === driversFileName[3]) {
+                finalName = OperationFileType.DO_DRIVER_EMPTY;
+            } else if (attachType === driversFileName[4]) {
+                finalName = OperationFileType.DO_DRIVER_DO;
+            } else if (attachType === driversFileName[5]) {
+                finalName = OperationFileType.DO_DRIVER_RECEIPIENT;
+            } else if (attachType === driversFileName[6]) {
+                finalName = OperationFileType.DO_DRIVER_WATER;
+            } else if (attachType === driversFileName[7]) {
+                finalName = OperationFileType.DO_DRIVER_FINISH_PROJECT;
+            }
+            break;
+        case EntryType.DISPATCH:
+            if (attachType === securityDispatchFileName[0]) {
+                finalName = OperationFileType.DO_SECURITY;
+            } else if (attachType === securityDispatchFileName[1]) {
+                finalName = OperationFileType.DO_DRIVER_SECURITY;
+            } else if (attachType === securityDispatchFileName[2]) {
+                finalName = OperationFileType.DO_LICENSE_SECURITY;
+            } else if (attachType === securityDispatchFileName[3]) {
+                finalName = OperationFileType.DO_SEAL_SECURITY;
+            } else if (attachType === securityDispatchFileName[4]) {
+                finalName = OperationFileType.DO_KONDOM_SECURITY;
+            }
+            break;
+        case EntryType.RETURN:
+            if (attachType === securityReturnFileName[0]) {
+                finalName = OperationFileType.DO_RETURN_SECURITY;
+            } else if (attachType === securityReturnFileName[1]) {
+                finalName =
+                    OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY;
+            }
+            break;
+        case EntryType.IN:
+            if (attachType === wbsInFileName[0]) {
+                finalName = OperationFileType.DO_WEIGHT_IN;
+            } else if (attachType === wbsInFileName[1]) {
+                finalName = OperationFileType.WEIGHT_IN;
+            }
+            break;
+        case EntryType.OUT:
+            if (attachType === wbsOutFileName[0]) {
+                finalName = OperationFileType.WB_OUT_DO;
+            } else if (attachType === wbsOutFileName[1]) {
+                finalName = OperationFileType.WB_OUT_RESULT;
+            }
+            break;
+        default:
+            break;
+    }
+    return finalName;
+}
+
+export function mapDOPhotoFromBE(
+    files: OperationsDeliveryOrderFileResponse[],
+    userType?: string
+): LocalFileType[] {
+    let beGalleryFiles: LocalFileType[] = [];
+    switch (userType) {
+        case EntryType.DRIVER: {
+            const filteredFiles: OperationsDeliveryOrderFileResponse[] =
+                getFileGalleryFromBE(files, driversFileType);
+            const finalFiles: LocalFileType[] = [];
+            mapFileFromBEToGallery(filteredFiles).forEach((it) => {
+                finalFiles.push({
+                    ...it,
+                    attachType: mapFileTypeToNameDO(
+                        EntryType.DRIVER,
+                        it.attachType
+                    )
+                });
+            });
+            beGalleryFiles = finalFiles;
+            break;
+        }
+        case EntryType.DISPATCH: {
+            const filteredFiles: OperationsDeliveryOrderFileResponse[] =
+                getFileGalleryFromBE(files, securityDispatchFileType);
+            const finalFiles: LocalFileType[] = [];
+            mapFileFromBEToGallery(filteredFiles).forEach((it) => {
+                finalFiles.push({
+                    ...it,
+                    attachType: mapFileTypeToNameDO(
+                        EntryType.DISPATCH,
+                        it.attachType
+                    )
+                });
+            });
+            beGalleryFiles = finalFiles;
+            break;
+        }
+        case EntryType.RETURN: {
+            const filteredFiles: OperationsDeliveryOrderFileResponse[] =
+                getFileGalleryFromBE(files, securityReturnFileType);
+            const finalFiles: LocalFileType[] = [];
+            mapFileFromBEToGallery(filteredFiles).forEach((it) => {
+                finalFiles.push({
+                    ...it,
+                    attachType: mapFileTypeToNameDO(
+                        EntryType.RETURN,
+                        it.attachType
+                    )
+                });
+            });
+            beGalleryFiles = finalFiles;
+            break;
+        }
+        case EntryType.IN: {
+            const filteredFiles: OperationsDeliveryOrderFileResponse[] =
+                getFileGalleryFromBE(files, wbsInFileType);
+            const finalFiles: LocalFileType[] = [];
+            mapFileFromBEToGallery(filteredFiles).forEach((it) => {
+                finalFiles.push({
+                    ...it,
+                    attachType: mapFileTypeToNameDO(EntryType.IN, it.attachType)
+                });
+            });
+            beGalleryFiles = finalFiles;
+            break;
+        }
+        case EntryType.OUT: {
+            const filteredFiles: OperationsDeliveryOrderFileResponse[] =
+                getFileGalleryFromBE(files, wbsOutFileType);
+            const finalFiles: LocalFileType[] = [];
+            mapFileFromBEToGallery(filteredFiles).forEach((it) => {
+                finalFiles.push({
+                    ...it,
+                    attachType: mapFileTypeToNameDO(
+                        EntryType.OUT,
+                        it.attachType
+                    )
+                });
+            });
+            beGalleryFiles = finalFiles;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    return beGalleryFiles;
 }

@@ -34,11 +34,8 @@ import {
     SUBMIT_FORM,
     TAB_DISPATCH_TITLE,
     TAB_RETURN_TITLE,
-    driversFileType,
     securityDispatchFileType,
-    securityReturnFileType,
-    wbsInFileType,
-    wbsOutFileType
+    securityReturnFileType
 } from "@/navigation/ScreenNames";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -60,6 +57,7 @@ import {
     updateDeliveryOrderWeight
 } from "@/actions/OrderActions";
 import { FlashList } from "@shopify/flash-list";
+import { mapFileNameToTypeDO, photoIsFromInternet } from "@/utils/generalFunc";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -259,10 +257,14 @@ function SubmitForm() {
             const payload = {} as UpdateDeliverOrder;
             payload.batchingPlantId = selectedBatchingPlant?.id;
             const photoFilestoUpload = operationData?.photoFiles
-                ?.filter((v) => v?.file !== null)
+                ?.filter(
+                    (v) =>
+                        v?.file !== null && !photoIsFromInternet(v?.file?.uri)
+                )
                 ?.map((photo) => ({
                     ...photo?.file,
-                    uri: photo?.file?.uri?.replace("file:", "file://")
+                    uri: photo?.file?.uri?.replace("file:", "file://"),
+                    attachType: photo?.attachType
                 }));
 
             let responseFiles;
@@ -273,18 +275,24 @@ function SubmitForm() {
                 );
             }
             if (
-                responseFiles?.data?.success &&
-                responseFiles?.data?.success !== false
+                (responseFiles?.data?.success &&
+                    responseFiles?.data?.success !== false) ||
+                responseFiles === undefined
             ) {
                 let responseUpdateDeliveryOrder: any;
                 if (userData?.type === EntryType.DRIVER) {
                     const newFileData = responseFiles?.data?.data?.map(
-                        (v, i) => ({
+                        (v: any, i: number) => ({
                             fileId: v?.id,
-                            type: driversFileType[i]
+                            type: mapFileNameToTypeDO(
+                                EntryType.DRIVER,
+                                photoFilestoUpload.find((it) =>
+                                    it?.name?.includes(v?.name)
+                                )?.attachType
+                            )
                         })
                     );
-                    payload.doFiles = newFileData;
+                    if (newFileData) payload.doFiles = newFileData;
                     payload.recipientName =
                         operationData?.inputsValue?.recepientName;
                     payload.recipientNumber =
@@ -296,14 +304,18 @@ function SubmitForm() {
                     );
                 } else if (userData?.type === EntryType.WB) {
                     const newFileData = responseFiles?.data?.data?.map(
-                        (v, i) => ({
+                        (v: any, i: number) => ({
                             fileId: v?.id,
-                            type:
-                                operationType === EntryType.OUT
-                                    ? wbsOutFileType[i]
-                                    : wbsInFileType[i]
+                            type: mapFileNameToTypeDO(
+                                operationType,
+                                photoFilestoUpload.find((it) =>
+                                    it?.name?.includes(v?.name)
+                                )?.attachType
+                            )
                         })
                     );
+                    payload.status =
+                        operationType === EntryType.IN ? "FINISHED" : "WB_OUT";
                     payload.doFiles = newFileData;
                     payload.weight = operationData?.inputsValue?.weightBridge;
                     responseUpdateDeliveryOrder =
@@ -313,13 +325,21 @@ function SubmitForm() {
                         );
                 } else if (userData?.type === EntryType.SECURITY) {
                     const newFileData = responseFiles?.data?.data?.map(
-                        (v, i) => ({
+                        (v: any, i: number) => ({
                             fileId: v?.id,
-                            type: securityFileType[i]
+                            type: mapFileNameToTypeDO(
+                                operationType,
+                                photoFilestoUpload.find((it) =>
+                                    it?.name?.includes(v?.name)
+                                )?.attachType
+                            )
                         })
                     );
+                    payload.status =
+                        operationType === EntryType.DISPATCH
+                            ? "ON_DELIVERY"
+                            : "AWAIT_WB_IN";
                     payload.doFiles = newFileData;
-
                     if (operationType === EntryType.RETURN) {
                         payload.conditionTruck =
                             operationData?.inputsValue?.truckMixCondition;
@@ -522,7 +542,7 @@ function SubmitForm() {
     ];
 
     const deleteImages = useCallback(
-        (i: number, attachType?: string) => {
+        (i: number, attachType: string) => {
             // if (userData?.type === EntryType.DRIVER) {
             dispatch(removeDriverPhoto({ index: i, attachType }));
             // } else {
@@ -662,7 +682,7 @@ function SubmitForm() {
                                     addMoreImages(attachType)
                                 }
                                 removePict={(pos, attachType) =>
-                                    deleteImages(pos, attachType)
+                                    deleteImages(pos, attachType || "")
                                 }
                                 picts={operationData?.photoFiles}
                             />
