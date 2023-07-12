@@ -24,6 +24,7 @@ export interface OperationInitState {
     inputsValue: InputsValue;
     projectDetails: OperationProjectDetails;
     isLoading: boolean;
+    existingFiles: any[];
 }
 
 const initialState: OperationInitState = {
@@ -44,7 +45,8 @@ const initialState: OperationInitState = {
         requestedQuantity: 0,
         deliveryTime: ""
     },
-    isLoading: false
+    isLoading: false,
+    existingFiles: []
 };
 export const operationSlice = createSlice({
     name: "operationState",
@@ -137,6 +139,14 @@ export const operationSlice = createSlice({
                 photoFiles: [...currentImages]
             };
         },
+        setExistingFiles: (state, actions: PayloadAction<{ files: any[] }>) => {
+            let tempState = state.existingFiles;
+            if (actions.payload?.files) tempState = actions.payload?.files;
+            return {
+                ...state,
+                existingFiles: [...tempState]
+            };
+        },
         removeDriverPhoto: (
             state,
             actions: PayloadAction<{ index: number; attachType: string }>
@@ -169,7 +179,8 @@ export const {
     setOperationPhoto,
     setAllOperationPhoto,
     removeOperationPhoto,
-    removeDriverPhoto
+    removeDriverPhoto,
+    setExistingFiles
 } = operationSlice.actions;
 
 export default operationSlice.reducer;

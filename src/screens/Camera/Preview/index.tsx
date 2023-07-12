@@ -251,6 +251,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             fileId: v?.id,
             type
         }));
+        payload.batchingPlantId = authState.selectedBatchingPlant?.id;
         payload.doFiles = newFileData;
         await updateDeliveryOrder(
             payload,

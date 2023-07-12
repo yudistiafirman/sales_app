@@ -35,6 +35,17 @@ interface OperationsDeliveryOrderScheduleResponse {
     };
 }
 
+interface OperationsDeliveryOrderFileResponse {
+    id?: number;
+    type?: string;
+    File?: {
+        id?: string;
+        type?: string;
+        name?: string;
+        url?: string;
+    };
+}
+
 export enum OperationFileType {
     DO_DEPARTURE = "DO_DEPARTURE",
     DO_SECURITY = "DO_SECURITY",
@@ -73,4 +84,5 @@ export interface OperationsDeliveryOrdersListResponse {
     conditionTruck?: string | null;
     project?: OperationsDeliverOrderProjectResponse;
     Schedule: OperationsDeliveryOrderScheduleResponse;
+    DeliveryOrderFile: OperationsDeliveryOrderFileResponse[];
 }

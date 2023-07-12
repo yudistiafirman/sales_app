@@ -15,12 +15,15 @@ import {
     TAB_DISPATCH,
     TAB_WB_OUT,
     securityDispatchFileName,
-    wbsInFileName
+    securityDispatchFileType,
+    wbsOutFileName,
+    wbsOutFileType
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
     onChangeProjectDetails,
-    setAllOperationPhoto
+    setAllOperationPhoto,
+    setExistingFiles
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { safetyCheck } from "@/utils/generalFunc";
@@ -89,6 +92,7 @@ function Dispatch() {
     ]);
 
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
+        dispatch(setExistingFiles({ files: item.DeliveryOrderFile }));
         if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
             navigation.navigate(SUBMIT_FORM, {
                 operationType:
@@ -145,27 +149,48 @@ function Dispatch() {
                         ]
                     })
                 );
+
+                const existingFirstPhoto = item.DeliveryOrderFile.filter(
+                    (it) => it.type === securityDispatchFileType[0]
+                );
+                if (existingFirstPhoto.length > 0) {
+                    navigation.navigate(SUBMIT_FORM, {
+                        operationType: EntryType.DISPATCH
+                    });
+                } else {
+                    navigation.navigate(CAMERA, {
+                        photoTitle: securityDispatchFileName[0],
+                        closeButton: true,
+                        navigateTo: EntryType.DISPATCH,
+                        operationAddedStep: securityDispatchFileName[0]
+                    });
+                }
             } else {
                 dispatch(
                     setAllOperationPhoto({
                         file: [
-                            { file: null, attachType: wbsInFileName[0] },
-                            { file: null, attachType: wbsInFileName[1] }
+                            { file: null, attachType: wbsOutFileName[0] },
+                            { file: null, attachType: wbsOutFileName[1] }
                         ]
                     })
                 );
-            }
 
-            // dispatch(setAllOperationPhoto({ file: [{ file: null }] }));
-            navigation.navigate(CAMERA, {
-                photoTitle: "DO",
-                closeButton: true,
-                navigateTo:
-                    userData?.type === EntryType.SECURITY
-                        ? EntryType.DISPATCH
-                        : EntryType.OUT,
-                operationAddedStep: "DO"
-            });
+                const existingFirstPhoto = item.DeliveryOrderFile.filter(
+                    (it) => it.type === wbsOutFileType[0]
+                );
+                if (existingFirstPhoto.length > 0) {
+                    navigation.navigate(SUBMIT_FORM, {
+                        operationType: EntryType.OUT
+                    });
+                } else {
+                    navigation.navigate(CAMERA, {
+                        photoTitle: wbsOutFileName[0],
+                        closeButton: true,
+                        navigateTo: EntryType.OUT,
+                        operationAddedStep: wbsOutFileName[0]
+                    });
+                }
+            }
         }
     };
 

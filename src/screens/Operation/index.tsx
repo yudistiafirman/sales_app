@@ -12,12 +12,14 @@ import {
     LOCATION,
     OPERATION,
     SUBMIT_FORM,
-    driversFileName
+    driversFileName,
+    driversFileType
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
     onChangeProjectDetails,
-    setAllOperationPhoto
+    setAllOperationPhoto,
+    setExistingFiles
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { safetyCheck } from "@/utils/generalFunc";
@@ -84,6 +86,7 @@ function Operation() {
     const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
         // NOTE: currently driver only
 
+        dispatch(setExistingFiles({ files: item.DeliveryOrderFile }));
         if (projectDetails && projectDetails?.deliveryOrderId === item?.id) {
             navigation.navigate(SUBMIT_FORM, {
                 operationType: userData?.type
@@ -125,12 +128,22 @@ function Operation() {
                     ]
                 })
             );
-            navigation.navigate(CAMERA, {
-                photoTitle: driversFileName[0],
-                closeButton: true,
-                navigateTo: EntryType.DRIVER,
-                operationAddedStep: driversFileName[0]
-            });
+
+            const existingFirstPhoto = item.DeliveryOrderFile.filter(
+                (it) => it.type === driversFileType[0]
+            );
+            if (existingFirstPhoto.length > 0) {
+                navigation.navigate(SUBMIT_FORM, {
+                    operationType: userData?.type
+                });
+            } else {
+                navigation.navigate(CAMERA, {
+                    photoTitle: driversFileName[0],
+                    closeButton: true,
+                    navigateTo: EntryType.DRIVER,
+                    operationAddedStep: driversFileName[0]
+                });
+            }
         }
     };
 
