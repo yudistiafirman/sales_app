@@ -13,6 +13,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { resScale } from "@/utils";
 import LocalFileType from "@/interfaces/LocalFileType";
 import { colors, layout } from "@/constants";
+import { photoIsFromInternet } from "@/utils/generalFunc";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";
 
@@ -108,7 +109,11 @@ export default function BGallery({
                     </View>
                 ) : (
                     <Image
-                        source={item?.file}
+                        source={
+                            photoIsFromInternet(item?.file?.uri)
+                                ? { uri: item?.file?.uri }
+                                : item?.file
+                        }
                         style={[
                             style.imageStyle,
                             {

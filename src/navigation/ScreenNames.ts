@@ -1,3 +1,5 @@
+import { OperationFileType } from "@/interfaces/Operation";
+
 /*
     Screen Keys
 */
@@ -108,3 +110,62 @@ export const HOME_MENU = {
     SIGN_SO: "Upload Signed SO",
     INVOICE: "List Tagihan"
 };
+
+export const driversFileType = [
+    OperationFileType.DO_DRIVER_ARRIVE_PROJECT,
+    OperationFileType.DO_DRIVER_BNIB,
+    OperationFileType.DO_DRIVER_UNBOXING,
+    OperationFileType.DO_DRIVER_EMPTY,
+    OperationFileType.DO_DRIVER_DO,
+    OperationFileType.DO_DRIVER_RECEIPIENT,
+    OperationFileType.DO_DRIVER_WATER,
+    OperationFileType.DO_DRIVER_FINISH_PROJECT
+];
+
+export const driversFileName = [
+    "Tiba di lokasi",
+    "Dalam gentong isi",
+    "Tuang beton",
+    "Cuci gentong",
+    "DO",
+    "Penerima",
+    "Penambahan air",
+    "Tambahan"
+];
+
+export const wbsInFileType = [
+    OperationFileType.DO_WEIGHT_IN,
+    OperationFileType.WEIGHT_IN
+];
+
+export const wbsInFileName = ["DO", "Hasil"];
+
+export const wbsOutFileType = [
+    OperationFileType.WB_OUT_DO,
+    OperationFileType.WB_OUT_RESULT
+];
+
+export const wbsOutFileName = ["DO", "Hasil"];
+
+export const securityDispatchFileType = [
+    OperationFileType.DO_SECURITY,
+    OperationFileType.DO_DRIVER_SECURITY,
+    OperationFileType.DO_LICENSE_SECURITY,
+    OperationFileType.DO_SEAL_SECURITY,
+    OperationFileType.DO_KONDOM_SECURITY
+];
+
+export const securityDispatchFileName = [
+    "DO",
+    "Driver",
+    "No Polisi TM",
+    "Segel",
+    "Kondom"
+];
+
+export const securityReturnFileType = [
+    OperationFileType.DO_RETURN_SECURITY,
+    OperationFileType.DO_RETURN_TRUCK_CONDITION_SECURITY
+];
+
+export const securityReturnFileName = ["DO", "Kondisi TM"];

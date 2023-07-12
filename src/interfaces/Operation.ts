@@ -35,6 +35,24 @@ interface OperationsDeliveryOrderScheduleResponse {
     };
 }
 
+interface OperationsDeliveryOrderWeightResponse {
+    id: string;
+    weight: number;
+    unit: string;
+    type: string;
+}
+
+export interface OperationsDeliveryOrderFileResponse {
+    id?: number;
+    type?: string;
+    File?: {
+        id?: string;
+        type?: string;
+        name?: string;
+        url?: string;
+    };
+}
+
 export enum OperationFileType {
     DO_DEPARTURE = "DO_DEPARTURE",
     DO_SECURITY = "DO_SECURITY",
@@ -71,6 +89,10 @@ export interface OperationsDeliveryOrdersListResponse {
     quantity?: number;
     status?: "SUBMITTED" | "FINISHED";
     conditionTruck?: string | null;
+    recipientName?: string;
+    recipientNumber?: string;
+    Weight: OperationsDeliveryOrderWeightResponse[];
     project?: OperationsDeliverOrderProjectResponse;
     Schedule: OperationsDeliveryOrderScheduleResponse;
+    DeliveryOrderFile: OperationsDeliveryOrderFileResponse[];
 }
