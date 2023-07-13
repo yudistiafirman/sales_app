@@ -141,7 +141,10 @@ export default function SelectedPOModal({
                     openPopUp({
                         popUpType: "error",
                         outsideClickClosePopUp: true,
-                        popUpText: "Salah Satu SPH harus di pilih"
+                        popUpText:
+                            dataToGet === "SPHDATA"
+                                ? "Salah Satu SPH harus di pilih"
+                                : "Proyek ini belum memiliki Sale Order"
                     })
                 );
             }

@@ -109,7 +109,9 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                     item?.locationAddress?.line1 ||
                     item?.address?.line1,
                 pilNames:
-                    item?.PurchaseOrders?.map((it) => it?.brikNumber) ||
+                    item?.PurchaseOrders?.map(
+                        (it) => it?.brikNumber || it?.customerNumber
+                    ) ||
                     item?.QuotationRequests?.map(
                         (val) => val?.QuotationLetter?.number
                     ),

@@ -5,8 +5,9 @@ import { useMachine } from "@xstate/react";
 import searchPOMachine from "@/machine/searchPOMachine";
 import { QuotationRequests } from "@/interfaces/CreatePurchaseOrder";
 import { PurchaseOrdersData } from "@/interfaces/SelectConfirmedPO";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { openPopUp } from "@/redux/reducers/modalReducer";
 import SelectedPOModal from "./element/SelectedPOModal";
 
 const styles = StyleSheet.create({
@@ -48,6 +49,8 @@ function SelectPurchaseOrderData({
     const { selectedBatchingPlant } = useSelector(
         (globalState: RootState) => globalState.auth
     );
+
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
         send("setDataType", {
@@ -115,6 +118,25 @@ function SelectPurchaseOrderData({
         send("onCloseModal");
     };
 
+    const onPressList = (data: any) => {
+        if (dataToGet === "DEPOSITDATA" || dataToGet === "SCHEDULEDATA") {
+            if (data?.PurchaseOrders && data?.PurchaseOrders?.length > 0) {
+                send("openingModal", { value: data });
+            } else {
+                dispatch(
+                    openPopUp({
+                        popUpType: "error",
+                        popUpText:
+                            "Proyek yang di pilih belum memiliki Purchase Order",
+                        outsideClickClosePopUp: true
+                    })
+                );
+            }
+        } else {
+            send("openingModal", { value: data });
+        }
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <SelectedPOModal
@@ -147,9 +169,7 @@ function SelectPurchaseOrderData({
                 isError={state.matches("errorGettingList")}
                 onRetry={() => send("retryGettingList")}
                 onRefresh={() => send("onRefresh")}
-                onPressList={(data: any) =>
-                    send("openingModal", { value: data })
-                }
+                onPressList={onPressList}
             />
         </SafeAreaView>
     );

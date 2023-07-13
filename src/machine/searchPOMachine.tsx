@@ -278,7 +278,7 @@ const searchPOMachine = createMachine(
             })),
             assignPurchaseOrderListData: assign((context, event) => {
                 const newData = event?.data?.data?.filter(
-                    (it) => it?.PurchaseOrders && it?.PurchaseOrders?.length > 0
+                    (it) => it?.PurchaseOrders
                 );
                 return {
                     routes: [
