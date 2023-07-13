@@ -113,6 +113,16 @@ function SubmitForm() {
     const operationData = useSelector((state: RootState) => state.operation);
     const { keyboardVisible } = useKeyboardActive();
     const operationType = route?.params?.operationType;
+    const [weight, setWeight] = React.useState<string | undefined>(undefined);
+    const [tmCondition, setTMCondition] = React.useState<string | undefined>(
+        undefined
+    );
+    const [receipientName, setReceipientName] = React.useState<
+        string | undefined
+    >(undefined);
+    const [receipientPhone, setReceipientPhone] = React.useState<
+        string | undefined
+    >(undefined);
 
     const securityFileType =
         operationType === EntryType.DISPATCH
@@ -453,7 +463,11 @@ function SubmitForm() {
                         value: result
                     })
                 );
+                setWeight(result);
             },
+            isInputDisable:
+                operationData?.inputsValue?.weightBridge !== undefined &&
+                weight === undefined,
             isRequire: true,
             type: "quantity",
             quantityType: "kg",
@@ -469,13 +483,18 @@ function SubmitForm() {
         {
             label: "Nama Penerima",
             value: operationData?.inputsValue?.recepientName,
-            onChange: (e) =>
+            onChange: (e) => {
                 dispatch(
                     onChangeInputValue({
                         inputType: "recepientName",
                         value: e?.nativeEvent?.text
                     })
-                ),
+                );
+                setReceipientName(e?.nativeEvent?.text);
+            },
+            isInputDisable:
+                operationData?.inputsValue?.recepientName !== undefined &&
+                receipientName === undefined,
             isRequire: true,
             type: "textInput",
             placeholder: "Masukkan nama penerima",
@@ -494,7 +513,11 @@ function SubmitForm() {
                         value: e?.nativeEvent?.text
                     })
                 );
+                setReceipientPhone(e?.nativeEvent?.text);
             },
+            isInputDisable:
+                operationData?.inputsValue?.recepientPhoneNumber !==
+                    undefined && receipientPhone === undefined,
             isError: !phoneNumberRegex?.test(
                 operationData?.inputsValue?.recepientPhoneNumber
             ),
@@ -520,6 +543,9 @@ function SubmitForm() {
             isRequire: true,
             isError: false,
             type: "dropdown",
+            isInputDisable:
+                operationData?.inputsValue?.truckMixCondition !== undefined &&
+                tmCondition === undefined,
             dropdown: {
                 items: TM_CONDITION,
                 placeholder: operationData?.inputsValue?.truckMixCondition
@@ -536,6 +562,7 @@ function SubmitForm() {
                             value
                         })
                     );
+                    setTMCondition(value);
                 }
             }
         }
@@ -623,6 +650,7 @@ function SubmitForm() {
         [operationData?.photoFiles, dispatch]
     );
 
+    console.log("lolololo:: ", operationData?.inputsValue);
     return (
         <SafeAreaView style={style.parent}>
             <FlashList

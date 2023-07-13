@@ -262,7 +262,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             operationData?.projectDetails?.deliveryOrderId
         );
 
-        console.log("tomtom:: ", localFiles);
         if (
             responseUpdateDeliveryOrder?.data?.success &&
             responseUpdateDeliveryOrder?.data?.success !== false
@@ -275,7 +274,9 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         file: {
                             ...it?.file,
                             uri:
-                                newFileData && newFileData?.length > 0
+                                newFileData &&
+                                newFileData?.length > 0 &&
+                                it.attachType === photoTitle
                                     ? newFileData[0]?.url
                                     : it?.file?.uri
                         }

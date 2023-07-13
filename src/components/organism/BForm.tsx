@@ -323,6 +323,7 @@ const renderInput = (
                         placeholder={placeholder}
                         contentStyle={textStyles}
                         outlineColor={outlineColor}
+                        disabled={isInputDisable}
                     />
                     <View style={styles.quantityText}>
                         <BText>{quantityType || "m³"}</BText>
@@ -906,6 +907,7 @@ const renderInput = (
                     <BDropdown
                         open={false}
                         value={value}
+                        disable={isInputDisable}
                         items={dropdown.items}
                         onChange={dropdown.onChange}
                         placeholder={dropdown.placeholder}

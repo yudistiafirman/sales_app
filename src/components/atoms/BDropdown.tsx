@@ -29,6 +29,7 @@ interface IProps {
     placeholder: string;
     isError?: boolean;
     errorMessage?: string;
+    disable?: boolean;
 }
 
 const styles: Styles = {
@@ -78,7 +79,8 @@ function BDropdown(props: IProps) {
         onChange,
         open: openProps,
         value: valueProps,
-        items: itemsProps
+        items: itemsProps,
+        disable
     } = props;
     const [open, setOpen] = React.useState(openProps);
     const [value, setValue] = React.useState(valueProps);
@@ -96,6 +98,7 @@ function BDropdown(props: IProps) {
                 setItems={setItems}
                 onChangeValue={onChange}
                 placeholder={placeholder}
+                disabled={disable !== undefined ? disable : false}
                 dropDownDirection="BOTTOM"
                 placeholderStyle={{
                     color: colors.textInput.placeHolder
