@@ -211,7 +211,7 @@ export default function FirstStep() {
                                 }
                             />
                             <BSearchBar
-                                placeholder="Cari PT / Proyek"
+                                placeholder="Cari Pelanggan / Proyek"
                                 disabled
                                 activeOutlineColor="gray"
                                 left={

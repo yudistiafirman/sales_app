@@ -181,7 +181,7 @@ function CreateScheduleScreen() {
     useHeaderTitleChanged({
         title:
             values?.isSearchingPurchaseOrder === true
-                ? "Cari PT / Proyek"
+                ? "Cari Pelanggan / Proyek"
                 : "Buat Jadwal",
         selectedBP: authState.selectedBatchingPlant
     });

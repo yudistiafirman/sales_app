@@ -200,7 +200,7 @@ function Deposit() {
     useHeaderTitleChanged({
         title:
             values?.isSearchingPurchaseOrder === true
-                ? "Cari PT / Proyek"
+                ? "Cari Pelanggan / Proyek"
                 : "Buat Deposit",
         selectedBP: authState.selectedBatchingPlant
     });

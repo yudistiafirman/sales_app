@@ -137,6 +137,13 @@ function SelectPurchaseOrderData({
         }
     };
 
+    const getPlaceholderName = () => {
+        if (dataToGet === "DEPOSITDATA" || dataToGet === "SCHEDULEDATA") {
+            return "Cari Pelanggan / Proyek";
+        }
+        return "Cari PT / Proyek";
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <SelectedPOModal
@@ -153,7 +160,7 @@ function SelectPurchaseOrderData({
             <BCommonSearchList
                 searchQuery={searchQuery}
                 onChangeText={onChangeText}
-                placeholder="Cari PT / Proyek"
+                placeholder={getPlaceholderName()}
                 onClearValue={onClearValue}
                 index={index}
                 routes={routes}

@@ -235,7 +235,7 @@ export default function SecondStep() {
                                         }
                                     >
                                         <BSearchBar
-                                            placeholder="Cari PT / Proyek"
+                                            placeholder="Cari Pelanggan / Proyek"
                                             activeOutlineColor="gray"
                                             disabled
                                             left={
