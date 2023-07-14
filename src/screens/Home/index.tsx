@@ -730,7 +730,7 @@ function Beranda() {
                 <View style={style.modalContent}>
                     <BSpacer size="extraSmall" />
                     <BCommonSearchList
-                        placeholder="Cari PT / Proyek"
+                        placeholder="Cari Proyek"
                         index={searchIndex}
                         onIndexChange={setSearchIndex}
                         onPressMagnify={kunjunganAction}
@@ -800,7 +800,7 @@ function Beranda() {
                         onPress={() => toggleModal("open")()}
                     />
                     <BSearchBar
-                        placeholder="Cari PT / Proyek"
+                        placeholder="Cari Proyek"
                         activeOutlineColor="gray"
                         disabled
                         left={

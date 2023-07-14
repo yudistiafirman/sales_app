@@ -104,7 +104,7 @@ export default function FirstStep() {
                                 onPress={() => setSearching(!isSearching)}
                             />
                             <BSearchBar
-                                placeholder="Cari PT / Proyek"
+                                placeholder="Cari Proyek"
                                 activeOutlineColor="gray"
                                 disabled
                                 left={
@@ -120,7 +120,7 @@ export default function FirstStep() {
                             index={pageIndex}
                             onIndexChange={setPageIndex}
                             routes={routes}
-                            placeholder="Cari PT / Proyek"
+                            placeholder="Cari Proyek"
                             searchQuery={searchQuery}
                             onChangeText={(text: string) => {
                                 setSearchQuery(text);

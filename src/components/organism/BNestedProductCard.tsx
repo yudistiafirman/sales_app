@@ -223,7 +223,8 @@ export default function BNestedProductCard({
                 const name =
                     poNumber ||
                     item?.QuotationLetter?.number ||
-                    item?.brikNumber;
+                    item?.brikNumber ||
+                    item?.customerNumber;
                 const totalPrice = item?.totalPrice
                     ? item?.totalPrice
                     : item?.products && item?.products?.length > 0

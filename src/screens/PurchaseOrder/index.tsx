@@ -61,7 +61,7 @@ function PurchaseOrder() {
     } = poState.currentState.context;
     const { keyboardVisible } = useKeyboardActive();
     const [isPopupExitVisible, setIsPopupExitVisible] = useState(false);
-    const labels = ["Cari PT / Proyek", "Detil Pembayaran", "Detil Produk"];
+    const labels = ["Cari Proyek", "Detil Pembayaran", "Detil Produk"];
     const isBtnFooterShown = !poState.currentState.matches(
         "firstStep.SearchSph"
     );
@@ -194,7 +194,7 @@ function PurchaseOrder() {
     const renderTitle = useCallback(() => {
         let title = customerType === "INDIVIDU" ? "Buat SO" : "Buat PO";
         if (poState.currentState.matches("firstStep.SearchSph")) {
-            title = "Cari PT / Proyek";
+            title = "Cari Proyek";
         }
         return title;
     }, [poState.currentState]);

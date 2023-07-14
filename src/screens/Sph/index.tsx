@@ -58,7 +58,7 @@ const style = StyleSheet.create({
 });
 
 const labels = [
-    "Cari PT / Proyek",
+    "Cari Proyek",
     "Konfirmasi Alamat",
     "Tipe Pembayaran",
     "Pilih Produk",

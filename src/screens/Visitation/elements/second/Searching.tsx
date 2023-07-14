@@ -214,7 +214,7 @@ function SearchFlow({
                         index={index}
                         onIndexChange={setIndex}
                         routes={routes}
-                        placeholder="Cari PT / Proyek"
+                        placeholder="Cari Proyek"
                         searchQuery={visitationData?.searchQuery}
                         autoFocus
                         onChangeText={onChangeSearch}
@@ -246,7 +246,7 @@ function SearchFlow({
                     />
                     <BSearchBar
                         disabled
-                        placeholder="Cari PT / Proyek"
+                        placeholder="Cari Proyek"
                         activeOutlineColor="gray"
                         left={
                             <TextInput.Icon

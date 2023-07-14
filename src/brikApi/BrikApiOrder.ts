@@ -103,7 +103,7 @@ export default class BrikApiOrder {
         productPo?: "1" | "0",
         batchingPlantId?: string
     ) => {
-        const url = new URL(`${API_URL}/order/m/project-po`);
+        const url = new URL(`${API_URL}/order/m/project-purchase-order`);
         const params = url.searchParams;
         if (page) {
             params.append("page", page);

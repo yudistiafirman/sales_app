@@ -25,6 +25,8 @@ import { resScale } from "@/utils";
 import formatCurrency from "@/utils/formatCurrency";
 import { CREATE_DEPOSIT } from "@/navigation/ScreenNames";
 import crashlytics from "@react-native-firebase/crashlytics";
+import BAlertText from "@/components/atoms/BAlertText";
+import { DepositStatus } from "@/interfaces/SelectConfirmedPO";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -205,6 +207,7 @@ export default function SecondStep() {
                                         <Text style={style.summary}>
                                             Est Deposit Akhir
                                         </Text>
+
                                         <Text
                                             style={[
                                                 style.summary,
@@ -214,6 +217,10 @@ export default function SecondStep() {
                                             {formatCurrency(calculatedTotal())}
                                         </Text>
                                     </View>
+                                    {stateTwo?.purchaseOrders[0]?.status !==
+                                        DepositStatus.APPROVED && (
+                                        <BAlertText text="Purchase Order ini belum disetujui" />
+                                    )}
                                 </>
                             ) : (
                                 <>
@@ -228,7 +235,7 @@ export default function SecondStep() {
                                         }
                                     >
                                         <BSearchBar
-                                            placeholder="Cari PT / Proyek"
+                                            placeholder="Cari Pelanggan / Proyek"
                                             activeOutlineColor="gray"
                                             disabled
                                             left={

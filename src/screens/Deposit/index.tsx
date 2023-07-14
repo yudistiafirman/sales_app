@@ -34,6 +34,7 @@ import { uploadFileImage } from "@/actions/CommonActions";
 import { postPayment } from "@/actions/FinanceActions";
 import { RootState } from "@/redux/store";
 import crashlytics from "@react-native-firebase/crashlytics";
+import { DepositStatus } from "@/interfaces/SelectConfirmedPO";
 import SecondStep from "./element/SecondStep";
 import FirstStep from "./element/FirstStep";
 
@@ -44,7 +45,7 @@ const styles: Styles = {
     }
 };
 
-const labels = ["Data Pelanggan", "Cari PT / Proyek"];
+const labels = ["Data Pelanggan", "Cari Proyek"];
 
 function stepHandler(
     state: CreateDepositState,
@@ -64,7 +65,12 @@ function stepHandler(
         setStepsDone((curr) => curr?.filter((num) => num !== 0));
     }
 
-    if (stepTwo?.companyName && stepTwo?.purchaseOrders && existingProjectID) {
+    if (
+        stepTwo?.companyName &&
+        stepTwo?.purchaseOrders &&
+        existingProjectID &&
+        stepTwo?.purchaseOrders[0]?.status === DepositStatus.APPROVED
+    ) {
         setStepsDone((curr) => [...new Set(curr), 1]);
     } else {
         setStepsDone((curr) => curr?.filter((num) => num !== 1));
@@ -194,7 +200,7 @@ function Deposit() {
     useHeaderTitleChanged({
         title:
             values?.isSearchingPurchaseOrder === true
-                ? "Cari PT / Proyek"
+                ? "Cari Pelanggan / Proyek"
                 : "Buat Deposit",
         selectedBP: authState.selectedBatchingPlant
     });
