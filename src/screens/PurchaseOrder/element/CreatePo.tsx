@@ -206,7 +206,7 @@ function CreatePo() {
                                                 />
                                             }
                                             disabled
-                                            placeholder="Cari PT / Proyek"
+                                            placeholder="Cari Proyek"
                                         />
                                     </TouchableOpacity>
                                 )}

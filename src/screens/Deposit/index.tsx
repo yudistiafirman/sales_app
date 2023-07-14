@@ -45,7 +45,7 @@ const styles: Styles = {
     }
 };
 
-const labels = ["Data Pelanggan", "Cari PT / Proyek"];
+const labels = ["Data Pelanggan", "Cari Proyek"];
 
 function stepHandler(
     state: CreateDepositState,

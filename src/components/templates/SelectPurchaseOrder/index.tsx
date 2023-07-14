@@ -141,7 +141,7 @@ function SelectPurchaseOrderData({
         if (dataToGet === "DEPOSITDATA" || dataToGet === "SCHEDULEDATA") {
             return "Cari Pelanggan / Proyek";
         }
-        return "Cari PT / Proyek";
+        return "Cari Proyek";
     };
 
     return (

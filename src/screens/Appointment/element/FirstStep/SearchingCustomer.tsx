@@ -138,7 +138,7 @@ function SearchingCustomer() {
                         dispatch(enableSearching({ value: false }));
                     }
                 }}
-                placeholder="Cari PT / Proyek"
+                placeholder="Cari Proyek"
                 index={searchIndex}
                 emptyText={`${appoinmentState?.searchQuery} tidak ditemukan!`}
                 routes={routes}

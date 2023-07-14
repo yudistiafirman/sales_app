@@ -42,7 +42,7 @@ const styles: Styles = {
     }
 };
 
-const labels = ["Cari PT / Proyek", "Detil Pengiriman"];
+const labels = ["Cari Proyek", "Detil Pengiriman"];
 
 function stepHandler(
     state: CreateScheduleState,

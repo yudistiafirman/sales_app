@@ -47,7 +47,7 @@ function FirstStep() {
                         }
                     />
                     <BSearchBar
-                        placeholder="Cari PT / Proyek"
+                        placeholder="Cari Proyek"
                         activeOutlineColor="gray"
                         disabled
                         left={
