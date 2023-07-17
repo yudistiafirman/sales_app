@@ -259,6 +259,7 @@ export default function Appointment() {
                         outsideClickClosePopUp: false,
                         outlineBtnAction: () => {
                             navigation.goBack();
+                            dispatch(resetAppointmentState());
                             dispatch(closePopUp());
                         },
                         primaryBtnAction: () => {
