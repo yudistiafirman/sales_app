@@ -493,6 +493,7 @@ function SubmitForm() {
                 setReceipientName(e?.nativeEvent?.text);
             },
             isInputDisable:
+                operationData?.inputsValue?.recepientName !== null &&
                 operationData?.inputsValue?.recepientName !== undefined &&
                 receipientName === undefined,
             isRequire: true,
@@ -516,8 +517,9 @@ function SubmitForm() {
                 setReceipientPhone(e?.nativeEvent?.text);
             },
             isInputDisable:
-                operationData?.inputsValue?.recepientPhoneNumber !==
-                    undefined && receipientPhone === undefined,
+                operationData?.inputsValue?.recepientPhoneNumber !== null &&
+                operationData?.inputsValue?.recepientName !== undefined &&
+                receipientPhone === undefined,
             isError: !phoneNumberRegex?.test(
                 operationData?.inputsValue?.recepientPhoneNumber
             ),
@@ -536,7 +538,10 @@ function SubmitForm() {
                 : undefined
         }
     ];
-
+    console.log(
+        "ini recepient name",
+        operationData?.inputsValue?.recepientName
+    );
     const returnInputs: Input[] = [
         {
             label: "Kondisi TM",
