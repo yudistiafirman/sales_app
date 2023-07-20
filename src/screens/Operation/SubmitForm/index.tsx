@@ -548,6 +548,7 @@ function SubmitForm() {
             type: "dropdown",
             isInputDisable:
                 operationData?.inputsValue?.truckMixCondition !== undefined &&
+                operationData?.inputsValue?.truckMixCondition !== null &&
                 tmCondition === undefined,
             dropdown: {
                 items: TM_CONDITION,
