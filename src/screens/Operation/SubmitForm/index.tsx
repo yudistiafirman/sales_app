@@ -587,7 +587,7 @@ function SubmitForm() {
             removeDriverPhoto
         ]
     );
-    console.log(operationData?.inputsValue?.truckMixCondition);
+
     const addMoreImages = useCallback(
         (attachType?: string) => {
             switch (userData?.type) {
