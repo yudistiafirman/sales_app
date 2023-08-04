@@ -48,6 +48,7 @@ import {
 } from "@/utils/generalFunc";
 import { uploadFileImage } from "@/actions/CommonActions";
 import { postSph } from "@/actions/OrderActions";
+import { useNavigation } from "@react-navigation/native";
 import StepDone from "../StepDoneModal/StepDone";
 import { SphContext } from "../context/SphContext";
 import ChoosePicModal from "../ChoosePicModal";
@@ -268,6 +269,7 @@ export default function FifthStep() {
     const { selectedBatchingPlant } = useSelector(
         (state: RootState) => state.auth
     );
+    const navigation = useNavigation();
     const [, stateUpdate, setCurrentPosition] = useContext(SphContext);
     const sphState = useSelector((state: RootState) => state.sph);
 
@@ -399,9 +401,12 @@ export default function FifthStep() {
             ) {
                 setMadeSphData(sphResponse?.data?.data?.sph);
                 dispatch(closePopUp());
-                setTimeout(
-                    () => setIsStepDoneVisible(true),
-                    Platform.OS === "ios" ? 500 : 0
+                navigation.goBack();
+                dispatch(
+                    openPopUp({
+                        popUpType: "success",
+                        popUpText: "Pembuatan Sph Berhasil"
+                    })
                 );
             } else {
                 dispatch(closePopUp());

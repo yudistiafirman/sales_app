@@ -316,7 +316,7 @@ function TransactionDetail() {
         downloadError
     }: DownloadType) => {
         if (!url) {
-            downloadError(undefined);
+            downloadError(`File ${selectedType} belum tersedia`);
             return null;
         }
         const { dirs } = ReactNativeBlobUtil.fs;
@@ -370,7 +370,7 @@ function TransactionDetail() {
     }
     const shareFunc = async (url?: string) => {
         try {
-            if (!url) throw new Error("no url");
+            if (!url) throw new Error(`File ${selectedType} belum tersedia`);
             await Share.share({
                 url: url.replace(/\s/g, "%20"),
                 message: `Link PDF ${selectedType} ${
