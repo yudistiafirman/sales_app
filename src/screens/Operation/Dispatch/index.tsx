@@ -2,9 +2,15 @@ import crashlytics from "@react-native-firebase/crashlytics";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useMachine } from "@xstate/react";
 import React from "react";
-import { StyleSheet, SafeAreaView, DeviceEventEmitter } from "react-native";
+import {
+    StyleSheet,
+    SafeAreaView,
+    DeviceEventEmitter,
+    Linking,
+    Platform
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { layout } from "@/constants";
+import { fonts, layout } from "@/constants";
 import colors from "@/constants/colors";
 import { OperationsDeliveryOrdersListResponse } from "@/interfaces/Operation";
 import displayOperationListMachine from "@/machine/displayOperationListMachine";
@@ -27,7 +33,16 @@ import {
     setExistingFiles
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
-import { mapDOPhotoFromBE, safetyCheck } from "@/utils/generalFunc";
+import {
+    getAppVersionName,
+    getMinVersionUpdate,
+    isDevelopment,
+    isForceUpdate,
+    mapDOPhotoFromBE,
+    safetyCheck
+} from "@/utils/generalFunc";
+import { Button, Dialog, Portal } from "react-native-paper";
+import { BText } from "@/components";
 import OperationList from "../element/OperationList";
 
 const style = StyleSheet.create({
@@ -42,12 +57,17 @@ function Dispatch() {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const [doListState, send] = useMachine(displayOperationListMachine);
-    const { userData, selectedBatchingPlant, batchingPlants } = useSelector(
-        (state: RootState) => state.auth
-    );
+    const {
+        userData,
+        selectedBatchingPlant,
+        batchingPlants,
+        remoteConfigData
+    } = useSelector((state: RootState) => state.auth);
     const { projectDetails, photoFiles } = useSelector(
         (state: RootState) => state.operation
     );
+    const [isUpdateDialogVisible, setUpdateDialogVisible] =
+        React.useState(false);
     const {
         operationListData,
         isLoadMore,
@@ -55,6 +75,10 @@ function Dispatch() {
         isRefreshing,
         searchQuery
     } = doListState.context;
+
+    /* eslint-disable @typescript-eslint/naming-convention */
+
+    const { force_update } = remoteConfigData;
 
     useFocusEffect(
         React.useCallback(() => {
@@ -275,6 +299,64 @@ function Dispatch() {
         }
     };
 
+    const renderUpdateDialog = () => (
+        <Portal>
+            <Dialog
+                visible={isUpdateDialogVisible}
+                dismissable={!isForceUpdate(force_update)}
+                onDismiss={() => setUpdateDialogVisible(!isUpdateDialogVisible)}
+                style={{ backgroundColor: colors.white }}
+            >
+                <Dialog.Title
+                    style={{
+                        fontFamily: fonts.family.montserrat[500],
+                        fontSize: fonts.size.lg
+                    }}
+                >
+                    Update Aplikasi
+                </Dialog.Title>
+                <Dialog.Content>
+                    <BText bold="300">
+                        Aplikasi anda telah usang, silakan update sebelum
+                        melanjutkan.
+                    </BText>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    {!isForceUpdate(force_update) && (
+                        <Button
+                            onPress={() =>
+                                setUpdateDialogVisible(!isUpdateDialogVisible)
+                            }
+                        >
+                            Cancel
+                        </Button>
+                    )}
+                    <Button
+                        onPress={() =>
+                            Linking.openURL(
+                                Platform.OS === "ios"
+                                    ? "http://itunes.com/apps/bod"
+                                    : "https://play.google.com/store/apps/details?id=bod.app"
+                            )
+                        }
+                    >
+                        Update
+                    </Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
+    );
+
+    React.useEffect(() => {
+        let currentVersionName = getAppVersionName();
+        if (isDevelopment())
+            currentVersionName = currentVersionName?.replace("(Dev)", "");
+        setUpdateDialogVisible(
+            currentVersionName?.split(".")?.join("") <
+                getMinVersionUpdate(force_update)
+        );
+    }, [force_update]);
+
     return (
         <SafeAreaView style={style.container}>
             <OperationList
@@ -309,6 +391,7 @@ function Dispatch() {
                     })
                 }
             />
+            {renderUpdateDialog()}
         </SafeAreaView>
     );
 }
