@@ -35,6 +35,7 @@ import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import crashlytics from "@react-native-firebase/crashlytics";
 import { SPH } from "@/navigation/ScreenNames";
 import {
+    resetSPHState,
     updateSelectedCompany,
     updateSelectedPic,
     updateUploadedAndMappedRequiredDocs,
@@ -401,11 +402,12 @@ export default function FifthStep() {
             ) {
                 setMadeSphData(sphResponse?.data?.data?.sph);
                 dispatch(closePopUp());
+                dispatch(resetSPHState());
                 navigation.goBack();
                 dispatch(
                     openPopUp({
                         popUpType: "success",
-                        popUpText: "Pembuatan Sph Berhasil"
+                        popUpText: "Pembuatan SPH Berhasil"
                     })
                 );
             } else {
