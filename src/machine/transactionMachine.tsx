@@ -352,8 +352,9 @@ const transactionMachine =
                         } else if (_context?.selectedType === "DO") {
                             response = await getAllDeliveryOrders(
                                 undefined,
-                                _context?.size?.toString(),
+                                undefined,
                                 _context?.page?.toString(),
+                                _context?.size?.toString(),
                                 _context?.batchingPlantId
                             );
                             response = response?.data;
