@@ -402,7 +402,7 @@ export default function FifthStep() {
             ) {
                 setMadeSphData(sphResponse?.data?.data?.sph);
                 dispatch(closePopUp());
-                dispatch(resetSPHState());
+
                 navigation.goBack();
                 dispatch(
                     openPopUp({
@@ -410,6 +410,7 @@ export default function FifthStep() {
                         popUpText: "Pembuatan SPH Berhasil"
                     })
                 );
+                dispatch(resetSPHState());
             } else {
                 dispatch(closePopUp());
                 dispatch(
