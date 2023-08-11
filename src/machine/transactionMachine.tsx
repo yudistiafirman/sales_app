@@ -353,8 +353,8 @@ const transactionMachine =
                             response = await getAllDeliveryOrders(
                                 undefined,
                                 undefined,
-                                _context?.page?.toString(),
                                 _context?.size?.toString(),
+                                _context?.page?.toString(),
                                 _context?.batchingPlantId
                             );
                             response = response?.data;
