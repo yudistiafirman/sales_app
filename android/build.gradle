@@ -9,10 +9,11 @@ buildscript {
         MINOR_VERSION = 1
         PATCH_VERSION = 33
 
-        compileSdkVersion = 31
+        compileSdkVersion = 33
         minSdkVersion = 21
-        targetSdkVersion = 31
-        buildToolsVersion = "31.0.0"
+        targetSdkVersion = 33
+        buildToolsVersion = "33.0.0"
+        kotlinVersion = "1.7.0" 
         googlePlayServicesVersion = "18.0.0"
         if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we need to use the NDK 24 which added support for aarch64
@@ -30,9 +31,11 @@ buildscript {
         classpath 'com.google.firebase:perf-plugin:1.4.2'
         classpath 'com.google.gms:google-services:4.3.15'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
-        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:7.4.2")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("de.undercouch:gradle-download-task:5.0.1")
+        
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

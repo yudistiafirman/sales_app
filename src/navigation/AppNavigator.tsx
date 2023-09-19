@@ -19,6 +19,7 @@ import Operation from "@/screens/Operation";
 import Splash from "@/screens/Splash";
 import Verification from "@/screens/Verification";
 import { BatchingPlant } from "@/models/BatchingPlant";
+import Security from "@/screens/Operation/Security";
 import SecurityTabs from "./tabs/SecurityTabs";
 import SalesTabs from "./tabs/SalesTabs";
 import {
@@ -29,7 +30,9 @@ import {
     VERIFICATION_TITLE,
     DRIVER,
     DRIVER_TITLE,
-    BLANK_SCREEN
+    BLANK_SCREEN,
+    SECURITY,
+    SECURITY_TITLE
 } from "./ScreenNames";
 import SalesStack from "./Sales/Stack";
 import SalesHeaderRight from "./Sales/HeaderRight";
@@ -104,11 +107,21 @@ function RootScreen(
                 return (
                     <>
                         <Stack.Screen
-                            name={TAB_ROOT}
-                            key={TAB_ROOT}
-                            component={SecurityTabs}
+                            name={SECURITY}
+                            key={SECURITY}
+                            component={Security}
                             options={{
-                                headerShown: false
+                                headerTitleAlign: "center",
+                                headerTitle: () =>
+                                    selectedBPOption(
+                                        SECURITY_TITLE,
+                                        selectedBatchingPlant,
+                                        batchingPlants,
+                                        onSelectBPOption
+                                    ),
+                                headerRight: () =>
+                                    SalesHeaderRight(colors.text.darker),
+                                headerShown: true
                             }}
                         />
                         {OperationStack(selectedBatchingPlant, Stack)}
