@@ -1,6 +1,5 @@
-import { FlashList } from "@shopify/flash-list";
 import React, { useCallback } from "react";
-import { StyleSheet, View, ListRenderItem } from "react-native";
+import { StyleSheet, View, ListRenderItem, FlatList } from "react-native";
 import { BLabel, BSpacer } from "@/components";
 import { layout } from "@/constants";
 import font from "@/constants/fonts";
@@ -32,8 +31,7 @@ function Product({ products }: { products: Products }) {
         <View style={styles.container}>
             <BLabel bold="600" sizeInNumber={font.size.md} label="Produk" />
             <BSpacer size="extraSmall" />
-            <FlashList
-                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            <FlatList
                 data={products}
                 keyExtractor={(item, index) => index?.toString()}
                 renderItem={renderItem}

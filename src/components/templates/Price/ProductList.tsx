@@ -3,8 +3,7 @@ import PriceListCard from "@/components/templates/Price/PriceListCard";
 import { layout } from "@/constants";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import React, { useCallback } from "react";
-import { ListRenderItem } from "react-native";
-import { FlashList } from "@shopify/flash-list";
+import { FlatList, ListRenderItem } from "react-native";
 import BSpacer from "@/components/atoms/BSpacer";
 import BDivider from "@/components/atoms/BDivider";
 import {
@@ -85,8 +84,7 @@ function ProductList<ArrayOfObject extends ProductsData>({
         );
     }, []);
     return (
-        <FlashList
-            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+        <FlatList
             onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={products}
             onRefresh={onRefresh}

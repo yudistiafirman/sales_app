@@ -1,6 +1,5 @@
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import { layout } from "@/constants";
 import { QuickActionProps } from "@/interfaces/QuickActionButton.type";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
@@ -15,7 +14,7 @@ export default function BQuickAction({
 }: QuickActionProps) {
     return (
         <View style={containerStyle}>
-            <FlashList
+            <FlatList
                 estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 contentContainerStyle={{ paddingLeft: layout.pad.lg }}
                 showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}

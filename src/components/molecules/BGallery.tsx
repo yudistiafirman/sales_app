@@ -1,11 +1,11 @@
-import { FlashList } from "@shopify/flash-list";
 import * as React from "react";
 import {
     View,
     StyleSheet,
     TouchableOpacity,
     Image,
-    ListRenderItem
+    ListRenderItem,
+    FlatList
 } from "react-native";
 import Pdf from "react-native-pdf";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -148,8 +148,7 @@ export default function BGallery({
         []
     );
     return (
-        <FlashList
-            estimatedItemSize={10}
+        <FlatList
             data={picts}
             keyExtractor={(item, index) => index?.toString()}
             renderItem={renderItem}

@@ -26,7 +26,8 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    View
+    View,
+    FlatList
 } from "react-native";
 import crashlytics from "@react-native-firebase/crashlytics";
 import {
@@ -56,7 +57,6 @@ import {
     updateDeliveryOrder,
     updateDeliveryOrderWeight
 } from "@/actions/OrderActions";
-import { FlashList } from "@shopify/flash-list";
 import { mapFileNameToTypeDO, photoIsFromInternet } from "@/utils/generalFunc";
 
 const style = StyleSheet.create({
@@ -657,8 +657,7 @@ function SubmitForm() {
     console.log("lolololo:: ", operationData?.inputsValue);
     return (
         <SafeAreaView style={style.parent}>
-            <FlashList
-                estimatedItemSize={1}
+            <FlatList
                 data={[1]}
                 contentContainerStyle={{
                     paddingHorizontal: layout.pad.lg,

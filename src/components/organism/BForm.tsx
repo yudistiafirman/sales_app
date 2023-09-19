@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     TextStyle,
     Platform,
-    ListRenderItem
+    ListRenderItem,
+    FlatList
 } from "react-native";
 import { IDurationButton, Input } from "@/interfaces";
 import { colors, fonts, layout } from "@/constants";
@@ -17,7 +18,6 @@ import { TextInputMask } from "react-native-masked-text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DatePicker from "react-native-date-picker";
 import { replaceDot } from "@/utils/generalFunc";
-import { FlashList } from "@shopify/flash-list";
 import font from "@/constants/fonts";
 import moment from "moment";
 import { MarkedDates } from "react-native-calendars/src/types";
@@ -1140,9 +1140,8 @@ const renderInput = (
                     isRequired={isRequire}
                 />
                 <BSpacer size="verySmall" />
-                <FlashList
+                <FlatList
                     data={input?.durationButton?.data}
-                    estimatedItemSize={10}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => item?.id}
