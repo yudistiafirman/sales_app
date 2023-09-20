@@ -212,15 +212,32 @@ android {
             // signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+            // For each separate APK per architecture, set a unique version code as described here:
+            // https://developer.android.com/studio/build/configure-apk-splits.html
+            // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            def flavorName = variant.flavorName
+            def buildType = variant.buildType.name
+            def versionCodes = ["armeabi-v7a": variant.versionCode, "x86": variant.versionCode + 1, "arm64-v8a": variant.versionCode + 2, "x86_64": variant.versionCode + 3]
+            def abi = output.getFilter(com.android.build.OutputFile.ABI) 
+            if (abi != null) {  // null for the universal-debug, universal-release variants
+                output.versionCodeOverride =
+                        defaultConfig.versionCode * 1000 + versionCodes.get(abi)
+            }
+            variant.outputs.all {
+                outputFileName = "BOD-${flavorName}-${versionName}(${versionCode})-${buildType}.apk"
+            }
+        }
+    }
         firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
         }
     }
-
-
-
 
     packagingOptions {
        pickFirst 'lib/x86/libc++_shared.so'

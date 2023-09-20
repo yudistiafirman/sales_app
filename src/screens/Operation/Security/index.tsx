@@ -23,6 +23,7 @@ import {
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
+    onChangeInputValue,
     onChangeProjectDetails,
     setAllOperationPhoto,
     setExistingFiles
@@ -142,6 +143,14 @@ function Security() {
             deliveryTime: item?.date ? item?.date : ""
         };
         dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+        if (entry.type === EntryType.RETURN) {
+            dispatch(
+                onChangeInputValue({
+                    inputType: "truckMixCondition",
+                    value: item?.conditionTruck
+                })
+            );
+        }
 
         const existingFirstPhoto = item?.DeliveryOrderFile?.filter(
             (it) => it?.type === securityDispatchFileType[0]
