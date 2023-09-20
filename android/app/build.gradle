@@ -201,6 +201,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // release {
+        //     storeFile file("release.jks")
+        //     storePassword System.getProperty("KEYSTORE_PASSWORD")
+        //     keyAlias System.getProperty("KEY_ALIAS")
+        //     keyPassword System.getProperty("KEY_PASSWORD")
+        // }
     }
     buildTypes {
         debug {
