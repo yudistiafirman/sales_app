@@ -19,7 +19,9 @@ import {
     CAMERA,
     SUBMIT_FORM,
     securityDispatchFileName,
-    securityDispatchFileType
+    securityDispatchFileType,
+    securityReturnFileName,
+    securityReturnFileType
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
@@ -152,95 +154,147 @@ function Security() {
             );
         }
 
+        const securityFileType =
+            entry.type === EntryType.RETURN
+                ? securityReturnFileType[0]
+                : securityDispatchFileType[0];
+
         const existingFirstPhoto = item?.DeliveryOrderFile?.filter(
-            (it) => it?.type === securityDispatchFileType[0]
+            (it) => it?.type === securityFileType
         );
         if (existingFirstPhoto && existingFirstPhoto?.length > 0) {
             const BEFiles = mapDOPhotoFromBE(
                 item?.DeliveryOrderFile,
                 entry.type
             );
-            dispatch(
-                setAllOperationPhoto({
-                    file: [
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType ===
-                                        securityDispatchFileName[0]
-                                )?.file || null,
-                            attachType: securityDispatchFileName[0]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType ===
-                                        securityDispatchFileName[1]
-                                )?.file || null,
-                            attachType: securityDispatchFileName[1]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType ===
-                                        securityDispatchFileName[2]
-                                )?.file || null,
-                            attachType: securityDispatchFileName[2]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType ===
-                                        securityDispatchFileName[3]
-                                )?.file || null,
-                            attachType: securityDispatchFileName[3]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType ===
-                                        securityDispatchFileName[4]
-                                )?.file || null,
-                            attachType: securityDispatchFileName[4]
-                        }
-                    ]
-                })
-            );
+
+            if (entry.type === EntryType.RETURN) {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityReturnFileName[0]
+                                    )?.file || null,
+                                attachType: securityReturnFileName[0]
+                            },
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityReturnFileName[1]
+                                    )?.file || null,
+                                attachType: securityReturnFileName[1]
+                            }
+                        ]
+                    })
+                );
+            } else {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityDispatchFileName[0]
+                                    )?.file || null,
+                                attachType: securityDispatchFileName[0]
+                            },
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityDispatchFileName[1]
+                                    )?.file || null,
+                                attachType: securityDispatchFileName[1]
+                            },
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityDispatchFileName[2]
+                                    )?.file || null,
+                                attachType: securityDispatchFileName[2]
+                            },
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityDispatchFileName[3]
+                                    )?.file || null,
+                                attachType: securityDispatchFileName[3]
+                            },
+                            {
+                                file:
+                                    BEFiles?.find(
+                                        (it) =>
+                                            it?.attachType ===
+                                            securityDispatchFileName[4]
+                                    )?.file || null,
+                                attachType: securityDispatchFileName[4]
+                            }
+                        ]
+                    })
+                );
+            }
+
             navigation.navigate(SUBMIT_FORM, {
                 operationType: entry.type
             });
         } else {
-            dispatch(
-                setAllOperationPhoto({
-                    file: [
-                        {
-                            file: null,
-                            attachType: securityDispatchFileName[0]
-                        },
-                        {
-                            file: null,
-                            attachType: securityDispatchFileName[1]
-                        },
-                        {
-                            file: null,
-                            attachType: securityDispatchFileName[2]
-                        },
-                        {
-                            file: null,
-                            attachType: securityDispatchFileName[3]
-                        },
-                        {
-                            file: null,
-                            attachType: securityDispatchFileName[4]
-                        }
-                    ]
-                })
-            );
+            if (entry.type === EntryType.RETURN) {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            {
+                                file: null,
+                                attachType: securityReturnFileName[0]
+                            },
+                            {
+                                file: null,
+                                attachType: securityReturnFileName[1]
+                            }
+                        ]
+                    })
+                );
+            } else {
+                dispatch(
+                    setAllOperationPhoto({
+                        file: [
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[0]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[1]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[2]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[3]
+                            },
+                            {
+                                file: null,
+                                attachType: securityDispatchFileName[4]
+                            }
+                        ]
+                    })
+                );
+            }
+
             navigation.navigate(CAMERA, {
                 photoTitle: securityDispatchFileName[0],
                 closeButton: true,
