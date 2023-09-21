@@ -11,4 +11,5 @@ pipelines:
             - step:
                   name: Our Very First Pipeline!
                   script:
-                      - echo "Hello World!"
+                      - yarn install
+                      - yarn androidRelease-Dev
