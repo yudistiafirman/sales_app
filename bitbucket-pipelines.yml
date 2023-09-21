@@ -6,13 +6,9 @@
 image: atlassian/default-image:3
 
 pipelines:
-    # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
     branches:
-        development:
+        main:
             - step:
-                  max-time: 120
-                  size: "1x"
+                  name: Our Very First Pipeline!
                   script:
-                      - echo yarn install
-                      - echo yarn androidRelease-Dev
-                  trigger: automatic
+                      - echo "Hello World!"
