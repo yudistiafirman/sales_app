@@ -3,12 +3,26 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
-image: atlassian/default-image:3
+image: node:10.15.3
 
 pipelines:
     branches:
-        main:
+        main: #name of your test branch
             - step:
-                  name: Our Very First Pipeline!
-                  script:
-                      - gradlew assembleRelease
+                  image: node:10.15.3
+                  caches:
+                      - node
+                      - gradle
+                  script: # Modify the commands below to build your repository.
+                      #env preperation
+                      - yarn install
+            - step:
+                  image: mingc/android-build-box:latest
+                  caches:
+                      - node
+                  script: # Modify the commands below to build your repository
+                      #build
+                      - cd ./android
+                      - chmod +x gradlew
+                      - ./gradlew assembleRelease
+                      - ls -R
