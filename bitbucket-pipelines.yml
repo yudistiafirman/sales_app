@@ -11,5 +11,4 @@ pipelines:
             - step:
                   name: Our Very First Pipeline!
                   script:
-                      - yarn install
-                      - yarn androidRelease-Dev
+                      - gradlew assembleRelease
