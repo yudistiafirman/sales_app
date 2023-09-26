@@ -172,9 +172,15 @@ function SearchAreaProject({ route }: { route: any }) {
                 onChangeText={onChangeValue}
                 placeholder="Cari alamat Area Proyek"
                 value={text}
-                left={<TextInput.Icon icon="magnify" />}
+                left={
+                    <TextInput.Icon
+                        style={{ marginBottom: 24 }}
+                        icon="magnify"
+                    />
+                }
                 right={
                     <TextInput.Icon
+                        style={{ marginBottom: 24 }}
                         onPress={() => send("clearInput")}
                         icon="close"
                     />

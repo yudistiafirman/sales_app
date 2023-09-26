@@ -156,6 +156,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 onChangeText={(text) => onChangeText(text)}
                 left={
                     <TextInput.Icon
+                        style={{ marginBottom: 24 }}
                         onPress={() =>
                             onPressMagnifyCheck !== null && onPressMagnify
                         }
@@ -164,7 +165,11 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 }
                 right={
                     onClearValue && (
-                        <TextInput.Icon onPress={onClearValue} icon="close" />
+                        <TextInput.Icon
+                            style={{ marginBottom: 24 }}
+                            onPress={onClearValue}
+                            icon="close"
+                        />
                     )
                 }
                 autoFocus={autoFocus}

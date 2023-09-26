@@ -77,6 +77,7 @@ function SecondStep() {
                     placeholder="Pilih Tanggal"
                     right={
                         <TextInput.Icon
+                            style={{ marginBottom: 24 }}
                             forceTextInputFocus={false}
                             icon="chevron-right"
                         />

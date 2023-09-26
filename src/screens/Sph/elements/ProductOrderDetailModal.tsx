@@ -329,6 +329,7 @@ export default function ProductCartModal({
                                 returnKeyType="next"
                                 right={
                                     <TextInput.Icon
+                                        style={{ marginBottom: 24 }}
                                         forceTextInputFocus={false}
                                         icon={() => TextIcon("m³")}
                                     />
@@ -359,12 +360,14 @@ export default function ProductCartModal({
                                 keyboardType="numeric"
                                 left={
                                     <TextInput.Icon
+                                        style={{ marginBottom: 24 }}
                                         forceTextInputFocus={false}
                                         icon={() => TextIcon("Rp")}
                                     />
                                 }
                                 right={
                                     <TextInput.Icon
+                                        style={{ marginBottom: 24 }}
                                         forceTextInputFocus={false}
                                         icon={() => TextIcon("/m³")}
                                     />
