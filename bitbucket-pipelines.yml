@@ -14,7 +14,7 @@ pipelines:
         development: #name of your test branch
             - step:
                   name: "Install dependencies"
-                  deployment: testing
+
                   image: node:18.8.0
                   caches:
                       - node
@@ -35,10 +35,11 @@ pipelines:
 
             - step:
                   name: "Release to App Center"
+                  deployment: Development
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app BRIK-ID/BRIK --token "215add0f758293abcabe1f3511fc89cff09deea1" --quiet
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
         release/*: #name of your test branch
             - step:
                   name: "Install dependencies"
@@ -62,10 +63,11 @@ pipelines:
 
             - step:
                   name: "Release to App Center"
+                  deployment: Development
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app BRIK-ID/BRIK --token "215add0f758293abcabe1f3511fc89cff09deea1" --quiet
+                        - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
         hotfix/*: #name of your test branch
             - step:
                   name: "Install dependencies"
@@ -89,10 +91,11 @@ pipelines:
 
             - step:
                   name: "Release to App Center"
+                  deployment: Production
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app BRIK-ID/BRIK-1 --token "215add0f758293abcabe1f3511fc89cff09deea1" --quiet
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
         main: #name of your test branch
             - step:
                   name: "Install dependencies"
@@ -116,7 +119,8 @@ pipelines:
 
             - step:
                   name: "Release to App Center"
+                  deployment: Production
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app BRIK-ID/BRIK-1 --token "215add0f758293abcabe1f3511fc89cff09deea1" --quiet
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
