@@ -1,0 +1,39 @@
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+
+options:
+    max-time: 120
+    size: "2x"
+
+image: node:18.8.0
+
+pipelines:
+    branches:
+        test/ci-cd: #name of your test branch
+            - step:
+                  name: "Install dependencies"
+                  image: node:18.8.0
+                  caches:
+                      - node
+                      - gradle
+                  script:
+                      - yarn install
+
+            - step:
+                  name: "Build Android"
+                  image: mingc/android-build-box:latest
+                  caches:
+                      - node
+                  script: # Modify the commands below to build your repository
+                      - cd android
+                      - ./gradlew app:bundleDevelopmentRelease
+                  artifacts:
+                      - android/app/build/outputs/**
+
+            - step:
+                  name: "Release to App Center"
+                  script:
+                      - yarn global add appcenter-cli
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes `$BITBUCKET_COMMIT` --app BRIK-ID/BRIK --token "215add0f758293abcabe1f3511fc89cff09deea1" --quiet
