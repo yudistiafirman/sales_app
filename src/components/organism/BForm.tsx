@@ -756,12 +756,7 @@ const renderInput = (
     if (type === "area") {
         const defaultErrorMsg = `${label} harus diisi`;
         return (
-            <View
-                style={[
-                    styles.relative,
-                    Platform.OS !== "android" && { zIndex: -1 }
-                ]}
-            >
+            <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 {textInputAsButton && (
                     <TouchableOpacity
                         onPress={textInputAsButtonOnPress}
@@ -779,16 +774,16 @@ const renderInput = (
                     value={value}
                     multiline
                     numberOfLines={4}
-                    minHeight={Platform.OS === "ios" ? 20 * 4 : null}
+                    minHeight={Platform.OS === "ios" ? 10 * 4 : null}
                     placeholder={placeholder}
-                    contentStyle={textStyles}
+                    contentStyle={[textStyles, { marginTop: 32 }]}
                     left={
                         LeftIcon && (
                             <TextInput.Icon
                                 forceTextInputFocus={false}
                                 icon={LeftIcon}
                                 style={{
-                                    marginTop: layout.pad.xs
+                                    marginTop: 16
                                 }}
                             />
                         )

@@ -32,11 +32,20 @@ function SearchProductNavbar({
                 onChangeText={onChangeText}
                 placeholder="Cari Produk"
                 autoFocus={autoFocus}
-                left={<TextInput.Icon icon="magnify" />}
+                left={
+                    <TextInput.Icon
+                        style={{ marginBottom: 24 }}
+                        icon="magnify"
+                    />
+                }
                 right={
                     value &&
                     value?.length > 0 && (
-                        <TextInput.Icon onPress={onClearValue} icon="close" />
+                        <TextInput.Icon
+                            style={{ marginBottom: 24 }}
+                            onPress={onClearValue}
+                            icon="close"
+                        />
                     )
                 }
             />

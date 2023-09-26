@@ -217,10 +217,22 @@ function InvoiceList() {
                 textInputStyle={{ minHeight: resScale(42) }}
                 left={
                     <TextInput.Icon
+                        style={{ marginBottom: 24 }}
                         size={layout.pad.xl}
                         disabled
                         icon="magnify"
                     />
+                }
+                right={
+                    invoiceData?.search?.searchQuery &&
+                    invoiceData?.search?.searchQuery?.length > 2 && (
+                        <TextInput.Icon
+                            style={{ marginBottom: 24 }}
+                            onPress={() => onChangeText("")}
+                            size={layout.pad.lg}
+                            icon="close-circle"
+                        />
+                    )
                 }
             />
             <BSpacer size="small" />

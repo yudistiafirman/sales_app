@@ -128,6 +128,7 @@ export default function OperationList({
                 textInputStyle={{ minHeight: resScale(42) }}
                 left={
                     <TextInput.Icon
+                        style={{ marginBottom: 24 }}
                         size={layout.pad.xl}
                         disabled
                         icon="magnify"

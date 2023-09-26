@@ -52,6 +52,7 @@ function FirstStep() {
                         disabled
                         left={
                             <TextInput.Icon
+                                style={{ marginBottom: 24 }}
                                 forceTextInputFocus={false}
                                 icon="magnify"
                             />

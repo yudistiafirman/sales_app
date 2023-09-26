@@ -187,6 +187,7 @@ function BList({
                         textInputStyle={searchBarInputStyle}
                         left={
                             <TextInput.Icon
+                                style={{ marginBottom: 24 }}
                                 size={layout.pad.xl}
                                 disabled
                                 icon="magnify"
@@ -196,6 +197,7 @@ function BList({
                             searchQuery &&
                             searchQuery?.length > 2 && (
                                 <TextInput.Icon
+                                    style={{ marginBottom: 24 }}
                                     onPress={onClearValue}
                                     size={layout.pad.lg}
                                     icon="close-circle"
