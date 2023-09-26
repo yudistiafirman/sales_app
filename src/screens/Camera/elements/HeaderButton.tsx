@@ -1,11 +1,11 @@
-import { FlashList } from "@shopify/flash-list";
 import * as React from "react";
 import {
     StyleProp,
     ViewStyle,
     View,
     StyleSheet,
-    ListRenderItem
+    ListRenderItem,
+    FlatList
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -116,8 +116,7 @@ function HeaderButton({
     return (
         <View style={[styles.cameraBtn, style]}>
             <View style={styles.container}>
-                <FlashList
-                    estimatedItemSize={4}
+                <FlatList
                     renderItem={renderItem}
                     data={cameraHeaderButtonValue}
                     keyExtractor={(item, index) => index?.toString()}

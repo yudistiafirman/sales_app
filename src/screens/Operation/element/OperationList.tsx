@@ -1,6 +1,5 @@
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import {
     BEmptyState,
     BSearchBar,
@@ -142,8 +141,7 @@ export default function OperationList({
     return (
         <>
             {renderDOListHeader()}
-            <FlashList
-                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            <FlatList
                 onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
                 data={data}
                 onRefresh={onRefresh}

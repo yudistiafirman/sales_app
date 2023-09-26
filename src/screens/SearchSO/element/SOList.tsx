@@ -1,6 +1,5 @@
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { BDivider, BEmptyState, BSpacer, BText } from "@/components";
 import BCommonListShimmer from "@/components/templates/BCommonListShimmer";
 import { colors, layout } from "@/constants";
@@ -80,8 +79,7 @@ export default function SOList({
 
     const isSearch = !(keyword && keyword.length > 2);
     return (
-        <FlashList
-            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+        <FlatList
             onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={data}
             onRefresh={onRefresh}

@@ -8,14 +8,14 @@ import font from "@/constants/fonts";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useEffect, useState } from "react";
 import {
     Text,
     StyleSheet,
     View,
     TouchableWithoutFeedback,
-    Platform
+    Platform,
+    FlatList
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getOneInvoice } from "@/actions/FinanceActions";
@@ -590,7 +590,7 @@ function InvoiceDetail() {
                                         : 0.6
                             }}
                         >
-                            <FlashList
+                            <FlatList
                                 data={
                                     invoiceDetailData?.DeliveryOrders?.length >
                                     0
@@ -600,7 +600,6 @@ function InvoiceDetail() {
                                 renderItem={({ item, index }) =>
                                     expand ? renderDoCard(item, index) : null
                                 }
-                                estimatedItemSize={10}
                             />
                         </View>
                     )}

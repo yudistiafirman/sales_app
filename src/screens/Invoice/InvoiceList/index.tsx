@@ -32,10 +32,9 @@ import {
     translatePaymentStatus
 } from "@/utils/generalFunc";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import debounce from "lodash.debounce";
 import React, { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -314,11 +313,10 @@ function InvoiceList() {
     return (
         <View style={styles.container}>
             {renderInvoiceListHeader()}
-            <FlashList
+            <FlatList
                 data={invoiceData?.invoiceData}
                 refreshing={invoiceData?.isRefreshing}
                 renderItem={renderInvoiceCard}
-                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                 onRefresh={onRefresh}
                 onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
                 onEndReached={onEndReached}

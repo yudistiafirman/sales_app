@@ -1,7 +1,7 @@
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import EmptyState from "@/components/organism/BEmptyState";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
+import { FlatList } from "react-native";
 import LocationListCard from "./LocationListCard";
 import LocationListShimmer from "./LocationListShimmer";
 
@@ -55,8 +55,7 @@ function LocationList<ArrayOfObject extends LocationData>({
         return undefined;
     };
     return (
-        <FlashList
-            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+        <FlatList
             data={locationData}
             render
             keyExtractor={(item, index) => index?.toString()}
