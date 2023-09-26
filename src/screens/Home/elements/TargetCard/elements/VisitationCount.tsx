@@ -11,7 +11,7 @@ const style = StyleSheet.create({
     },
     count: {
         fontFamily: font.family.montserrat[500],
-        colors: colors.black
+        color: colors.black
     }
 });
 
