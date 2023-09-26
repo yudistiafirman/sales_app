@@ -19,7 +19,6 @@ import Operation from "@/screens/Operation";
 import Splash from "@/screens/Splash";
 import Verification from "@/screens/Verification";
 import { BatchingPlant } from "@/models/BatchingPlant";
-import Security from "@/screens/Operation/Security";
 import SecurityTabs from "./tabs/SecurityTabs";
 import SalesTabs from "./tabs/SalesTabs";
 import {
@@ -103,13 +102,14 @@ function RootScreen(
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.SECURITY.toLowerCase(): {
+
+            case EntryType.SECURITY.toLocaleLowerCase():
                 return (
                     <>
                         <Stack.Screen
                             name={SECURITY}
                             key={SECURITY}
-                            component={Security}
+                            component={Operation}
                             options={{
                                 headerTitleAlign: "center",
                                 headerTitle: () =>
@@ -127,7 +127,7 @@ function RootScreen(
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            }
+
             case EntryType.WB.toLowerCase():
                 return (
                     <>
