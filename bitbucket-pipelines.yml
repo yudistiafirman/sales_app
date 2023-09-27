@@ -67,7 +67,7 @@ pipelines:
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                        - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
         hotfix/*: #name of your test branch
             - step:
                   name: "Install dependencies"
@@ -95,7 +95,7 @@ pipelines:
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/productionRelease/app-production-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
         main: #name of your test branch
             - step:
                   name: "Install dependencies"
@@ -123,4 +123,4 @@ pipelines:
                   script:
                       - yarn global add appcenter-cli
                       - COMMIT_MSG=$(git log --format=%B -n 1 $BITBUCKET_COMMIT)
-                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/developmentRelease/app-development-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
+                      - appcenter distribute release --group Collaborators --file "android/app/build/outputs/bundle/productionRelease/app-production-release.aab" --release-notes "$COMMIT_MSG" --app $APP_CENTER_APP_NAME --token $APP_CENTER_API_TOKEN --quiet
