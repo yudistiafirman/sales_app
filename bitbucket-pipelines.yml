@@ -14,10 +14,8 @@ pipelines:
         development: #name of your test branch
             - step:
                   name: "Install dependencies"
-
                   image: node:18.8.0
                   caches:
-                      - node
                       - gradle
                   script:
                       - yarn install
@@ -25,8 +23,6 @@ pipelines:
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
-                  caches:
-                      - node
                   script: # Modify the commands below to build your repository
                       - cd android
                       - ./gradlew app:bundleDevelopmentRelease
@@ -45,7 +41,6 @@ pipelines:
                   name: "Install dependencies"
                   image: node:18.8.0
                   caches:
-                      - node
                       - gradle
                   script:
                       - yarn install
@@ -53,8 +48,7 @@ pipelines:
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
-                  caches:
-                      - node
+
                   script: # Modify the commands below to build your repository
                       - cd android
                       - ./gradlew app:bundleDevelopmentRelease
@@ -73,7 +67,6 @@ pipelines:
                   name: "Install dependencies"
                   image: node:18.8.0
                   caches:
-                      - node
                       - gradle
                   script:
                       - yarn install
@@ -81,8 +74,6 @@ pipelines:
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
-                  caches:
-                      - node
                   script: # Modify the commands below to build your repository
                       - cd android
                       - ./gradlew app:bundleProductionRelease
@@ -101,7 +92,6 @@ pipelines:
                   name: "Install dependencies"
                   image: node:18.8.0
                   caches:
-                      - node
                       - gradle
                   script:
                       - yarn install
@@ -109,8 +99,7 @@ pipelines:
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
-                  caches:
-                      - node
+
                   script: # Modify the commands below to build your repository
                       - cd android
                       - ./gradlew app:bundleProductionRelease
