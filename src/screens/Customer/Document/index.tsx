@@ -1,4 +1,4 @@
-import { updateCustomer, uploadFileImage } from "@/actions/CommonActions";
+import { updateCustomer, uploadFiles } from "@/actions/CommonActions";
 import {
     BChip,
     BContainer,
@@ -73,7 +73,7 @@ function Document() {
                 ...value,
                 name: `CD-${uniqueStringGenerator()}-${value?.name}}`
             };
-            const responseFile = await uploadFileImage([valueToUpload]);
+            const responseFile = await uploadFiles([valueToUpload]);
             const id = responseFile?.data?.data[0]?.id;
             if (
                 responseFile?.data?.success &&

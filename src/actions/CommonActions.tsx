@@ -66,7 +66,7 @@ export const signIn = async (body: Record<string, string>) => {
 export const signOut = async () =>
     customRequest(BrikApiCommon.logout(), "POST");
 
-export const uploadFileImage = async (files: any[], from: string) => {
+export const uploadFiles = async (files: any[], from: string) => {
     const formData = new FormData();
     files?.forEach((file) => {
         formData?.append("photos", file);

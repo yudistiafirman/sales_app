@@ -40,6 +40,7 @@ import {
     IMAGE_PREVIEW,
     PO,
     SUBMIT_FORM,
+    driversFileName,
     driversFileType,
     securityDispatchFileType,
     securityReturnFileType,
@@ -55,6 +56,7 @@ import {
     onChangeProjectDetails,
     resetInputsValue,
     setAllOperationPhoto,
+    setAllOperationVideo,
     setOperationPhoto
 } from "@/redux/reducers/operationReducer";
 import {
@@ -67,7 +69,7 @@ import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasLocationPermission } from "@/utils/permissions";
 import { safetyCheck } from "@/utils/generalFunc";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 
 const styles = StyleSheet.create({
     parent: {
@@ -121,13 +123,14 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const soNumber = route?.params?.soNumber;
     const soID = route?.params?.soID;
     const photoTitle = route?.params?.photoTitle;
+    const isVideo = route?.params?.isVideo;
     const visitationData = useSelector((state: RootState) => state.visitation);
     const operationData = useSelector((state: RootState) => state.operation);
     const authState = useSelector((state: RootState) => state.auth);
     let latlongResult = "";
 
     useHeaderTitleChanged({
-        title: `Foto ${photoTitle}`,
+        title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
         selectedBP: authState.selectedBatchingPlant,
         hideBPBadges: true
     });
@@ -194,7 +197,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 navigateTo !== GALLERY_VISITATION &&
                 navigateTo !== GALLERY_DEPOSIT &&
                 navigateTo !== PO &&
-                // navigateTo !== EntryType.DRIVER &&
+                navigateTo === EntryType.DRIVER &&
                 // navigateTo !== EntryType.DISPATCH &&
                 // navigateTo !== EntryType.RETURN &&
                 // navigateTo !== EntryType.IN &&
@@ -238,14 +241,14 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         file: LocalFileType | undefined,
         localFiles: LocalFileType[] | undefined
     ) => {
-        const photoFilestoUpload: any[] = [];
+        const filestoUpload: any[] = [];
         const tempFile = { ...file?.file };
         tempFile?.uri?.replace("file:", "file://");
-        photoFilestoUpload.push(tempFile);
+        filestoUpload.push(tempFile);
         const payload = {} as UpdateDeliverOrder;
 
-        const responseFile = await uploadFileImage(
-            photoFilestoUpload,
+        const responseFile = await uploadFiles(
+            filestoUpload,
             "Update Delivery Order"
         );
         const newFileData = responseFile?.data?.data?.map(
@@ -266,10 +269,10 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             responseUpdateDeliveryOrder?.data?.success &&
             responseUpdateDeliveryOrder?.data?.success !== false
         ) {
-            const newPhotoFiles: LocalFileType[] = [];
+            const newFiles: LocalFileType[] = [];
             localFiles?.forEach((it) => {
                 if (it?.file !== null) {
-                    newPhotoFiles.push({
+                    newFiles.push({
                         ...it,
                         file: {
                             ...it?.file,
@@ -282,10 +285,16 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         }
                     });
                 } else {
-                    newPhotoFiles.push(it);
+                    newFiles.push(it);
                 }
             });
-            dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
+            if (isVideo === true) {
+                dispatch(setAllOperationVideo({ file: newFiles }));
+            } else {
+                dispatch(setAllOperationPhoto({ file: newFiles }));
+            }
+        } else if (isVideo === true) {
+            dispatch(setAllOperationVideo({ file: localFiles }));
         } else {
             dispatch(setAllOperationPhoto({ file: localFiles }));
         }
@@ -296,7 +305,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         const photoName = photo?.split("/")?.pop();
         const pdfName = picker?.name;
         const photoNameParts = photoName?.split(".");
-        let photoType =
+        let photoType: string =
             photoNameParts && photoNameParts?.length > 0
                 ? photoNameParts[photoNameParts.length - 1]
                 : "";
@@ -310,13 +319,14 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             localFile = {
                 file: {
                     uri: `file:${photo}`,
-                    type: `image/${photoType}`,
+                    type: isVideo === true ? photoType : `image/${photoType}`,
                     name: photoName,
                     longlat: latlongResult,
                     datetime: moment(new Date()).format("DD/MM/yyyy HH:mm:ss")
                 },
                 isFromPicker: false,
                 type: imagePayloadType,
+                isVideo: isVideo ?? false,
                 attachType:
                     navigateTo === EntryType.DRIVER ||
                     navigateTo === EntryType.DISPATCH ||
@@ -337,6 +347,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 },
                 isFromPicker: true,
                 type: imagePayloadType,
+                isVideo: isVideo ?? false,
                 attachType:
                     navigateTo === EntryType.DRIVER ||
                     navigateTo === EntryType.DISPATCH ||
@@ -461,15 +472,36 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 return;
             }
             case EntryType.DRIVER: {
-                const newPhotoFiles: LocalFileType[] = [];
-                operationData?.photoFiles?.forEach((item) => {
-                    let selectedItem: LocalFileType | undefined = { ...item };
-                    if (selectedItem?.attachType === operationAddedStep) {
-                        selectedItem = localFile;
-                    }
+                const newFiles: LocalFileType[] = [];
+                if (isVideo === true) {
+                    operationData?.videoFiles?.forEach((item) => {
+                        let selectedItem: LocalFileType | undefined = {
+                            ...item
+                        };
+                        if (
+                            selectedItem?.attachType === operationAddedStep ||
+                            (selectedItem?.attachType === driversFileName[7] &&
+                                operationData?.videoFiles.filter(
+                                    (it) => it.file !== null
+                                ).length > 0)
+                        ) {
+                            selectedItem = localFile;
+                        }
 
-                    if (selectedItem) newPhotoFiles?.push(selectedItem);
-                });
+                        if (selectedItem) newFiles?.push(selectedItem);
+                    });
+                } else {
+                    operationData?.photoFiles?.forEach((item) => {
+                        let selectedItem: LocalFileType | undefined = {
+                            ...item
+                        };
+                        if (selectedItem?.attachType === operationAddedStep) {
+                            selectedItem = localFile;
+                        }
+
+                        if (selectedItem) newFiles?.push(selectedItem);
+                    });
+                }
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
@@ -477,7 +509,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         uploadEachPhoto(
                             driversFileType[0],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         onArrivedDriver();
                         navigation.navigate(SUBMIT_FORM, {
@@ -488,53 +520,57 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         uploadEachPhoto(
                             driversFileType[1],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
                     case "Tuang beton":
                         uploadEachPhoto(
                             driversFileType[2],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
                     case "Cuci gentong":
                         uploadEachPhoto(
                             driversFileType[3],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
                     case "DO":
                         uploadEachPhoto(
                             driversFileType[4],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
                     case "Penerima":
                         uploadEachPhoto(
                             driversFileType[5],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
                     case "Penambahan air":
                         uploadEachPhoto(
                             driversFileType[6],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
-                    case "Tambahan":
+                    case "Tambahan" && !isVideo:
                         uploadEachPhoto(
                             driversFileType[7],
                             localFile,
-                            newPhotoFiles
+                            newFiles
                         );
                         break;
                     default:
-                        dispatch(setAllOperationPhoto({ file: newPhotoFiles }));
+                        if (isVideo === true) {
+                            dispatch(setAllOperationVideo({ file: newFiles }));
+                        } else {
+                            dispatch(setAllOperationPhoto({ file: newFiles }));
+                        }
                         break;
                 }
                 return;

@@ -23,8 +23,6 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasCameraPermissions } from "@/utils/permissions";
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
-import { ALBUM_NAME } from "@/constants/general";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 
@@ -69,6 +67,7 @@ function CameraScreen() {
     const operationTempData = route?.params?.operationTempData;
     const soNumber = route?.params?.soNumber;
     const soID = route?.params?.soID;
+    const isVideo = route?.params?.isVideo;
     const disabledDocPicker =
         route?.params?.disabledDocPicker !== undefined
             ? route?.params?.disabledDocPicker
@@ -80,7 +79,7 @@ function CameraScreen() {
     const devices = useCameraDevices();
 
     useHeaderTitleChanged({
-        title: `Foto ${photoTitle}`,
+        title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
         selectedBP: authState.selectedBatchingPlant,
         hideBPBadges: true
     });
@@ -159,7 +158,8 @@ function CameraScreen() {
                     operationAddedStep,
                     operationTempData,
                     soID,
-                    soNumber
+                    soNumber,
+                    isVideo
                 });
             } catch (error) {
                 dispatch(

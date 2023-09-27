@@ -7,6 +7,7 @@ interface LocalFileType {
         datetime: string;
     };
     isFromPicker: boolean;
+    isVideo: boolean;
     type?: "COVER" | "GALLERY";
     attachType?: string;
 }

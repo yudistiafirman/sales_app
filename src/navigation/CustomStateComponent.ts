@@ -20,6 +20,7 @@ export type RootStackParamList = {
         operationTempData?: OperationProjectDetails;
         soID?: string;
         soNumber?: string;
+        isVideo?: boolean;
     };
     IMAGE_PREVIEW: {
         photo?: PhotoFile;
@@ -32,6 +33,7 @@ export type RootStackParamList = {
         operationTempData?: OperationProjectDetails;
         soID?: string;
         soNumber?: string;
+        isVideo?: boolean;
     };
     ALL_PRODUCT: {
         coordinate: { longitude: number; latitude: number };

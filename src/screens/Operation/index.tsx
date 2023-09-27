@@ -26,6 +26,7 @@ import {
     onChangeInputValue,
     onChangeProjectDetails,
     setAllOperationPhoto,
+    setAllOperationVideo,
     setExistingFiles
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -235,6 +236,26 @@ function Operation() {
                     ]
                 })
             );
+            dispatch(
+                setAllOperationVideo({
+                    file: [
+                        {
+                            file:
+                                BEFiles?.find(
+                                    (it) =>
+                                        it?.attachType === driversFileName[8]
+                                )?.file || null,
+                            attachType: driversFileName[8],
+                            isVideo: true
+                        },
+                        {
+                            file: null,
+                            attachType: driversFileName[7],
+                            isVideo: true
+                        }
+                    ]
+                })
+            );
             navigation.navigate(SUBMIT_FORM, {
                 operationType: userData?.type
             });
@@ -250,6 +271,22 @@ function Operation() {
                         { file: null, attachType: driversFileName[5] },
                         { file: null, attachType: driversFileName[6] },
                         { file: null, attachType: driversFileName[7] }
+                    ]
+                })
+            );
+            dispatch(
+                setAllOperationVideo({
+                    file: [
+                        {
+                            file: null,
+                            attachType: driversFileName[8],
+                            isVideo: true
+                        },
+                        {
+                            file: null,
+                            attachType: driversFileName[7],
+                            isVideo: true
+                        }
                     ]
                 })
             );
