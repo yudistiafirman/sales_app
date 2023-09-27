@@ -30,7 +30,7 @@ import { resetImageURLS } from "@/redux/reducers/cameraReducer";
 import { openPopUp } from "@/redux/reducers/modalReducer";
 import { resScale } from "@/utils";
 import { CreatePayment } from "@/models/CreatePayment";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import { postPayment } from "@/actions/FinanceActions";
 import { RootState } from "@/redux/store";
 import crashlytics from "@react-native-firebase/crashlytics";
@@ -110,7 +110,7 @@ function Deposit() {
                     }));
                 let uploadedImage;
                 if (photoFiles && photoFiles?.length > 0)
-                    uploadedImage = await uploadFileImage(
+                    uploadedImage = await uploadFiles(
                         photoFiles,
                         "deposit"
                     ).catch((err) => Error(err));

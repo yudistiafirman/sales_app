@@ -13,7 +13,8 @@ import Feather from "react-native-vector-icons/Feather";
 import { resScale } from "@/utils";
 import LocalFileType from "@/interfaces/LocalFileType";
 import { colors, layout } from "@/constants";
-import { photoIsFromInternet } from "@/utils/generalFunc";
+import { fileIsFromInternet } from "@/utils/generalFunc";
+import Icon from "react-native-vector-icons/FontAwesome6";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";
 
@@ -86,54 +87,115 @@ export default function BGallery({
                         </View>
                     </TouchableOpacity>
                 )}
-                {item?.isFromPicker ? (
+                {item?.isVideo && item?.file !== null ? (
+                    <>
+                        <Image
+                            source={{ uri: item?.file?.uri }}
+                            style={[
+                                style.imageStyle,
+                                {
+                                    resizeMode: "cover"
+                                }
+                            ]}
+                        />
+                        <View
+                            style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: colors.black,
+                                opacity: 0.5
+                            }}
+                        />
+                        <View
+                            style={{
+                                position: "absolute",
+                                height: "100%",
+                                width: "100%",
+                                justifyContent: "center",
+                                alignSelf: "center",
+                                alignItems: "center"
+                            }}
+                        >
+                            <Icon
+                                name="play"
+                                color={colors.white}
+                                size={layout.pad.xl}
+                            />
+                        </View>
+                    </>
+                ) : (
                     <View>
-                        {item?.file?.type === "image/jpeg" ||
-                        item?.file?.type === "image/png" ? (
-                            <Image
-                                source={item?.file}
-                                style={[
-                                    style.imageStyle,
-                                    {
-                                        resizeMode: "cover"
-                                    }
-                                ]}
-                            />
+                        {item?.isFromPicker ? (
+                            <View>
+                                {item?.file?.type === "image/jpeg" ||
+                                item?.file?.type === "image/png" ? (
+                                    <View>
+                                        {item?.file !== null && (
+                                            <Image
+                                                source={item?.file}
+                                                style={[
+                                                    style.imageStyle,
+                                                    {
+                                                        resizeMode: "cover"
+                                                    }
+                                                ]}
+                                            />
+                                        )}
+                                    </View>
+                                ) : (
+                                    <View>
+                                        {item?.file !== null && (
+                                            <Pdf
+                                                source={{
+                                                    uri: item?.file?.uri
+                                                }}
+                                                style={style.imageStyle}
+                                                page={1}
+                                            />
+                                        )}
+                                    </View>
+                                )}
+                            </View>
                         ) : (
-                            <Pdf
-                                source={{ uri: item?.file?.uri }}
-                                style={style.imageStyle}
-                                page={1}
-                            />
+                            <View>
+                                {item?.file !== null && (
+                                    <Image
+                                        source={
+                                            fileIsFromInternet(item?.file?.uri)
+                                                ? { uri: item?.file?.uri }
+                                                : item?.file
+                                        }
+                                        style={[
+                                            style.imageStyle,
+                                            {
+                                                resizeMode: "cover"
+                                            }
+                                        ]}
+                                    />
+                                )}
+                            </View>
                         )}
                     </View>
-                ) : (
-                    <Image
-                        source={
-                            photoIsFromInternet(item?.file?.uri)
-                                ? { uri: item?.file?.uri }
-                                : item?.file
-                        }
-                        style={[
-                            style.imageStyle,
-                            {
-                                resizeMode: "cover"
+                )}
+                {item?.file !== null &&
+                    item?.type === "GALLERY" &&
+                    removePict && (
+                        <TouchableOpacity
+                            style={style.closeIcon}
+                            onPress={() =>
+                                removePict(index - 1, item?.attachType)
                             }
-                        ]}
-                    />
-                )}
-                {item?.type === "GALLERY" && removePict && (
-                    <TouchableOpacity
-                        style={style.closeIcon}
-                        onPress={() => removePict(index - 1, item?.attachType)}
-                    >
-                        <AntDesign
-                            name="close"
-                            size={resScale(15)}
-                            color={colors.white}
-                        />
-                    </TouchableOpacity>
-                )}
+                        >
+                            <AntDesign
+                                name="close"
+                                size={resScale(15)}
+                                color={colors.white}
+                            />
+                        </TouchableOpacity>
+                    )}
                 {item?.attachType !== undefined &&
                     item?.attachType !== null && (
                         <View style={style.attachType}>

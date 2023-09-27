@@ -47,7 +47,7 @@ import {
     safetyCheck,
     shouldAllowSPHStateToContinue
 } from "@/utils/generalFunc";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import { postSph } from "@/actions/OrderActions";
 import { useNavigation } from "@react-navigation/native";
 import StepDone from "../StepDoneModal/StepDone";
@@ -333,10 +333,9 @@ export default function FifthStep() {
             ) {
                 let photoResponse;
                 if (photoFiles && photoFiles?.length > 0) {
-                    photoResponse = await uploadFileImage(
-                        photoFiles,
-                        "sph"
-                    ).catch((err) => Error(err));
+                    photoResponse = await uploadFiles(photoFiles, "sph").catch(
+                        (err) => Error(err)
+                    );
                 }
 
                 const files: { documentId: string; fileId: string }[] = [];

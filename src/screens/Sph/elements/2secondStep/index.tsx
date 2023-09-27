@@ -113,7 +113,7 @@ function checkObj(
 }
 
 function LeftIcon() {
-    return <Text style={style.leftIconStyle}>+62</Text>;
+    return <Text style={[style.leftIconStyle, { marginBottom: 16 }]}>+62</Text>;
 }
 function SearchIcon() {
     return (

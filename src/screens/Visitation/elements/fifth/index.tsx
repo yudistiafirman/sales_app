@@ -33,7 +33,7 @@ import {
     VisitationGlobalState
 } from "@/redux/reducers/VisitationReducer";
 import { postVisitations, putVisitation } from "@/actions/ProductivityActions";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import { resetSPHState } from "@/redux/reducers/SphReducer";
 import { COMPANY } from "@/constants/general";
 import { safetyCheck } from "@/utils/generalFunc";
@@ -317,7 +317,7 @@ function Fifth() {
 
                         let photoResponse;
                         if (photoFiles && photoFiles?.length > 0) {
-                            photoResponse = await uploadFileImage(
+                            photoResponse = await uploadFiles(
                                 photoFiles,
                                 "visitation"
                             ).catch((err) => Error(err));

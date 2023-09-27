@@ -24,7 +24,7 @@ const initialState = {
     email: ""
 };
 function LeftIcon() {
-    return <Text style={style.leftIconStyle}>+62</Text>;
+    return <Text style={[style.leftIconStyle, { marginBottom: 16 }]}>+62</Text>;
 }
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;

@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { colors, fonts, layout } from "@/constants";
-import { resScale } from "@/utils";
 import BBackContinueBtn from "./BBackContinueBtn";
 
 const styles = StyleSheet.create({
@@ -42,6 +41,7 @@ type PopUpQuestionType = {
     descContent?: ReactNode;
     actionText?: string;
     cancelText?: string;
+    disabledNext?: boolean;
 };
 
 export default function PopUpQuestion({
@@ -52,7 +52,8 @@ export default function PopUpQuestion({
     desc,
     descContent,
     actionText,
-    cancelText
+    cancelText,
+    disabledNext
 }: PopUpQuestionType) {
     const actionButtonPopup = setIsPopupVisible || null;
     return (
@@ -90,6 +91,7 @@ export default function PopUpQuestion({
                         isContinueIcon={false}
                         continueText={actionText || "Ya, Tambah"}
                         backText={cancelText || "Tidak"}
+                        disableContinue={disabledNext ?? false}
                     />
                 </View>
             </View>
