@@ -103,7 +103,7 @@ function RootScreen(
                     </>
                 );
 
-            case EntryType.SECURITY.toLocaleLowerCase():
+            case EntryType.SECURITY.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
