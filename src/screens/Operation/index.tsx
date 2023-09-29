@@ -242,6 +242,28 @@ function Operation() {
         );
     };
 
+    const setDriverExistingVideo = (files: LocalFileType[]) => {
+        dispatch(
+            setAllOperationVideo({
+                file: [
+                    {
+                        file:
+                            BEFiles?.find(
+                                (it) => it?.attachType === driversFileName[8]
+                            )?.file || null,
+                        attachType: driversFileName[8],
+                        isVideo: true
+                    },
+                    {
+                        file: null,
+                        attachType: driversFileName[7],
+                        isVideo: true
+                    }
+                ]
+            })
+        );
+    };
+
     const setSecurityReturnExistingPhoto = (files: LocalFileType[]) => {
         dispatch(
             setAllOperationPhoto({
@@ -338,6 +360,25 @@ function Operation() {
         );
     };
 
+    const setNewDriverVideo = () => {
+        dispatch(
+            setAllOperationVideo({
+                file: [
+                    {
+                        file: null,
+                        attachType: driversFileName[8],
+                        isVideo: true
+                    },
+                    {
+                        file: null,
+                        attachType: driversFileName[7],
+                        isVideo: true
+                    }
+                ]
+            })
+        );
+    };
+
     const setNewReturnPhoto = () => {
         dispatch(
             setAllOperationPhoto({
@@ -422,6 +463,7 @@ function Operation() {
 
             if (entry.type === EntryType.DRIVER) {
                 setDriverExistingPhoto(files);
+                setDriverExistingVideo(files);
             } else if (entry.type === EntryType.RETURN) {
                 setSecurityReturnExistingPhoto(files);
                 setIsVisiblePopup(false);
@@ -435,6 +477,7 @@ function Operation() {
             });
         } else if (entry.type === EntryType.DRIVER) {
             setNewDriverPhoto();
+            setNewDriverVideo();
             goToCameraPage(driversFileName[0], EntryType.DRIVER);
             setIsVisiblePopup(false);
         } else if (entry.type === EntryType.RETURN) {
