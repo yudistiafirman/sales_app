@@ -11,7 +11,8 @@ import { Animated, SafeAreaView, StyleSheet, View } from "react-native";
 import {
     Camera,
     CameraDevice,
-    useCameraDevices
+    useCameraDevices,
+    useFrameProcessor
 } from "react-native-vision-camera";
 import { useDispatch, useSelector } from "react-redux";
 import { BHeaderIcon } from "@/components";
@@ -58,6 +59,8 @@ function CameraScreen() {
     const [enableLowBoost, onEnableLowBoost] = React.useState<boolean>(false);
     const [enableHighQuality, onEnableHighQuality] =
         React.useState<boolean>(false);
+    const [isRecording, setIsRecording] = React.useState(false);
+    const [pause, setPause] = React.useState(false);
     const { isFirstTimeOpenCamera } = poState.currentState.context;
     const navigateTo = route?.params?.navigateTo;
     const closeButton = route?.params?.closeButton;
@@ -125,26 +128,25 @@ function CameraScreen() {
     const getDevice = (): CameraDevice | undefined =>
         isFrontCamera ? devices?.front : devices?.back;
 
+    const showCameraError = (errorText: string) => {
+        dispatch(
+            openPopUp({
+                popUpType: "error",
+                popUpText: errorText,
+                outsideClickClosePopUp: true
+            })
+        );
+    };
+
     const takePhoto = async () => {
         if (camera === undefined || camera?.current === undefined) {
-            dispatch(
-                openPopUp({
-                    popUpType: "error",
-                    popUpText: "No Camera Found",
-                    outsideClickClosePopUp: true
-                })
-            );
+            showCameraError("Camera not Found");
         } else {
             try {
                 const takenPhoto = await camera?.current?.takeSnapshot({
                     flash: enableFlashlight ? "on" : "off",
                     quality: 70
                 });
-
-                // await CameraRoll.save(takenPhoto?.path, {
-                //     type: "photo",
-                //     album: ALBUM_NAME
-                // });
 
                 animateElement();
 
@@ -158,19 +160,40 @@ function CameraScreen() {
                     operationAddedStep,
                     operationTempData,
                     soID,
-                    soNumber,
-                    isVideo
+                    soNumber
                 });
             } catch (error) {
-                dispatch(
-                    openPopUp({
-                        popUpType: "error",
-                        popUpText: "Camera error",
-                        outsideClickClosePopUp: true
-                    })
-                );
+                showCameraError("Camera Error");
             }
         }
+    };
+
+    const recordVideo = () => {
+        setIsRecording(true);
+        camera?.current?.startRecording({
+            flash: enableFlashlight ? "on" : "off",
+            onRecordingFinished: (video) => {
+                setIsRecording(false);
+                setPause(false);
+                console.log(video);
+            },
+
+            onRecordingError: (error) => console.log(error)
+        });
+    };
+
+    const pauseVideo = async () => {
+        await setPause(true);
+        await camera?.current?.pauseRecording();
+    };
+
+    const onResumeVideo = async () => {
+        await setPause(false);
+        await camera?.current?.resumeRecording();
+    };
+
+    const stopVideo = async () => {
+        await camera?.current?.stopRecording();
     };
 
     const onFileSelect = (data: any) => {
@@ -212,6 +235,7 @@ function CameraScreen() {
                                 device={getDevice()}
                                 isActive={isFocused}
                                 photo
+                                video={isVideo}
                                 enableHighQualityPhotos={!!enableHighQuality}
                                 enableZoomGesture
                                 hdr={!!enableHDR}
@@ -240,7 +264,14 @@ function CameraScreen() {
                         enableHDR={enableHDR}
                     />
                     <CameraButton
+                        resumeVideo={onResumeVideo}
                         takePhoto={takePhoto}
+                        recordVideo={recordVideo}
+                        isVideo={isVideo}
+                        stopRecordingVideo={stopVideo}
+                        isRecording={isRecording}
+                        pauseVideo={pauseVideo}
+                        isPause={pause}
                         onGalleryPress={(data) => onFileSelect(data)}
                         onDocPress={(data) => onFileSelect(data)}
                         disabledDocPicker={disabledDocPicker}
