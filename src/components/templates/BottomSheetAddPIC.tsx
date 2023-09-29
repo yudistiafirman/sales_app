@@ -63,7 +63,9 @@ const initialState = {
 };
 
 function LeftIcon() {
-    return <Text style={styles.leftIconStyle}>+62</Text>;
+    return (
+        <Text style={[styles.leftIconStyle, { marginBottom: 16 }]}>+62</Text>
+    );
 }
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 

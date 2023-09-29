@@ -633,7 +633,7 @@ export function safetyCheck(item: any) {
     return false;
 }
 
-export function photoIsFromInternet(photo?: string): boolean {
+export function fileIsFromInternet(photo?: string): boolean {
     return photo ? photo.startsWith("http") : false;
 }
 

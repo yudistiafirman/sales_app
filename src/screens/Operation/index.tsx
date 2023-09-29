@@ -30,6 +30,7 @@ import {
     onChangeInputValue,
     onChangeProjectDetails,
     setAllOperationPhoto,
+    setAllOperationVideo,
     setExistingFiles
 } from "@/redux/reducers/operationReducer";
 import { AppDispatch, RootState } from "@/redux/store";

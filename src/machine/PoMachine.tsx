@@ -1,5 +1,5 @@
 import bStorage from "@/actions";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import {
     getCreatedSphDocuments,
     postPurchaseOrder
@@ -526,7 +526,7 @@ const POMachine =
                                     "file://"
                                 )
                             }));
-                        const response = await uploadFileImage(
+                        const response = await uploadFiles(
                             photoFiles,
                             "Purchase Order"
                         );
@@ -542,7 +542,7 @@ const POMachine =
                             ?.filter((v) => v?.projectDocId === null)
                             ?.filter((v) => v?.value !== null)
                             ?.map((v) => v?.value);
-                        const response = await uploadFileImage(
+                        const response = await uploadFiles(
                             docsToUpload,
                             "Purchase Order"
                         );
