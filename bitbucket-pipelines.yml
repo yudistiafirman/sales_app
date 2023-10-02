@@ -45,16 +45,19 @@ pipelines:
                   image: node:18.8.0
                   caches:
                       - gradle
+                      - node
                   script:
                       - yarn install
 
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
+                  caches:
+                      - node
 
                   script: # Modify the commands below to build your repository
                       - cd android
-                      - ./gradlew app:bundleDevelopmentRelease
+                      - yarn androidRelease-Dev
                   artifacts:
                       - android/app/build/outputs/**
 
@@ -71,15 +74,18 @@ pipelines:
                   image: node:18.8.0
                   caches:
                       - gradle
+                      - node
                   script:
                       - yarn install
 
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
+                  caches:
+                      - node
                   script: # Modify the commands below to build your repository
                       - cd android
-                      - ./gradlew app:bundleProductionRelease
+                      - yarn androidRelease
                   artifacts:
                       - android/app/build/outputs/**
 
@@ -96,16 +102,19 @@ pipelines:
                   image: node:18.8.0
                   caches:
                       - gradle
+                      - node
                   script:
                       - yarn install
 
             - step:
                   name: "Build Android"
+                  caches:
+                      - node
                   image: mingc/android-build-box:latest
 
                   script: # Modify the commands below to build your repository
                       - cd android
-                      - ./gradlew app:bundleProductionRelease
+                      - yarn androidRelease
                   artifacts:
                       - android/app/build/outputs/**
 
