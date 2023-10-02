@@ -17,6 +17,7 @@ pipelines:
                   image: node:18.8.0
                   caches:
                       - gradle
+                      - node
                   script:
                       - yarn install
 
@@ -27,7 +28,7 @@ pipelines:
                       - node
                   script: # Modify the commands below to build your repository
                       - cd android
-                      - ./gradlew app:bundleDevelopmentRelease
+                      - yarn androidRelease-Dev
                   artifacts:
                       - android/app/build/outputs/**
 
