@@ -56,12 +56,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: layout.pad.xxl,
         paddingTop: layout.pad.md
     },
+    playPauseBtn: {
+        alignItems: "flex-start",
+        alignSelf: "flex-start",
+        justifyContent: "center",
+        flex: 2,
+        paddingHorizontal: layout.pad.xxl,
+        paddingTop: layout.pad.md
+    },
     videoDuration: {
         alignItems: "center",
         alignSelf: "flex-end",
         justifyContent: "space-between",
         flex: 1,
-        paddingHorizontal: layout.pad.xl,
+        paddingHorizontal: layout.pad.xxl,
         paddingTop: layout.pad.md,
         flexDirection: "row"
     },
@@ -231,19 +239,8 @@ function CameraButton({
     return (
         <View style={[styles.cameraBtn, style]}>
             <View style={styles.optionButton}>
-                {isVideo && isRecording && (
+                {!disabledGalleryPicker && (
                     <View style={styles.flexFull}>
-                        <View style={[styles.videoDuration]}>
-                            <Text style={{ color: colors.danger }}>●</Text>
-                            <BSpacer size="extraSmall" />
-                            <Text style={{ color: colors.white }}>
-                                {convertTimeString(videoDuration)}
-                            </Text>
-                        </View>
-                    </View>
-                )}
-                <View style={styles.flexFull}>
-                    {!disabledGalleryPicker && (
                         <View style={styles.gallery}>
                             <TouchableOpacity
                                 style={styles.roundedViewButton}
@@ -257,8 +254,8 @@ function CameraButton({
                                 />
                             </TouchableOpacity>
                         </View>
-                    )}
-                </View>
+                    </View>
+                )}
 
                 {!disabledDocPicker && (
                     <View style={styles.flexFull}>
@@ -279,7 +276,7 @@ function CameraButton({
                 )}
                 {isVideo && isRecording && isPause && (
                     <View style={styles.flexFull}>
-                        <View style={styles.gallery}>
+                        <View style={styles.playPauseBtn}>
                             <TouchableOpacity
                                 style={styles.roundedViewButton}
                                 onPress={onResumeVideo}
@@ -295,7 +292,7 @@ function CameraButton({
                 )}
                 {isVideo && isRecording && !isPause && (
                     <View style={styles.flexFull}>
-                        <View style={styles.gallery}>
+                        <View style={styles.playPauseBtn}>
                             <TouchableOpacity
                                 style={styles.roundedViewButton}
                                 onPress={onPauseVideo}
@@ -306,6 +303,18 @@ function CameraButton({
                                     name="pause"
                                 />
                             </TouchableOpacity>
+                        </View>
+                    </View>
+                )}
+
+                {isVideo && isRecording && (
+                    <View style={styles.flexFull}>
+                        <View style={[styles.videoDuration]}>
+                            <Text style={{ color: colors.danger }}>●</Text>
+                            <BSpacer size="extraSmall" />
+                            <Text style={{ color: colors.white }}>
+                                {convertTimeString(videoDuration)}
+                            </Text>
                         </View>
                     </View>
                 )}

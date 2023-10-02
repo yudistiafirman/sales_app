@@ -17,6 +17,7 @@ import { fileIsFromInternet } from "@/utils/generalFunc";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";
+import BThumbnail from "../atoms/BThumbnail";
 
 const style = StyleSheet.create({
     container: {
@@ -89,15 +90,7 @@ export default function BGallery({
                 )}
                 {item?.isVideo && item?.file !== null ? (
                     <>
-                        <Image
-                            source={{ uri: item?.file?.uri }}
-                            style={[
-                                style.imageStyle,
-                                {
-                                    resizeMode: "cover"
-                                }
-                            ]}
-                        />
+                        <BThumbnail videoUri={item?.file?.uri} />
                         <View
                             style={{
                                 position: "absolute",

@@ -167,7 +167,7 @@ function CameraScreen() {
                 animateElement();
 
                 navigation.navigate(IMAGE_PREVIEW, {
-                    photo: takenPhoto,
+                    capturedFile: takenPhoto,
                     picker: undefined,
                     photoTitle,
                     navigateTo,
@@ -195,7 +195,7 @@ function CameraScreen() {
 
                 setTimeout(() => {
                     navigation.navigate(IMAGE_PREVIEW, {
-                        video,
+                        capturedFile: video,
                         picker: undefined,
                         isVideo,
                         photoTitle,
@@ -207,7 +207,7 @@ function CameraScreen() {
                         soID,
                         soNumber
                     });
-                }, DEBOUNCE_SEARCH);
+                }, 200);
             },
 
             onRecordingError: (error) => console.log("ini error", error)
