@@ -23,6 +23,8 @@ pipelines:
             - step:
                   name: "Build Android"
                   image: mingc/android-build-box:latest
+                  caches:
+                      - node
                   script: # Modify the commands below to build your repository
                       - cd android
                       - ./gradlew app:bundleDevelopmentRelease
