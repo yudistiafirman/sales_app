@@ -70,6 +70,10 @@ import { resScale } from "@/utils";
 import { hasLocationPermission } from "@/utils/permissions";
 import { safetyCheck } from "@/utils/generalFunc";
 import { uploadFiles } from "@/actions/CommonActions";
+import Video, {
+    VideoDecoderProperties,
+    TextTrackType
+} from "react-native-video";
 
 const styles = StyleSheet.create({
     parent: {
@@ -114,6 +118,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const route = useRoute<RootStackScreenProps>();
     const assignStyle = React.useMemo(() => style, [style]);
     const photo = route?.params?.photo?.path;
+
     const picker = route?.params?.picker;
     const navigateTo = route?.params?.navigateTo;
     const operationAddedStep = route?.params?.operationAddedStep;
@@ -124,6 +129,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const soID = route?.params?.soID;
     const photoTitle = route?.params?.photoTitle;
     const isVideo = route?.params?.isVideo;
+    const video = route?.params?.video;
     const visitationData = useSelector((state: RootState) => state.visitation);
     const operationData = useSelector((state: RootState) => state.operation);
     const authState = useSelector((state: RootState) => state.auth);
@@ -319,7 +325,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             localFile = {
                 file: {
                     uri: `file:${photo}`,
-                    type: isVideo === true ? photoType : `image/${photoType}`,
+                    type: isVideo === true ? "video/mp4" : `image/${photoType}`,
                     name: photoName,
                     longlat: latlongResult,
                     datetime: moment(new Date()).format("DD/MM/yyyy HH:mm:ss")
@@ -558,7 +564,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                             newFiles
                         );
                         break;
-                    case "Tambahan" && !isVideo:
+                    case "Tambahan":
                         uploadEachPhoto(
                             driversFileType[7],
                             localFile,
@@ -567,6 +573,20 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         break;
                     default:
                         if (isVideo === true) {
+                            uploadEachPhoto(
+                                `Video ${photoTitle}`,
+                                localFile,
+                                newFiles
+                            );
+                            newFiles.push({
+                                file: null,
+                                isFromPicker: false,
+                                isVideo: true,
+                                attachType: `Penuangan Ke-${
+                                    newFiles.length + 1
+                                }`,
+                                type: "COVER"
+                            });
                             dispatch(setAllOperationVideo({ file: newFiles }));
                         } else {
                             dispatch(setAllOperationPhoto({ file: newFiles }));
@@ -750,6 +770,14 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     <Image
                         source={{ uri: `file:${photo}` }}
                         style={styles.image}
+                    />
+                )}
+                {isVideo && (
+                    <Video
+                        controls
+                        resizeMode="cover"
+                        style={{ ...styles.image, flex: 1 }}
+                        source={{ uri: video.path }}
                     />
                 )}
                 {picker && picker.type === "application/pdf" && (

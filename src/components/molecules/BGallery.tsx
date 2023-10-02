@@ -57,7 +57,7 @@ const style = StyleSheet.create({
 
 type BGalleryType = {
     picts: any[];
-    addMorePict?: (attachType?: string) => void;
+    addMorePict?: (attachType?: string, index?: number) => void;
     removePict?: (index: number, attachType?: string) => void;
 };
 
@@ -76,7 +76,7 @@ export default function BGallery({
             >
                 {item?.file === null && addMorePict && (
                     <TouchableOpacity
-                        onPress={() => addMorePict(item?.attachType)}
+                        onPress={() => addMorePict(item?.attachType, index)}
                     >
                         <View style={[style.addImage]}>
                             <Feather

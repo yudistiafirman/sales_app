@@ -123,7 +123,8 @@ export const driversFileType = [
     OperationFileType.DO_DRIVER_RECEIPIENT,
     OperationFileType.DO_DRIVER_WATER,
     OperationFileType.DO_DRIVER_FINISH_PROJECT,
-    OperationFileType.DO_POURING_DRIVER
+    OperationFileType.DO_POURING_DRIVER,
+    "Video Penuanagn Ke-"
 ];
 
 export const driversFileName = [
@@ -135,7 +136,7 @@ export const driversFileName = [
     "Penerima",
     "Penambahan air",
     "Tambahan",
-    "Penuangan"
+    "Penuangan Ke-1"
 ];
 
 export const wbsInFileType = [

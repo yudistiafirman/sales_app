@@ -641,7 +641,10 @@ export function getFileGalleryFromBE(files: any[], types: any[]): any[] {
     const filteredFiles: any[] = [];
     files.forEach((it) => {
         types.forEach((type) => {
-            if (it.type === type) {
+            if (
+                it.type === type ||
+                it.File?.type?.toLowerCase()?.includes("mp4")
+            ) {
                 filteredFiles.push(it);
             }
         });
@@ -703,6 +706,8 @@ export function mapFileTypeToNameDO(type: string, attachType?: string): string {
             ) {
                 // eslint-disable-next-line prefer-destructuring
                 finalName = driversFileName[7];
+            } else {
+                finalName = attachType ?? "";
             }
             break;
         case EntryType.DISPATCH:

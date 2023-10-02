@@ -24,6 +24,7 @@ import { openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasCameraPermissions } from "@/utils/permissions";
+import { DEBOUNCE_SEARCH } from "@/constants/general";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 
@@ -138,6 +139,21 @@ function CameraScreen() {
         );
     };
 
+    const pauseVideo = async () => {
+        await setPause(true);
+        await camera?.current?.pauseRecording();
+    };
+
+    const onResumeVideo = async () => {
+        await setPause(false);
+        await camera?.current?.resumeRecording();
+    };
+
+    const stopVideo = async () => {
+        setIsRecording(false);
+        await camera?.current?.stopRecording();
+    };
+
     const takePhoto = async () => {
         if (camera === undefined || camera?.current === undefined) {
             showCameraError("Camera not Found");
@@ -172,28 +188,30 @@ function CameraScreen() {
         setIsRecording(true);
         camera?.current?.startRecording({
             flash: enableFlashlight ? "on" : "off",
+
             onRecordingFinished: (video) => {
-                setIsRecording(false);
+                stopVideo();
                 setPause(false);
-                console.log(video);
+
+                setTimeout(() => {
+                    navigation.navigate(IMAGE_PREVIEW, {
+                        video,
+                        picker: undefined,
+                        isVideo,
+                        photoTitle,
+                        navigateTo,
+                        closeButton,
+                        existingVisitation,
+                        operationAddedStep,
+                        operationTempData,
+                        soID,
+                        soNumber
+                    });
+                }, DEBOUNCE_SEARCH);
             },
 
-            onRecordingError: (error) => console.log(error)
+            onRecordingError: (error) => console.log("ini error", error)
         });
-    };
-
-    const pauseVideo = async () => {
-        await setPause(true);
-        await camera?.current?.pauseRecording();
-    };
-
-    const onResumeVideo = async () => {
-        await setPause(false);
-        await camera?.current?.resumeRecording();
-    };
-
-    const stopVideo = async () => {
-        await camera?.current?.stopRecording();
     };
 
     const onFileSelect = (data: any) => {
