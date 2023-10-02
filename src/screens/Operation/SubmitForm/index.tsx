@@ -767,6 +767,7 @@ function SubmitForm() {
                             <BGallery
                                 addMorePict={(attachType) => {
                                     setVideoTitle(undefined);
+                                    setSelectedAttachType(undefined);
                                     addMoreImages(attachType, false);
                                 }}
                                 removePict={(pos, attachType) =>
@@ -781,13 +782,11 @@ function SubmitForm() {
                         <View>
                             <BLabel bold="500" label="Video" />
                             <BGallery
-                                addMorePict={(attachType) => {
-                                    if (attachType === driversFileName[8]) {
-                                        setVideoTitle(driversFileName[8]);
-                                    } else {
-                                        setVideoTitle(undefined);
-                                    }
-                                    setSelectedAttachType(attachType);
+                                addMorePict={(attachType, index) => {
+                                    setVideoTitle(`Penuangan Ke-${index! + 1}`);
+                                    setSelectedAttachType(
+                                        `Penuangan Ke-${index! + 1}`
+                                    );
                                     setVideoTitleDialogVisible(true);
                                 }}
                                 removePict={(pos, attachType) =>
@@ -829,11 +828,7 @@ function SubmitForm() {
             <PopUpQuestion
                 isVisible={isVideoTitleDialogVisible}
                 setIsPopupVisible={() => setVideoTitleDialogVisible(false)}
-                actionButton={() =>
-                    videoTitle && videoTitle !== ""
-                        ? addMoreImages(selectedAttachType, true)
-                        : null
-                }
+                actionButton={() => addMoreImages(selectedAttachType, true)}
                 disabledNext={!(videoTitle && videoTitle !== "")}
                 descContent={
                     <View style={{ paddingHorizontal: layout.pad.md }}>

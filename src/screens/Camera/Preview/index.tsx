@@ -319,7 +319,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             localFile = {
                 file: {
                     uri: `file:${photo}`,
-                    type: isVideo === true ? photoType : `image/${photoType}`,
+                    type: isVideo === true ? "video/mp4" : `image/${photoType}`,
                     name: photoName,
                     longlat: latlongResult,
                     datetime: moment(new Date()).format("DD/MM/yyyy HH:mm:ss")
@@ -558,7 +558,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                             newFiles
                         );
                         break;
-                    case "Tambahan" && !isVideo:
+                    case "Tambahan":
                         uploadEachPhoto(
                             driversFileType[7],
                             localFile,
@@ -567,6 +567,20 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         break;
                     default:
                         if (isVideo === true) {
+                            uploadEachPhoto(
+                                `Video ${photoTitle}`,
+                                localFile,
+                                newFiles
+                            );
+                            newFiles.push({
+                                file: null,
+                                isFromPicker: false,
+                                isVideo: true,
+                                attachType: `Penuangan Ke-${
+                                    newFiles.length + 1
+                                }`,
+                                type: "COVER"
+                            });
                             dispatch(setAllOperationVideo({ file: newFiles }));
                         } else {
                             dispatch(setAllOperationPhoto({ file: newFiles }));

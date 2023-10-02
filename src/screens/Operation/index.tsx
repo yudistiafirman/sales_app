@@ -243,23 +243,35 @@ function Operation() {
     };
 
     const setDriverExistingVideo = (files: LocalFileType[]) => {
+        const addedFile: LocalFileType[] = [];
+        files
+            .sort((a, b) =>
+                a.attachType! > b.attachType!
+                    ? 1
+                    : b.attachType! > a.attachType!
+                    ? -1
+                    : 0
+            )
+            .filter((it) => it.attachType?.toLowerCase()?.includes("video"))
+            .forEach((it, index) => {
+                addedFile.push({
+                    file: it.file,
+                    attachType: `Penuangan Ke-${index + 1}`,
+                    isVideo: true,
+                    isFromPicker: false
+                });
+            });
+        const filteredFiles = addedFile.filter((it) => it.file != null).length;
+        addedFile.push({
+            file: null,
+            isFromPicker: false,
+            isVideo: true,
+            type: "COVER",
+            attachType: `Penuangan Ke-${filteredFiles + 1}`
+        });
         dispatch(
             setAllOperationVideo({
-                file: [
-                    {
-                        file:
-                            files?.find(
-                                (it) => it?.attachType === driversFileName[8]
-                            )?.file || null,
-                        attachType: driversFileName[8],
-                        isVideo: true
-                    },
-                    {
-                        file: null,
-                        attachType: driversFileName[7],
-                        isVideo: true
-                    }
-                ]
+                file: addedFile
             })
         );
     };
@@ -368,11 +380,6 @@ function Operation() {
                         file: null,
                         attachType: driversFileName[8],
                         isVideo: true
-                    },
-                    {
-                        file: null,
-                        attachType: driversFileName[7],
-                        isVideo: true
                     }
                 ]
             })
@@ -460,7 +467,6 @@ function Operation() {
 
         if (existingFirstPhoto && existingFirstPhoto?.length > 0) {
             const files = mapDOPhotoFromBE(item?.DeliveryOrderFile, entry.type);
-
             if (entry.type === EntryType.DRIVER) {
                 setDriverExistingPhoto(files);
                 setDriverExistingVideo(files);

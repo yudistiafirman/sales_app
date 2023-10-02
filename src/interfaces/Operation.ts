@@ -1,4 +1,5 @@
 interface OperationsDeliverOrderProjectResponse {
+    ShippingAddress: any;
     companyName?: string;
     projectName?: string;
     id?: string;
