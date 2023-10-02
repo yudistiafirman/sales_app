@@ -1,7 +1,7 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useMachine } from "@xstate/react";
-import React from "react";
+import React, { useState } from "react";
 import {
     StyleSheet,
     SafeAreaView,
@@ -19,7 +19,11 @@ import {
     OPERATION,
     SUBMIT_FORM,
     driversFileName,
-    driversFileType
+    driversFileType,
+    securityDispatchFileName,
+    securityDispatchFileType,
+    securityReturnFileName,
+    securityReturnFileType
 } from "@/navigation/ScreenNames";
 import {
     OperationProjectDetails,
@@ -41,7 +45,9 @@ import {
 import { Button, Dialog, Portal } from "react-native-paper";
 import { BText } from "@/components";
 import { colors, fonts } from "@/constants";
+import LocalFileType from "@/interfaces/LocalFileType";
 import OperationList from "./element/OperationList";
+import ArriveAndDepartPopUp from "./ArrivalAndDeparturePopup";
 
 const style = StyleSheet.create({
     container: {
@@ -71,6 +77,11 @@ function Operation() {
         isRefreshing,
         searchQuery
     } = doListState.context;
+
+    const [isVisiblePopup, setIsVisiblePopup] = useState(false);
+    const [doItem, setDoItems] = useState<
+        OperationsDeliveryOrdersListResponse | undefined
+    >();
 
     /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -120,9 +131,7 @@ function Operation() {
         selectedBatchingPlant
     ]);
 
-    const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
-        // NOTE: currently driver only
-
+    const setOperationValue = (item: OperationsDeliveryOrdersListResponse) => {
         dispatch(setExistingFiles({ files: item?.DeliveryOrderFile }));
         dispatch(
             onChangeInputValue({
@@ -157,146 +166,344 @@ function Operation() {
             deliveryTime: item?.date ? item?.date : ""
         };
         dispatch(onChangeProjectDetails({ projectDetails: dataToDeliver }));
+    };
 
-        const existingFirstPhoto = item?.DeliveryOrderFile?.filter(
-            (it) => it?.type === driversFileType[0]
+    const goToCameraPage = (fileName: string, navigateTo: string) => {
+        navigation.navigate(CAMERA, {
+            photoTitle: fileName,
+            closeButton: true,
+            navigateTo,
+            operationAddedStep: fileName
+        });
+    };
+
+    const setDriverExistingPhoto = (files: LocalFileType[]) => {
+        dispatch(
+            setAllOperationPhoto({
+                file: [
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[0]
+                            )?.file || null,
+                        attachType: driversFileName[0]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[1]
+                            )?.file || null,
+                        attachType: driversFileName[1]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[2]
+                            )?.file || null,
+                        attachType: driversFileName[2]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[3]
+                            )?.file || null,
+                        attachType: driversFileName[3]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[4]
+                            )?.file || null,
+                        attachType: driversFileName[4]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[5]
+                            )?.file || null,
+                        attachType: driversFileName[5]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[6]
+                            )?.file || null,
+                        attachType: driversFileName[6]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[7]
+                            )?.file || null,
+                        attachType: driversFileName[7]
+                    }
+                ]
+            })
         );
-        if (existingFirstPhoto && existingFirstPhoto?.length > 0) {
-            const BEFiles = mapDOPhotoFromBE(
-                item?.DeliveryOrderFile,
-                userData?.type
-            );
-            dispatch(
-                setAllOperationPhoto({
-                    file: [
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[0]
-                                )?.file || null,
-                            attachType: driversFileName[0]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[1]
-                                )?.file || null,
-                            attachType: driversFileName[1]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[2]
-                                )?.file || null,
-                            attachType: driversFileName[2]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[3]
-                                )?.file || null,
-                            attachType: driversFileName[3]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[4]
-                                )?.file || null,
-                            attachType: driversFileName[4]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[5]
-                                )?.file || null,
-                            attachType: driversFileName[5]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[6]
-                                )?.file || null,
-                            attachType: driversFileName[6]
-                        },
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[7]
-                                )?.file || null,
-                            attachType: driversFileName[7]
-                        }
-                    ]
-                })
-            );
-            dispatch(
-                setAllOperationVideo({
-                    file: [
-                        {
-                            file:
-                                BEFiles?.find(
-                                    (it) =>
-                                        it?.attachType === driversFileName[8]
-                                )?.file || null,
-                            attachType: driversFileName[8],
-                            isVideo: true
-                        },
-                        {
-                            file: null,
-                            attachType: driversFileName[7],
-                            isVideo: true
-                        }
-                    ]
-                })
-            );
-            navigation.navigate(SUBMIT_FORM, {
-                operationType: userData?.type
-            });
-        } else {
-            dispatch(
-                setAllOperationPhoto({
-                    file: [
-                        { file: null, attachType: driversFileName[0] },
-                        { file: null, attachType: driversFileName[1] },
-                        { file: null, attachType: driversFileName[2] },
-                        { file: null, attachType: driversFileName[3] },
-                        { file: null, attachType: driversFileName[4] },
-                        { file: null, attachType: driversFileName[5] },
-                        { file: null, attachType: driversFileName[6] },
-                        { file: null, attachType: driversFileName[7] }
-                    ]
-                })
-            );
-            dispatch(
-                setAllOperationVideo({
-                    file: [
-                        {
-                            file: null,
-                            attachType: driversFileName[8],
-                            isVideo: true
-                        },
-                        {
-                            file: null,
-                            attachType: driversFileName[7],
-                            isVideo: true
-                        }
-                    ]
-                })
-            );
-            navigation.navigate(CAMERA, {
-                photoTitle: driversFileName[0],
-                closeButton: true,
-                navigateTo: EntryType.DRIVER,
-                operationAddedStep: driversFileName[0]
-            });
+    };
+
+    const setDriverExistingVideo = (files: LocalFileType[]) => {
+        dispatch(
+            setAllOperationVideo({
+                file: [
+                    {
+                        file:
+                            files?.find(
+                                (it) => it?.attachType === driversFileName[8]
+                            )?.file || null,
+                        attachType: driversFileName[8],
+                        isVideo: true
+                    },
+                    {
+                        file: null,
+                        attachType: driversFileName[7],
+                        isVideo: true
+                    }
+                ]
+            })
+        );
+    };
+
+    const setSecurityReturnExistingPhoto = (files: LocalFileType[]) => {
+        dispatch(
+            setAllOperationPhoto({
+                file: [
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType === securityReturnFileName[0]
+                            )?.file || null,
+                        attachType: securityReturnFileName[0]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType === securityReturnFileName[1]
+                            )?.file || null,
+                        attachType: securityReturnFileName[1]
+                    }
+                ]
+            })
+        );
+    };
+
+    const setSecurityDispatchExistingPhoto = (files: LocalFileType[]) => {
+        dispatch(
+            setAllOperationPhoto({
+                file: [
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType ===
+                                    securityDispatchFileName[0]
+                            )?.file || null,
+                        attachType: securityDispatchFileName[0]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType ===
+                                    securityDispatchFileName[1]
+                            )?.file || null,
+                        attachType: securityDispatchFileName[1]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType ===
+                                    securityDispatchFileName[2]
+                            )?.file || null,
+                        attachType: securityDispatchFileName[2]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType ===
+                                    securityDispatchFileName[3]
+                            )?.file || null,
+                        attachType: securityDispatchFileName[3]
+                    },
+                    {
+                        file:
+                            files?.find(
+                                (it) =>
+                                    it?.attachType ===
+                                    securityDispatchFileName[4]
+                            )?.file || null,
+                        attachType: securityDispatchFileName[4]
+                    }
+                ]
+            })
+        );
+    };
+
+    const setNewDriverPhoto = () => {
+        dispatch(
+            setAllOperationPhoto({
+                file: [
+                    { file: null, attachType: driversFileName[0] },
+                    { file: null, attachType: driversFileName[1] },
+                    { file: null, attachType: driversFileName[2] },
+                    { file: null, attachType: driversFileName[3] },
+                    { file: null, attachType: driversFileName[4] },
+                    { file: null, attachType: driversFileName[5] },
+                    { file: null, attachType: driversFileName[6] },
+                    { file: null, attachType: driversFileName[7] }
+                ]
+            })
+        );
+    };
+
+    const setNewDriverVideo = () => {
+        dispatch(
+            setAllOperationVideo({
+                file: [
+                    {
+                        file: null,
+                        attachType: driversFileName[8],
+                        isVideo: true
+                    },
+                    {
+                        file: null,
+                        attachType: driversFileName[7],
+                        isVideo: true
+                    }
+                ]
+            })
+        );
+    };
+
+    const setNewReturnPhoto = () => {
+        dispatch(
+            setAllOperationPhoto({
+                file: [
+                    {
+                        file: null,
+                        attachType: securityReturnFileName[0]
+                    },
+                    {
+                        file: null,
+                        attachType: securityReturnFileName[1]
+                    }
+                ]
+            })
+        );
+    };
+
+    const setNewDispatchPhoto = () => {
+        dispatch(
+            setAllOperationPhoto({
+                file: [
+                    {
+                        file: null,
+                        attachType: securityDispatchFileName[0]
+                    },
+                    {
+                        file: null,
+                        attachType: securityDispatchFileName[1]
+                    },
+                    {
+                        file: null,
+                        attachType: securityDispatchFileName[2]
+                    },
+                    {
+                        file: null,
+                        attachType: securityDispatchFileName[3]
+                    },
+                    {
+                        file: null,
+                        attachType: securityDispatchFileName[4]
+                    }
+                ]
+            })
+        );
+    };
+
+    const onGoToSubmitForm = (
+        item: OperationsDeliveryOrdersListResponse,
+        entry: {
+            type: EntryType.DISPATCH | EntryType.RETURN | EntryType.DRIVER;
         }
+    ) => {
+        setOperationValue(item);
+
+        if (entry.type === EntryType.RETURN) {
+            dispatch(
+                onChangeInputValue({
+                    inputType: "truckMixCondition",
+                    value: item?.conditionTruck
+                })
+            );
+        }
+
+        let existingFirstPhoto;
+
+        if (entry.type === EntryType.DRIVER) {
+            existingFirstPhoto = item?.DeliveryOrderFile?.filter(
+                (it) => it?.type === driversFileType[0]
+            );
+        } else if (entry.type === EntryType.RETURN) {
+            existingFirstPhoto = item?.DeliveryOrderFile?.filter(
+                (it) => it?.type === securityReturnFileType[0]
+            );
+        } else if (entry.type === EntryType.DISPATCH) {
+            existingFirstPhoto = item?.DeliveryOrderFile?.filter(
+                (it) => it?.type === securityDispatchFileType[0]
+            );
+        }
+
+        if (existingFirstPhoto && existingFirstPhoto?.length > 0) {
+            const files = mapDOPhotoFromBE(item?.DeliveryOrderFile, entry.type);
+
+            if (entry.type === EntryType.DRIVER) {
+                setDriverExistingPhoto(files);
+                setDriverExistingVideo(files);
+            } else if (entry.type === EntryType.RETURN) {
+                setSecurityReturnExistingPhoto(files);
+                setIsVisiblePopup(false);
+            } else if (entry.type === EntryType.DISPATCH) {
+                setSecurityDispatchExistingPhoto(files);
+                setIsVisiblePopup(false);
+            }
+
+            navigation.navigate(SUBMIT_FORM, {
+                operationType: entry.type
+            });
+        } else if (entry.type === EntryType.DRIVER) {
+            setNewDriverPhoto();
+            setNewDriverVideo();
+            goToCameraPage(driversFileName[0], EntryType.DRIVER);
+            setIsVisiblePopup(false);
+        } else if (entry.type === EntryType.RETURN) {
+            setNewReturnPhoto();
+            setIsVisiblePopup(false);
+            goToCameraPage(securityReturnFileName[0], EntryType.RETURN);
+        } else if (entry.type === EntryType.DISPATCH) {
+            setNewDispatchPhoto();
+            setIsVisiblePopup(false);
+            goToCameraPage(securityDispatchFileName[0], EntryType.DISPATCH);
+        }
+    };
+
+    const onPressItem = (item: OperationsDeliveryOrdersListResponse) => {
+        setDoItems(item);
+        if (userData?.type === EntryType.SECURITY) {
+            setIsVisiblePopup(true);
+        } else {
+            onGoToSubmitForm(item, { type: EntryType.DRIVER });
+        }
+    };
+
+    const onClickArrivalOrDepature = (entry: {
+        type: EntryType.DISPATCH | EntryType.RETURN;
+    }) => {
+        onGoToSubmitForm(doItem, entry);
     };
 
     const onLocationPress = async (lonlat: {
@@ -399,6 +606,12 @@ function Operation() {
             />
 
             {renderUpdateDialog()}
+            <ArriveAndDepartPopUp
+                onClose={() => setIsVisiblePopup(false)}
+                isVisible={isVisiblePopup}
+                onPressArrival={onClickArrivalOrDepature}
+                onPressDeparture={onClickArrivalOrDepature}
+            />
         </SafeAreaView>
     );
 }
