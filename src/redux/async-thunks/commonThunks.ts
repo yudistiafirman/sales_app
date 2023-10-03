@@ -236,7 +236,6 @@ export const getUserCurrentLocation = createAsyncThunk(
 
             return coordinate;
         } catch (error) {
-            console.log(error);
             let errorData = error?.message;
             if (error?.response?.data) {
                 errorData = error?.response?.data;
