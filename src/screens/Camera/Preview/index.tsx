@@ -767,6 +767,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         }
     };
 
+    console.log("ini captured file", capturedFile);
+
     return (
         <View style={[assignStyle, styles.parent]}>
             <View style={styles.container}>
@@ -781,7 +783,9 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         controls
                         resizeMode="cover"
                         style={{ ...styles.image, flex: 1 }}
-                        source={{ uri: capturedFile }}
+                        source={{
+                            uri: capturedFile.replace(".mp4", "_timestamp.mp4")
+                        }}
                     />
                 )}
                 {picker && picker.type === "application/pdf" && (

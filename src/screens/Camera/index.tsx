@@ -25,6 +25,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasCameraPermissions } from "@/utils/permissions";
 import { DEBOUNCE_SEARCH } from "@/constants/general";
+import { FFmpegKit } from "ffmpeg-kit-react-native";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 
@@ -189,11 +190,20 @@ function CameraScreen() {
         camera?.current?.startRecording({
             flash: enableFlashlight ? "on" : "off",
 
-            onRecordingFinished: (video) => {
+            onRecordingFinished: async (video) => {
                 stopVideo();
                 setPause(false);
 
-                setTimeout(() => {
+                const overlayCommand = `-i ${
+                    video.path
+                } -vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:hms}':x=200:y=200:fontsize=24:fontcolor=white" ${video.path.replace(
+                    ".mp4",
+                    "_timestamp.mp4"
+                )}`;
+
+                await FFmpegKit.executeAsync(overlayCommand);
+
+                await setTimeout(() => {
                     navigation.navigate(IMAGE_PREVIEW, {
                         capturedFile: video,
                         picker: undefined,

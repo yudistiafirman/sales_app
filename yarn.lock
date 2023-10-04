@@ -4184,6 +4184,11 @@ fbjs@^0.8.9:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.30"
 
+ffmpeg-kit-react-native@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/ffmpeg-kit-react-native/-/ffmpeg-kit-react-native-6.0.2.tgz#9eeac96ad89367c99480bd90431391405d4eb73e"
+  integrity sha512-r9uSmahq8TeyIb7fXf3ft+uUXyoeWRFa99+khjo0TAzWO9y0z9wU7eGnab9JLw1MmCB9v64o4yojNluJhVm9nQ==
+
 figures@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"
@@ -7261,11 +7266,6 @@ react-native-encrypted-storage@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-native-encrypted-storage/-/react-native-encrypted-storage-4.0.3.tgz#2a4d65459870511e8f4ccd22f02433dab7fa5e91"
   integrity sha512-0pJA4Aj2S1PIJEbU7pN/Qvf7JIJx3hFywx+i+bLHtgK0/6Zryf1V2xVsWcrD50dfiu3jY1eN2gesQ5osGxE7jA==
-
-react-native-fast-image@^8.6.3:
-  version "8.6.3"
-  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.6.3.tgz#6edc3f9190092a909d636d93eecbcc54a8822255"
-  integrity sha512-Sdw4ESidXCXOmQ9EcYguNY2swyoWmx53kym2zRsvi+VeFCHEdkO+WG1DK+6W81juot40bbfLNhkc63QnWtesNg==
 
 react-native-geolocation-service@^5.3.1:
   version "5.3.1"
