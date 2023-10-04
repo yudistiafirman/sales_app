@@ -210,7 +210,7 @@ function CameraScreen() {
                 }, 200);
             },
 
-            onRecordingError: (error) => console.log("ini error", error)
+            onRecordingError: (error) => showCameraError(error.message)
         });
     };
 

@@ -918,4 +918,4 @@ export function mapDOPhotoFromBE(
 }
 
 export const convertTimeString = (time: number) =>
-    moment().startOf("day").seconds(time).format("mm:ss");
+    moment().startOf("day").seconds(time).format("hh:mm:ss");
