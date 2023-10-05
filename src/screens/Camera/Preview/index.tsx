@@ -70,6 +70,7 @@ import { resScale } from "@/utils";
 import { hasLocationPermission } from "@/utils/permissions";
 import { safetyCheck } from "@/utils/generalFunc";
 import { uploadFiles } from "@/actions/CommonActions";
+import Video from "react-native-video";
 
 const styles = StyleSheet.create({
     parent: {
@@ -113,7 +114,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const navigation = useNavigation();
     const route = useRoute<RootStackScreenProps>();
     const assignStyle = React.useMemo(() => style, [style]);
-    const photo = route?.params?.photo?.path;
+    const capturedFile = route?.params?.capturedFile?.path;
+
     const picker = route?.params?.picker;
     const navigateTo = route?.params?.navigateTo;
     const operationAddedStep = route?.params?.operationAddedStep;
@@ -251,6 +253,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             filestoUpload,
             "Update Delivery Order"
         );
+
         const newFileData = responseFile?.data?.data?.map(
             (v: any, i: number) => ({
                 fileId: v?.id,
@@ -258,8 +261,10 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 url: v?.url
             })
         );
+
         payload.batchingPlantId = authState.selectedBatchingPlant?.id;
         payload.doFiles = newFileData;
+
         const responseUpdateDeliveryOrder = await updateDeliveryOrder(
             payload,
             operationData?.projectDetails?.deliveryOrderId
@@ -288,6 +293,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     newFiles.push(it);
                 }
             });
+
             if (isVideo === true) {
                 dispatch(setAllOperationVideo({ file: newFiles }));
             } else {
@@ -302,7 +308,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
 
     const savePhoto = () => {
         const imagePayloadType: "COVER" | "GALLERY" = getTypeOfImagePayload();
-        const photoName = photo?.split("/")?.pop();
+        const photoName = capturedFile?.split("/")?.pop();
         const pdfName = picker?.name;
         const photoNameParts = photoName?.split(".");
         let photoType: string =
@@ -315,10 +321,13 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         }
 
         let localFile: LocalFileType | undefined;
-        if (photo) {
+        if (capturedFile) {
             localFile = {
                 file: {
-                    uri: `file:${photo}`,
+                    uri:
+                        isVideo === true
+                            ? capturedFile
+                            : `file:${capturedFile}`,
                     type: isVideo === true ? "video/mp4" : `image/${photoType}`,
                     name: photoName,
                     longlat: latlongResult,
@@ -382,7 +391,8 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             dispatch(setAllSOPhoto({ file: [{ file: null }] }));
         }
 
-        if (photo) DeviceEventEmitter.emit("Camera.preview", photo);
+        if (capturedFile)
+            DeviceEventEmitter.emit("Camera.preview", capturedFile);
         else DeviceEventEmitter.emit("Camera.preview", picker);
         let images: any[] = [];
         switch (navigateTo) {
@@ -760,10 +770,18 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     return (
         <View style={[assignStyle, styles.parent]}>
             <View style={styles.container}>
-                {photo && (
+                {capturedFile && !isVideo && (
                     <Image
-                        source={{ uri: `file:${photo}` }}
+                        source={{ uri: `file:${capturedFile}` }}
                         style={styles.image}
+                    />
+                )}
+                {capturedFile && isVideo && (
+                    <Video
+                        controls
+                        resizeMode="cover"
+                        style={{ ...styles.image, flex: 1 }}
+                        source={{ uri: capturedFile }}
                     />
                 )}
                 {picker && picker.type === "application/pdf" && (

@@ -916,3 +916,6 @@ export function mapDOPhotoFromBE(
     }
     return beGalleryFiles;
 }
+
+export const convertTimeString = (time: number) =>
+    moment().startOf("day").seconds(time).format("hh:mm:ss");

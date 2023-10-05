@@ -779,22 +779,31 @@ function SubmitForm() {
                         <BSpacer size="small" />
                         <BDivider />
                         <BSpacer size="small" />
-                        <View>
-                            <BLabel bold="500" label="Video" />
-                            <BGallery
-                                addMorePict={(attachType, index) => {
-                                    setVideoTitle(`Penuangan Ke-${index! + 1}`);
-                                    setSelectedAttachType(
-                                        `Penuangan Ke-${index! + 1}`
-                                    );
-                                    setVideoTitleDialogVisible(true);
-                                }}
-                                removePict={(pos, attachType) =>
-                                    deleteImages(pos, attachType || "", true)
-                                }
-                                picts={operationData?.videoFiles}
-                            />
-                        </View>
+                        {operationType === EntryType.DRIVER && (
+                            <View>
+                                <BLabel bold="500" label="Video" />
+                                <BGallery
+                                    addMorePict={(attachType, index) => {
+                                        setVideoTitle(
+                                            `Penuangan Ke-${index! + 1}`
+                                        );
+                                        setSelectedAttachType(
+                                            `Penuangan Ke-${index! + 1}`
+                                        );
+                                        setVideoTitleDialogVisible(true);
+                                    }}
+                                    removePict={(pos, attachType) =>
+                                        deleteImages(
+                                            pos,
+                                            attachType || "",
+                                            true
+                                        )
+                                    }
+                                    picts={operationData?.videoFiles}
+                                />
+                            </View>
+                        )}
+
                         <View style={style.flexFull}>
                             {(operationType === EntryType.DRIVER ||
                                 operationType === EntryType.RETURN ||
