@@ -163,8 +163,18 @@ function CameraButton({
         [onDocPress, onGalleryPress]
     );
 
+    const startTimer = () => {
+        timer.current = setInterval(() => {
+            setVideoDuration((prev) => prev + 1);
+        }, 1000);
+    };
+    const stopTimer = () => {
+        if (timer.current) clearInterval(timer.current);
+    };
+
     const onRecordVideo = () => {
         setVideoDuration(0);
+        startTimer();
 
         setTimeout(() => {
             recordVideo();
@@ -173,6 +183,7 @@ function CameraButton({
 
     const onStopRecordingVideo = () => {
         if (stopRecordingVideo) {
+            stopTimer();
             stopRecordingVideo();
         }
     };
@@ -243,6 +254,17 @@ function CameraButton({
                                     type="color"
                                 />
                             </TouchableOpacity>
+                        </View>
+                    </View>
+                )}
+                {isVideo && isRecording && (
+                    <View style={styles.flexFull}>
+                        <View style={[styles.videoDuration]}>
+                            <Text style={{ color: colors.danger }}>●</Text>
+                            <BSpacer size="extraSmall" />
+                            <Text style={{ color: colors.white }}>
+                                {convertTimeString(videoDuration)}
+                            </Text>
                         </View>
                     </View>
                 )}

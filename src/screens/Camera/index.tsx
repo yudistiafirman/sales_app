@@ -40,6 +40,7 @@ import {
 import { colors, fonts } from "@/constants";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
+import LiveTimeStamp from "./elements/LiveTimestamp";
 
 const styles = StyleSheet.create({
     parent: {
@@ -57,15 +58,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         backgroundColor: "green"
-    },
-    videoDetail: {
-        position: "absolute",
-        right: 20
-    },
-    videoDetailText: {
-        fontFamily: fonts.family.montserrat["500"],
-        color: colors.white,
-        fontSize: fonts.size.sm
     }
 });
 
@@ -389,20 +381,11 @@ function CameraScreen() {
                             enableHDR={enableHDR}
                         />
                     ) : (
-                        <View style={styles.videoDetail}>
-                            <BSpacer size="extraSmall" />
-                            <Text style={styles.videoDetailText}>
-                                {currentTimestamp}
-                            </Text>
-                            <BSpacer size="extraSmall" />
-                            <Text style={styles.videoDetailText}>
-                                {formattedAddress}
-                            </Text>
-                            <BSpacer size="extraSmall" />
-                            <Text style={styles.videoDetailText}>
-                                {latlongResult}
-                            </Text>
-                        </View>
+                        <LiveTimeStamp
+                            currentLocation={formattedAddress}
+                            currentTimestamp={currentTimestamp}
+                            latlong={latlongResult}
+                        />
                     )}
 
                     <CameraButton
