@@ -918,4 +918,26 @@ export function mapDOPhotoFromBE(
 }
 
 export const convertTimeString = (time: number) =>
-    moment().startOf("day").seconds(time).format("hh:mm:ss");
+    moment().startOf("day").seconds(time).format("HH:mm:ss");
+
+export const replaceMP4videoPath = (path: string) =>
+    path.replace(".mp4", "_timestamp.mp4");
+
+export const ffmegLiveTimestampOverlayCommand = (
+    inputVideoPath: string,
+    localUnixTime: string,
+    currentAddress: string,
+    latlong: string
+) => {
+    const videoPath = inputVideoPath;
+    const outputVideoPath = replaceMP4videoPath(videoPath);
+    const drawtextCommand = `-vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:gmtime\\:${localUnixTime}\\:%d-%m-%Y %T}':x=w-tw-50:y=180:fontsize=24:fontcolor=white,
+    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${currentAddress}':x=w-tw-50:y=220:fontsize=24:fontcolor=white,
+    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${latlong}':x=w-tw-50:y=260:fontsize=24:fontcolor=white"`;
+    const ffmpegCommand = `-i ${inputVideoPath} ${drawtextCommand} ${outputVideoPath}`;
+    return ffmpegCommand;
+};
+
+export const getCurrentTimestamp = () => moment().format("DD-MM-YYYY HH:mm:ss");
+
+export const getGmtPlus7UnixTime = () => moment().unix() + 7 * 3600;

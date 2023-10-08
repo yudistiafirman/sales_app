@@ -13,7 +13,8 @@ import {
     View,
     Image,
     StyleSheet,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Alert
 } from "react-native";
 import Geolocation from "react-native-geolocation-service";
 import Pdf from "react-native-pdf";
@@ -68,9 +69,10 @@ import {
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasLocationPermission } from "@/utils/permissions";
-import { safetyCheck } from "@/utils/generalFunc";
+import { replaceMP4videoPath, safetyCheck } from "@/utils/generalFunc";
 import { uploadFiles } from "@/actions/CommonActions";
 import Video from "react-native-video";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
 const styles = StyleSheet.create({
     parent: {
@@ -129,7 +131,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const visitationData = useSelector((state: RootState) => state.visitation);
     const operationData = useSelector((state: RootState) => state.operation);
     const authState = useSelector((state: RootState) => state.auth);
-    let latlongResult = "";
+    const latlongResult = route?.params?.latlongResult;
 
     useHeaderTitleChanged({
         title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
@@ -175,22 +177,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             throw new Error(error);
         }
     };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            hasLocationPermission().then((result) => {
-                if (result) {
-                    getCurrentLocation().then((longlat) => {
-                        latlongResult =
-                            safetyCheck(longlat?.latitude) &&
-                            safetyCheck(longlat?.longitude)
-                                ? `${longlat?.latitude}, ${longlat?.longitude}`
-                                : "";
-                    });
-                }
-            });
-        }, [])
-    );
 
     const getTypeOfImagePayload = () => {
         if (navigateTo) {
@@ -326,7 +312,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 file: {
                     uri:
                         isVideo === true
-                            ? capturedFile
+                            ? replaceMP4videoPath(capturedFile)
                             : `file:${capturedFile}`,
                     type: isVideo === true ? "video/mp4" : `image/${photoType}`,
                     name: photoName,
@@ -767,8 +753,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         }
     };
 
-    console.log("ini captured file", capturedFile);
-
     return (
         <View style={[assignStyle, styles.parent]}>
             <View style={styles.container}>
@@ -784,7 +768,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         resizeMode="cover"
                         style={{ ...styles.image, flex: 1 }}
                         source={{
-                            uri: capturedFile.replace(".mp4", "_timestamp.mp4")
+                            uri: replaceMP4videoPath(capturedFile)
                         }}
                     />
                 )}

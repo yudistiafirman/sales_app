@@ -120,14 +120,11 @@ type ConfigType = {
     stopRecordingVideo?: () => void;
     onDocPress?: (data: any) => void;
     onGalleryPress?: (data: any) => void;
-    resumeVideo: () => void;
-    pauseVideo: () => void;
     disabledGalleryPicker?: boolean;
     disabledDocPicker?: boolean;
     flashModeEnable?: boolean;
     isVideo?: boolean;
     isRecording?: boolean;
-    isPause?: boolean;
 };
 
 function CameraButton({
@@ -137,14 +134,11 @@ function CameraButton({
     onDocPress,
     onGalleryPress,
     stopRecordingVideo,
-    pauseVideo,
-    resumeVideo,
     disabledGalleryPicker = true,
     disabledDocPicker = true,
     flashModeEnable = false,
     isVideo = false,
-    isRecording = false,
-    isPause = false
+    isRecording = false
 }: ConfigType) {
     const timer = React.useRef();
     const [videoDuration, setVideoDuration] = React.useState(0);
@@ -168,40 +162,18 @@ function CameraButton({
         },
         [onDocPress, onGalleryPress]
     );
-    const startTimer = () => {
-        timer.current = setInterval(() => {
-            setVideoDuration((prev) => prev + 1);
-        }, 1000);
-    };
-
-    const stopTimer = () => {
-        if (timer.current) clearInterval(timer.current);
-    };
 
     const onRecordVideo = () => {
         setVideoDuration(0);
-        startTimer();
-        recordVideo();
+
+        setTimeout(() => {
+            recordVideo();
+        }, 500);
     };
 
     const onStopRecordingVideo = () => {
         if (stopRecordingVideo) {
-            stopTimer();
             stopRecordingVideo();
-        }
-    };
-
-    const onResumeVideo = () => {
-        if (resumeVideo) {
-            startTimer();
-            resumeVideo();
-        }
-    };
-
-    const onPauseVideo = () => {
-        if (pauseVideo) {
-            stopTimer();
-            pauseVideo();
         }
     };
 
@@ -259,7 +231,7 @@ function CameraButton({
 
                 {!disabledDocPicker && (
                     <View style={styles.flexFull}>
-                        <View style={styles.gallery}>
+                        <View style={styles.doc}>
                             <TouchableOpacity
                                 style={styles.roundedViewButton}
                                 onPress={() => selectFile("DOC")}
@@ -271,50 +243,6 @@ function CameraButton({
                                     type="color"
                                 />
                             </TouchableOpacity>
-                        </View>
-                    </View>
-                )}
-                {isVideo && isRecording && isPause && (
-                    <View style={styles.flexFull}>
-                        <View style={styles.playPauseBtn}>
-                            <TouchableOpacity
-                                style={styles.roundedViewButton}
-                                onPress={onResumeVideo}
-                            >
-                                <Feathericon
-                                    color="white"
-                                    size={layout.pad.lg}
-                                    name="play"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                )}
-                {isVideo && isRecording && !isPause && (
-                    <View style={styles.flexFull}>
-                        <View style={styles.playPauseBtn}>
-                            <TouchableOpacity
-                                style={styles.roundedViewButton}
-                                onPress={onPauseVideo}
-                            >
-                                <AntDesignIcon
-                                    size={layout.pad.lg}
-                                    color="white"
-                                    name="pause"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                )}
-
-                {isVideo && isRecording && (
-                    <View style={styles.flexFull}>
-                        <View style={[styles.videoDuration]}>
-                            <Text style={{ color: colors.danger }}>●</Text>
-                            <BSpacer size="extraSmall" />
-                            <Text style={{ color: colors.white }}>
-                                {convertTimeString(videoDuration)}
-                            </Text>
                         </View>
                     </View>
                 )}

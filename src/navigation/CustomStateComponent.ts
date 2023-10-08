@@ -34,6 +34,7 @@ export type RootStackParamList = {
         soID?: string;
         soNumber?: string;
         isVideo?: boolean;
+        latlongResult?: string;
     };
     ALL_PRODUCT: {
         coordinate: { longitude: number; latitude: number };

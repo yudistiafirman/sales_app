@@ -7,25 +7,37 @@ import {
     useFocusEffect
 } from "@react-navigation/native";
 import * as React from "react";
-import { Animated, SafeAreaView, StyleSheet, View } from "react-native";
+import { Animated, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import {
     Camera,
     CameraDevice,
-    useCameraDevices,
-    useFrameProcessor
+    useCameraDevices
 } from "react-native-vision-camera";
 import { useDispatch, useSelector } from "react-redux";
-import { BHeaderIcon } from "@/components";
+import { BHeaderIcon, BSpacer } from "@/components";
 import useCustomHeaderLeft from "@/hooks/useCustomHeaderLeft";
 import useHeaderTitleChanged from "@/hooks/useHeaderTitleChanged";
 import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import { CAMERA, PO, IMAGE_PREVIEW } from "@/navigation/ScreenNames";
-import { openPopUp } from "@/redux/reducers/modalReducer";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 import { AppDispatch, RootState } from "@/redux/store";
 import { resScale } from "@/utils";
-import { hasCameraPermissions } from "@/utils/permissions";
-import { DEBOUNCE_SEARCH } from "@/constants/general";
+import {
+    hasCameraPermissions,
+    hasLocationPermission
+} from "@/utils/permissions";
 import { FFmpegKit } from "ffmpeg-kit-react-native";
+import Geolocation from "react-native-geolocation-service";
+
+import moment from "moment";
+import { getLocationCoordinates } from "@/actions/CommonActions";
+import {
+    ffmegLiveTimestampOverlayCommand,
+    getCurrentTimestamp,
+    getGmtPlus7UnixTime,
+    safetyCheck
+} from "@/utils/generalFunc";
+import { colors, fonts } from "@/constants";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 
@@ -45,6 +57,15 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         backgroundColor: "green"
+    },
+    videoDetail: {
+        position: "absolute",
+        right: 20
+    },
+    videoDetailText: {
+        fontFamily: fonts.family.montserrat["500"],
+        color: colors.white,
+        fontSize: fonts.size.sm
     }
 });
 
@@ -62,7 +83,6 @@ function CameraScreen() {
     const [enableHighQuality, onEnableHighQuality] =
         React.useState<boolean>(false);
     const [isRecording, setIsRecording] = React.useState(false);
-    const [pause, setPause] = React.useState(false);
     const { isFirstTimeOpenCamera } = poState.currentState.context;
     const navigateTo = route?.params?.navigateTo;
     const closeButton = route?.params?.closeButton;
@@ -82,6 +102,74 @@ function CameraScreen() {
             ? route?.params?.disabledGalleryPicker
             : true;
     const devices = useCameraDevices();
+    const [latlongResult, setLatlongResult] = React.useState("");
+    const [formattedAddress, setFormattedAddress] = React.useState("");
+    const [localTime, setLocalTime] = React.useState(getGmtPlus7UnixTime);
+
+    const [currentTimestamp, setCurrentTimestamp] = React.useState(
+        getCurrentTimestamp()
+    );
+    const interval = React.useRef();
+
+    const showCameraError = (errorText: string) => {
+        dispatch(
+            openPopUp({
+                popUpType: "error",
+                popUpText: errorText,
+                outsideClickClosePopUp: true
+            })
+        );
+    };
+
+    const getCurrentLocation = async () => {
+        dispatch(
+            openPopUp({
+                popUpType: "loading",
+                popUpText: "Loading",
+                outsideClickClosePopUp: false
+            })
+        );
+        const opt = {
+            showLocationDialog: true,
+            forceRequestLocation: true
+            // timeout:INFINITY,
+            // maximumAge:INFINITY,
+            // accuracy: { ios: "hundredMeters", android: "balanced" },
+            // enableHighAccuracy: false,
+            // distanceFilter:0,
+        };
+        const getCurrentPosition = () =>
+            new Promise((resolve, error) =>
+                Geolocation.getCurrentPosition(resolve, error, opt)
+            );
+
+        try {
+            const response = await getCurrentPosition();
+            const { coords } = response;
+            const { latitude, longitude } = coords;
+            const responseDetail = await getLocationCoordinates(
+                longitude,
+                latitude
+            );
+            const latlong =
+                safetyCheck(latitude) && safetyCheck(longitude)
+                    ? `${latitude}, ${longitude}`
+                    : "";
+            setLatlongResult(latlong);
+
+            const addressTitle = safetyCheck(
+                responseDetail?.data?.result?.formattedAddress
+            )
+                ? responseDetail?.data?.result?.formattedAddress?.split(",")[0]
+                : "";
+
+            setFormattedAddress(addressTitle);
+            dispatch(closePopUp());
+        } catch (error) {
+            showCameraError(error);
+            dispatch(closePopUp());
+        }
+    };
 
     useHeaderTitleChanged({
         title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
@@ -130,26 +218,6 @@ function CameraScreen() {
     const getDevice = (): CameraDevice | undefined =>
         isFrontCamera ? devices?.front : devices?.back;
 
-    const showCameraError = (errorText: string) => {
-        dispatch(
-            openPopUp({
-                popUpType: "error",
-                popUpText: errorText,
-                outsideClickClosePopUp: true
-            })
-        );
-    };
-
-    const pauseVideo = async () => {
-        await setPause(true);
-        await camera?.current?.pauseRecording();
-    };
-
-    const onResumeVideo = async () => {
-        await setPause(false);
-        await camera?.current?.resumeRecording();
-    };
-
     const stopVideo = async () => {
         setIsRecording(false);
         await camera?.current?.stopRecording();
@@ -169,6 +237,7 @@ function CameraScreen() {
 
                 navigation.navigate(IMAGE_PREVIEW, {
                     capturedFile: takenPhoto,
+                    latlongResult,
                     picker: undefined,
                     photoTitle,
                     navigateTo,
@@ -185,28 +254,35 @@ function CameraScreen() {
         }
     };
 
-    const recordVideo = () => {
-        setIsRecording(true);
-        camera?.current?.startRecording({
-            flash: enableFlashlight ? "on" : "off",
+    const recordVideo = async () => {
+        if (camera === undefined || camera?.current === undefined) {
+            showCameraError("Camera not Found");
+        } else {
+            await setIsRecording(true);
+            await camera?.current?.startRecording({
+                flash: enableFlashlight ? "on" : "off",
 
-            onRecordingFinished: async (video) => {
-                stopVideo();
-                setPause(false);
+                onRecordingFinished: (video) => {
+                    dispatch(
+                        openPopUp({
+                            popUpType: "loading",
+                            popUpText: "Loading",
+                            outsideClickClosePopUp: false
+                        })
+                    );
+                    const overlayCommand = ffmegLiveTimestampOverlayCommand(
+                        video.path,
+                        localTime.toString(),
+                        formattedAddress,
+                        latlongResult
+                    );
 
-                const overlayCommand = `-i ${
-                    video.path
-                } -vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:hms}':x=200:y=200:fontsize=24:fontcolor=white" ${video.path.replace(
-                    ".mp4",
-                    "_timestamp.mp4"
-                )}`;
+                    FFmpegKit.executeAsync(overlayCommand);
 
-                await FFmpegKit.executeAsync(overlayCommand);
-
-                await setTimeout(() => {
                     navigation.navigate(IMAGE_PREVIEW, {
                         capturedFile: video,
                         picker: undefined,
+                        latlongResult,
                         isVideo,
                         photoTitle,
                         navigateTo,
@@ -217,11 +293,13 @@ function CameraScreen() {
                         soID,
                         soNumber
                     });
-                }, 200);
-            },
 
-            onRecordingError: (error) => showCameraError(error.message)
-        });
+                    dispatch(closePopUp());
+                },
+
+                onRecordingError: (error) => showCameraError(error.message)
+            });
+        }
     };
 
     const onFileSelect = (data: any) => {
@@ -243,11 +321,27 @@ function CameraScreen() {
 
     React.useEffect(() => {
         crashlytics().log(CAMERA);
-    }, [navigation]);
+        if (isVideo) {
+            interval.current = setInterval(() => {
+                setCurrentTimestamp(getCurrentTimestamp());
+                setLocalTime(getGmtPlus7UnixTime);
+            }, 1000);
+        }
+
+        return () => clearInterval(interval.current);
+    }, [navigation, isVideo]);
 
     useFocusEffect(
         React.useCallback(() => {
-            hasCameraPermissions();
+            hasCameraPermissions().then((response) => {
+                if (response) {
+                    hasLocationPermission().then((result) => {
+                        if (result) {
+                            getCurrentLocation();
+                        }
+                    });
+                }
+            });
         }, [])
     );
 
@@ -256,50 +350,67 @@ function CameraScreen() {
             <SafeAreaView style={styles.container}>
                 <View style={styles.containerCamera}>
                     <View style={{ flex: 1 }}>
-                        {getDevice() !== undefined && (
+                        {getDevice() !== undefined ? (
                             <Camera
                                 ref={camera}
-                                style={styles.camera}
                                 device={getDevice()}
                                 isActive={isFocused}
                                 photo
+                                style={StyleSheet.absoluteFill}
                                 video={isVideo}
                                 enableHighQualityPhotos={!!enableHighQuality}
                                 enableZoomGesture
                                 hdr={!!enableHDR}
                                 lowLightBoost={enableLowBoost}
                             />
+                        ) : (
+                            <View />
                         )}
                     </View>
-                    <HeaderButton
-                        onPressSwitchCamera={() => {
-                            onSwitchCamera(!isFrontCamera);
-                        }}
-                        onPressFlashlight={() =>
-                            onEnableFlashlight(!enableFlashlight)
-                        }
-                        onPressHDR={() => onEnableHDR(!enableHDR)}
-                        onPressHighQuality={() =>
-                            onEnableHighQuality(!enableHighQuality)
-                        }
-                        onPressLowBoost={() =>
-                            onEnableLowBoost(!enableLowBoost)
-                        }
-                        enableSwitchCamera={isFrontCamera}
-                        enableLowBoost={enableLowBoost}
-                        enableHighQuality={enableHighQuality}
-                        enableFlashlight={enableFlashlight}
-                        enableHDR={enableHDR}
-                    />
+                    {!isVideo ? (
+                        <HeaderButton
+                            onPressSwitchCamera={() => {
+                                onSwitchCamera(!isFrontCamera);
+                            }}
+                            onPressFlashlight={() =>
+                                onEnableFlashlight(!enableFlashlight)
+                            }
+                            onPressHDR={() => onEnableHDR(!enableHDR)}
+                            onPressHighQuality={() =>
+                                onEnableHighQuality(!enableHighQuality)
+                            }
+                            onPressLowBoost={() =>
+                                onEnableLowBoost(!enableLowBoost)
+                            }
+                            enableSwitchCamera={isFrontCamera}
+                            enableLowBoost={enableLowBoost}
+                            enableHighQuality={enableHighQuality}
+                            enableFlashlight={enableFlashlight}
+                            enableHDR={enableHDR}
+                        />
+                    ) : (
+                        <View style={styles.videoDetail}>
+                            <BSpacer size="extraSmall" />
+                            <Text style={styles.videoDetailText}>
+                                {currentTimestamp}
+                            </Text>
+                            <BSpacer size="extraSmall" />
+                            <Text style={styles.videoDetailText}>
+                                {formattedAddress}
+                            </Text>
+                            <BSpacer size="extraSmall" />
+                            <Text style={styles.videoDetailText}>
+                                {latlongResult}
+                            </Text>
+                        </View>
+                    )}
+
                     <CameraButton
-                        resumeVideo={onResumeVideo}
                         takePhoto={takePhoto}
                         recordVideo={recordVideo}
                         isVideo={isVideo}
                         stopRecordingVideo={stopVideo}
                         isRecording={isRecording}
-                        pauseVideo={pauseVideo}
-                        isPause={pause}
                         onGalleryPress={(data) => onFileSelect(data)}
                         onDocPress={(data) => onFileSelect(data)}
                         disabledDocPicker={disabledDocPicker}
