@@ -6,8 +6,6 @@ import { BSpacer, BSvg } from "@/components";
 import SvgNames from "@/components/atoms/BSvg/svgName";
 import { colors, layout } from "@/constants";
 import { resScale } from "@/utils";
-import AntDesignIcon from "react-native-vector-icons/AntDesign";
-import Feathericon from "react-native-vector-icons/Feather";
 import { convertTimeString } from "@/utils/generalFunc";
 
 const styles = StyleSheet.create({

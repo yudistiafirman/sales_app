@@ -5,13 +5,17 @@ import { StyleSheet, Text, View } from "react-native";
 
 const styles = StyleSheet.create({
     videoDetail: {
+        // maxWidth: 200,
         position: "absolute",
-        right: 20
+        bottom: 160,
+        right: 20,
+        alignItems: "flex-end"
     },
     videoDetailText: {
-        fontFamily: fonts.family.montserrat["500"],
+        fontFamily: "Roboto-Regular",
         color: colors.white,
-        fontSize: fonts.size.sm
+        fontSize: fonts.size.sm,
+        textAlign: "right"
     }
 });
 
@@ -28,12 +32,11 @@ function LiveTimeStamp({
 }: ILiveTimeStamp) {
     return (
         <View style={styles.videoDetail}>
-            <BSpacer size="extraSmall" />
-            <Text style={styles.videoDetailText}>{currentTimestamp}</Text>
-            <BSpacer size="extraSmall" />
-            <Text style={styles.videoDetailText}>{currentLocation}</Text>
-            <BSpacer size="extraSmall" />
-            <Text style={styles.videoDetailText}>{latlong}</Text>
+            <Text style={[styles.videoDetailText]}>{currentTimestamp}</Text>
+            <BSpacer size="verySmall" />
+            <Text style={[styles.videoDetailText]}>{currentLocation}</Text>
+            <BSpacer size="verySmall" />
+            <Text style={[styles.videoDetailText]}>{latlong}</Text>
         </View>
     );
 }

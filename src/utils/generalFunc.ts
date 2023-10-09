@@ -931,13 +931,13 @@ export const ffmegLiveTimestampOverlayCommand = (
 ) => {
     const videoPath = inputVideoPath;
     const outputVideoPath = replaceMP4videoPath(videoPath);
-    const drawtextCommand = `-vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:gmtime\\:${localUnixTime}\\:%d-%m-%Y %T}':x=w-tw-50:y=180:fontsize=24:fontcolor=white,
-    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${currentAddress}':x=w-tw-50:y=220:fontsize=24:fontcolor=white,
-    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${latlong}':x=w-tw-50:y=260:fontsize=24:fontcolor=white"`;
+    const drawtextCommand = `-vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${latlong}':x=w-tw-20:y=h-th-60:fontsize=42:fontcolor=white,
+    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${currentAddress}':x=w-tw-20:y=h-th-120:fontsize=42:fontcolor=white,
+    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:gmtime\\:${localUnixTime}\\:%d/%m/%Y %T}':x=w-tw-20:y=h-th-170:fontsize=42:fontcolor=white"`;
     const ffmpegCommand = `-i ${inputVideoPath} ${drawtextCommand} ${outputVideoPath}`;
     return ffmpegCommand;
 };
 
-export const getCurrentTimestamp = () => moment().format("DD-MM-YYYY HH:mm:ss");
+export const getCurrentTimestamp = () => moment().format("DD/MM/YYYY HH:mm:ss");
 
 export const getGmtPlus7UnixTime = () => moment().unix() + 7 * 3600;

@@ -747,10 +747,7 @@ function SubmitForm() {
                                     time: `${moment(
                                         operationData?.projectDetails
                                             ?.deliveryTime
-                                    ).format("L")} | ${moment(
-                                        operationData?.projectDetails
-                                            ?.deliveryTime
-                                    ).format("HH:mm")}`
+                                    ).format("L")}`
                                 }}
                                 customStyle={{
                                     backgroundColor: colors.tertiary
@@ -777,10 +774,10 @@ function SubmitForm() {
                             />
                         </View>
                         <BSpacer size="small" />
-                        <BDivider />
-                        <BSpacer size="small" />
                         {operationType === EntryType.DRIVER && (
                             <View>
+                                <BDivider />
+                                <BSpacer size="small" />
                                 <BLabel bold="500" label="Video" />
                                 <BGallery
                                     addMorePict={(attachType, index) => {
