@@ -30,6 +30,7 @@ import {
     OperationFileType,
     OperationsDeliveryOrderFileResponse
 } from "@/interfaces/Operation";
+import { VideoFile } from "react-native-vision-camera";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -924,18 +925,18 @@ export const replaceMP4videoPath = (path: string) =>
     path.replace(".mp4", "_timestamp.mp4");
 
 export const ffmegLiveTimestampOverlayCommand = (
-    inputVideoPath: string,
+    inputVideo: VideoFile,
     localUnixTime: string,
     currentAddress: string,
     latlong: string
 ) => {
-    const videoPath = inputVideoPath;
-    const outputVideoPath = replaceMP4videoPath(videoPath);
-    const drawtextCommand = `-vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${latlong}':x=w-tw-20:y=h-th-60:fontsize=42:fontcolor=white,
-    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${currentAddress}':x=w-tw-20:y=h-th-120:fontsize=42:fontcolor=white,
-    drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:gmtime\\:${localUnixTime}\\:%d/%m/%Y %T}':x=w-tw-20:y=h-th-170:fontsize=42:fontcolor=white"`;
-    const ffmpegCommand = `-i ${inputVideoPath} ${drawtextCommand} ${outputVideoPath}`;
-    return ffmpegCommand;
+    const overlayCommand = ` -i ${
+        inputVideo.path
+    } -vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${latlong}':x=w-tw-200:y=h-th-60:fontsize=42:fontcolor=white,drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${currentAddress}':x=w-tw-200:y=h-th-120:fontsize=42:fontcolor=white, drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:gmtime\\:${localUnixTime}\\:%d/%m/%Y %T}':x=w-tw-200:y=h-th-170:fontsize=42:fontcolor=white" -preset ultrafast -c:v libx264 -pix_fmt yuv420p -crf 30 -c:a copy ${replaceMP4videoPath(
+        inputVideo.path
+    )}`;
+
+    return overlayCommand;
 };
 
 export const getCurrentTimestamp = () => moment().format("DD/MM/YYYY HH:mm:ss");

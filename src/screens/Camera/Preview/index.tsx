@@ -312,10 +312,13 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                 file: {
                     uri:
                         isVideo === true
-                            ? replaceMP4videoPath(capturedFile)
+                            ? `file:${replaceMP4videoPath(capturedFile)}`
                             : `file:${capturedFile}`,
                     type: isVideo === true ? "video/mp4" : `image/${photoType}`,
-                    name: photoName,
+                    name:
+                        isVideo === true
+                            ? replaceMP4videoPath(photoName)
+                            : photoName,
                     longlat: latlongResult,
                     datetime: moment(new Date()).format("DD/MM/yyyy HH:mm:ss")
                 },

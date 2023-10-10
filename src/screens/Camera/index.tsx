@@ -7,10 +7,18 @@ import {
     useFocusEffect
 } from "@react-navigation/native";
 import * as React from "react";
-import { Animated, SafeAreaView, StyleSheet, View, Text } from "react-native";
+import {
+    Animated,
+    SafeAreaView,
+    StyleSheet,
+    View,
+    Text,
+    ActivityIndicator
+} from "react-native";
 import {
     Camera,
     CameraDevice,
+    useCameraDevice,
     useCameraDevices
 } from "react-native-vision-camera";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,9 +43,11 @@ import {
     ffmegLiveTimestampOverlayCommand,
     getCurrentTimestamp,
     getGmtPlus7UnixTime,
+    replaceMP4videoPath,
     safetyCheck
 } from "@/utils/generalFunc";
-import { colors, fonts } from "@/constants";
+import { colors, fonts, layout } from "@/constants";
+import hasMicrophonePermissions from "@/utils/permissions/microphonePersmission";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 import LiveTimeStamp from "./elements/LiveTimestamp";
@@ -58,6 +68,10 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         backgroundColor: "green"
+    },
+    cameraLoading: {
+        flex: 1,
+        justifyContent: "center"
     }
 });
 
@@ -93,7 +107,7 @@ function CameraScreen() {
         route?.params?.disabledGalleryPicker !== undefined
             ? route?.params?.disabledGalleryPicker
             : true;
-    const devices = useCameraDevices();
+    const devices = useCameraDevice(isFrontCamera ? "front" : "back");
     const [latlongResult, setLatlongResult] = React.useState("");
     const [formattedAddress, setFormattedAddress] = React.useState("");
     const [localTime, setLocalTime] = React.useState(getGmtPlus7UnixTime);
@@ -101,6 +115,7 @@ function CameraScreen() {
     const [currentTimestamp, setCurrentTimestamp] = React.useState(
         getCurrentTimestamp()
     );
+    const [isCameraLoading, setIsCameraLoading] = React.useState(false);
     const interval = React.useRef();
 
     const showCameraError = (errorText: string) => {
@@ -114,13 +129,6 @@ function CameraScreen() {
     };
 
     const getCurrentLocation = async () => {
-        dispatch(
-            openPopUp({
-                popUpType: "loading",
-                popUpText: "Loading",
-                outsideClickClosePopUp: false
-            })
-        );
         const opt = {
             showLocationDialog: true,
             forceRequestLocation: true
@@ -156,10 +164,10 @@ function CameraScreen() {
                 : "";
 
             setFormattedAddress(addressTitle);
-            dispatch(closePopUp());
+            setIsCameraLoading(false);
         } catch (error) {
             showCameraError(error);
-            dispatch(closePopUp());
+            setIsCameraLoading(false);
         }
     };
 
@@ -207,9 +215,6 @@ function CameraScreen() {
         });
     };
 
-    const getDevice = (): CameraDevice | undefined =>
-        isFrontCamera ? devices?.front : devices?.back;
-
     const stopVideo = async () => {
         setIsRecording(false);
         await camera?.current?.stopRecording();
@@ -220,9 +225,10 @@ function CameraScreen() {
             showCameraError("Camera not Found");
         } else {
             try {
-                const takenPhoto = await camera?.current?.takeSnapshot({
+                const takenPhoto = await camera?.current?.takePhoto({
                     flash: enableFlashlight ? "on" : "off",
-                    quality: 70
+                    qualityPrioritization: "speed",
+                    enableShutterSound: false
                 });
 
                 animateElement();
@@ -254,24 +260,25 @@ function CameraScreen() {
             await camera?.current?.startRecording({
                 flash: enableFlashlight ? "on" : "off",
 
-                onRecordingFinished: (video) => {
-                    dispatch(
+                onRecordingFinished: async (video) => {
+                    await dispatch(
                         openPopUp({
                             popUpType: "loading",
-                            popUpText: "Loading",
+                            popUpText: "Video sedang di proses",
                             outsideClickClosePopUp: false
                         })
                     );
+
                     const overlayCommand = ffmegLiveTimestampOverlayCommand(
-                        video.path,
+                        video,
                         localTime.toString(),
                         formattedAddress,
                         latlongResult
                     );
 
-                    FFmpegKit.executeAsync(overlayCommand);
+                    await FFmpegKit.execute(overlayCommand);
 
-                    navigation.navigate(IMAGE_PREVIEW, {
+                    await navigation.navigate(IMAGE_PREVIEW, {
                         capturedFile: video,
                         picker: undefined,
                         latlongResult,
@@ -286,7 +293,7 @@ function CameraScreen() {
                         soNumber
                     });
 
-                    dispatch(closePopUp());
+                    await dispatch(closePopUp());
                 },
 
                 onRecordingError: (error) => showCameraError(error.message)
@@ -325,11 +332,16 @@ function CameraScreen() {
 
     useFocusEffect(
         React.useCallback(() => {
+            setIsCameraLoading(true);
             hasCameraPermissions().then((response) => {
                 if (response) {
-                    hasLocationPermission().then((result) => {
+                    hasMicrophonePermissions().then((result) => {
                         if (result) {
-                            getCurrentLocation();
+                            hasLocationPermission().then((res) => {
+                                if (res) {
+                                    getCurrentLocation();
+                                }
+                            });
                         }
                     });
                 }
@@ -337,71 +349,74 @@ function CameraScreen() {
         }, [])
     );
 
-    return (
-        <View style={styles.parent}>
-            <SafeAreaView style={styles.container}>
-                <View style={styles.containerCamera}>
-                    <View style={{ flex: 1 }}>
-                        {getDevice() !== undefined ? (
-                            <Camera
-                                ref={camera}
-                                device={getDevice()}
-                                isActive={isFocused}
-                                photo
-                                style={StyleSheet.absoluteFill}
-                                video={isVideo}
-                                enableHighQualityPhotos={!!enableHighQuality}
-                                enableZoomGesture
-                                hdr={!!enableHDR}
-                                lowLightBoost={enableLowBoost}
-                            />
-                        ) : (
-                            <View />
-                        )}
-                    </View>
-                    {!isVideo ? (
-                        <HeaderButton
-                            onPressSwitchCamera={() => {
-                                onSwitchCamera(!isFrontCamera);
-                            }}
-                            onPressFlashlight={() =>
-                                onEnableFlashlight(!enableFlashlight)
-                            }
-                            onPressHDR={() => onEnableHDR(!enableHDR)}
-                            onPressHighQuality={() =>
-                                onEnableHighQuality(!enableHighQuality)
-                            }
-                            onPressLowBoost={() =>
-                                onEnableLowBoost(!enableLowBoost)
-                            }
-                            enableSwitchCamera={isFrontCamera}
-                            enableLowBoost={enableLowBoost}
-                            enableHighQuality={enableHighQuality}
-                            enableFlashlight={enableFlashlight}
-                            enableHDR={enableHDR}
-                        />
-                    ) : (
-                        <LiveTimeStamp
-                            currentLocation={formattedAddress}
-                            currentTimestamp={currentTimestamp}
-                            latlong={latlongResult}
-                        />
-                    )}
+    if (isCameraLoading) {
+        return (
+            <View style={styles.cameraLoading}>
+                <ActivityIndicator
+                    size={layout.pad.xl}
+                    color={colors.primary}
+                />
+            </View>
+        );
+    }
 
-                    <CameraButton
-                        takePhoto={takePhoto}
-                        recordVideo={recordVideo}
-                        isVideo={isVideo}
-                        stopRecordingVideo={stopVideo}
-                        isRecording={isRecording}
-                        onGalleryPress={(data) => onFileSelect(data)}
-                        onDocPress={(data) => onFileSelect(data)}
-                        disabledDocPicker={disabledDocPicker}
-                        disabledGalleryPicker={disabledGalleryPicker}
-                    />
-                </View>
-            </SafeAreaView>
-        </View>
+    return (
+        <>
+            {devices ? (
+                <Camera
+                    ref={camera}
+                    device={devices}
+                    isActive={isFocused}
+                    photo
+                    orientation="portrait"
+                    style={StyleSheet.absoluteFill}
+                    video={isVideo}
+                    audio={isVideo}
+                    enableZoomGesture
+                    enableHighQualityPhotos={!!enableHighQuality}
+                    hdr={!!enableHDR}
+                    lowLightBoost={enableLowBoost}
+                />
+            ) : (
+                <View />
+            )}
+
+            <HeaderButton
+                onPressSwitchCamera={() => {
+                    onSwitchCamera(!isFrontCamera);
+                }}
+                onPressFlashlight={() => onEnableFlashlight(!enableFlashlight)}
+                onPressHDR={() => onEnableHDR(!enableHDR)}
+                onPressHighQuality={() =>
+                    onEnableHighQuality(!enableHighQuality)
+                }
+                onPressLowBoost={() => onEnableLowBoost(!enableLowBoost)}
+                enableSwitchCamera={isFrontCamera}
+                enableLowBoost={enableLowBoost}
+                enableHighQuality={enableHighQuality}
+                enableFlashlight={enableFlashlight}
+                enableHDR={enableHDR}
+            />
+            {isVideo && (
+                <LiveTimeStamp
+                    currentLocation={formattedAddress}
+                    currentTimestamp={currentTimestamp}
+                    latlong={latlongResult}
+                />
+            )}
+
+            <CameraButton
+                takePhoto={takePhoto}
+                recordVideo={recordVideo}
+                isVideo={isVideo}
+                stopRecordingVideo={stopVideo}
+                isRecording={isRecording}
+                onGalleryPress={(data) => onFileSelect(data)}
+                onDocPress={(data) => onFileSelect(data)}
+                disabledDocPicker={disabledDocPicker}
+                disabledGalleryPicker={disabledGalleryPicker}
+            />
+        </>
     );
 }
 

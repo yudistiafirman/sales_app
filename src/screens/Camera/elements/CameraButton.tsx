@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     cameraBtn: {
-        // position: 'absolute',
+        position: "absolute",
         height: resScale(120),
         left: 0,
         right: 0,
