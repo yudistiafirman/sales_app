@@ -67,7 +67,7 @@ const loginStyle = StyleSheet.create({
         flex: 0.85
     },
     buttonStyle: {
-        width: resScale(328)
+        width: "78%"
     }
 });
 export default loginStyle;

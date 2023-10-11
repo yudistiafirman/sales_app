@@ -217,7 +217,12 @@ function CameraScreen() {
 
     const stopVideo = async () => {
         setIsRecording(false);
-        await camera?.current?.stopRecording();
+        console.log("wkwkwk 0:: ", false);
+        try {
+            await camera?.current?.stopRecording();
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const takePhoto = async () => {
@@ -252,15 +257,18 @@ function CameraScreen() {
         }
     };
 
-    const recordVideo = async () => {
+    const recordVideo = React.useCallback(async () => {
         if (camera === undefined || camera?.current === undefined) {
+            stopVideo();
             showCameraError("Camera not Found");
         } else {
-            await setIsRecording(true);
+            setIsRecording(true);
+            console.log("wkwkwk 1:: ", true);
             await camera?.current?.startRecording({
                 flash: enableFlashlight ? "on" : "off",
-
                 onRecordingFinished: async (video) => {
+                    setIsRecording(false);
+                    console.log("wkwkwk 2:: ", false);
                     await dispatch(
                         openPopUp({
                             popUpType: "loading",
@@ -268,6 +276,12 @@ function CameraScreen() {
                             outsideClickClosePopUp: false
                         })
                     );
+
+                    try {
+                        await camera?.current?.stopRecording();
+                    } catch (e) {
+                        console.log(e);
+                    }
 
                     const overlayCommand = ffmegLiveTimestampOverlayCommand(
                         video,
@@ -277,6 +291,8 @@ function CameraScreen() {
                     );
 
                     await FFmpegKit.execute(overlayCommand);
+
+                    await dispatch(closePopUp());
 
                     await navigation.navigate(IMAGE_PREVIEW, {
                         capturedFile: video,
@@ -292,14 +308,20 @@ function CameraScreen() {
                         soID,
                         soNumber
                     });
-
-                    await dispatch(closePopUp());
                 },
 
-                onRecordingError: (error) => showCameraError(error.message)
+                onRecordingError: (error) => {
+                    if (error.code === "capture/recording-in-progress") {
+                        console.log(error);
+                    } else {
+                        setIsRecording(false);
+                        console.log("wkwkwk 3:: ", false);
+                        showCameraError(error.message);
+                    }
+                }
             });
         }
-    };
+    }, [isRecording]);
 
     const onFileSelect = (data: any) => {
         navigation.navigate(IMAGE_PREVIEW, {
@@ -321,10 +343,17 @@ function CameraScreen() {
     React.useEffect(() => {
         crashlytics().log(CAMERA);
         if (isVideo) {
-            interval.current = setInterval(() => {
-                setCurrentTimestamp(getCurrentTimestamp());
-                setLocalTime(getGmtPlus7UnixTime);
-            }, 1000);
+            clearInterval(interval.current);
+            if (
+                interval &&
+                interval !== null &&
+                interval.current &&
+                interval.current !== null
+            )
+                interval.current = setInterval(() => {
+                    setCurrentTimestamp(getCurrentTimestamp());
+                    setLocalTime(getGmtPlus7UnixTime);
+                }, 1000);
         }
 
         return () => clearInterval(interval.current);

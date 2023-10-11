@@ -54,18 +54,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: layout.pad.xxl,
         paddingTop: layout.pad.md
     },
-    playPauseBtn: {
-        alignItems: "flex-start",
-        alignSelf: "flex-start",
-        justifyContent: "center",
-        flex: 2,
-        paddingHorizontal: layout.pad.xxl,
-        paddingTop: layout.pad.md
-    },
     videoDuration: {
         alignItems: "center",
-        alignSelf: "flex-end",
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
         flex: 1,
         paddingHorizontal: layout.pad.xxl,
         paddingTop: layout.pad.md,
@@ -217,6 +208,7 @@ function CameraButton({
         return renderTakePhotoBtn();
     };
 
+    console.log("iniiii:: ", isVideo, isRecording);
     return (
         <View style={[styles.cameraBtn, style]}>
             <View style={styles.optionButton}>
@@ -258,11 +250,30 @@ function CameraButton({
                 {isVideo && isRecording && (
                     <View style={styles.flexFull}>
                         <View style={[styles.videoDuration]}>
-                            <Text style={{ color: colors.danger }}>●</Text>
-                            <BSpacer size="extraSmall" />
-                            <Text style={{ color: colors.white }}>
-                                {convertTimeString(videoDuration)}
-                            </Text>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "flex-end"
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: colors.danger
+                                    }}
+                                >
+                                    ●
+                                </Text>
+                                {/* <BSpacer size="extraSmall" /> */}
+                                <Text
+                                    style={{
+                                        color: colors.white,
+                                        minWidth: "20%",
+                                        textAlign: "right"
+                                    }}
+                                >
+                                    {convertTimeString(videoDuration)}
+                                </Text>
+                            </View>
                         </View>
                     </View>
                 )}
