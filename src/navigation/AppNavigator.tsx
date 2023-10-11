@@ -19,6 +19,7 @@ import Operation from "@/screens/Operation";
 import Splash from "@/screens/Splash";
 import Verification from "@/screens/Verification";
 import { BatchingPlant } from "@/models/BatchingPlant";
+import { getUserType } from "@/utils/generalFunc";
 import SecurityTabs from "./tabs/SecurityTabs";
 import SalesTabs from "./tabs/SalesTabs";
 import {
@@ -61,22 +62,8 @@ function RootScreen(
     onSelectBPOption: (item: BatchingPlant) => void
 ) {
     if (userData !== null) {
-        const { type, roles } = userData;
-        const mappingRoles: string[] = [];
-        let safetyType = type;
-        roles?.forEach((item) => {
-            mappingRoles?.push(item?.toLowerCase());
-        });
-        if (mappingRoles?.includes(EntryType.DRIVER.toLowerCase()))
-            safetyType = EntryType.DRIVER;
-        else if (mappingRoles?.includes(EntryType.SECURITY.toLowerCase()))
-            safetyType = EntryType.SECURITY;
-        else if (mappingRoles?.includes(EntryType.WB.toLowerCase()))
-            safetyType = EntryType.WB;
-        else if (mappingRoles?.includes(EntryType.SALES.toLowerCase()))
-            safetyType = EntryType.SALES;
-        else if (mappingRoles?.includes(EntryType.ADMIN.toLowerCase()))
-            safetyType = EntryType.ADMIN;
+        const safetyType = getUserType(userData?.type, userData?.roles);
+
         switch (safetyType?.toLowerCase()) {
             case EntryType.DRIVER.toLowerCase():
                 return (

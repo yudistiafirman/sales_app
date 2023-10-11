@@ -918,4 +918,25 @@ export function mapDOPhotoFromBE(
 }
 
 export const convertTimeString = (time: number) =>
-    moment().startOf("day").seconds(time).format("hh:mm:ss");
+    moment().startOf("day").seconds(time).format("HH:mm:ss");
+
+export const getUserType = (type?: string, roles?: string[]) => {
+    const mappingRoles: string[] = [];
+    let safetyType = type ?? "";
+    roles?.forEach((item) => {
+        mappingRoles?.push(item?.toLowerCase());
+    });
+
+    if (mappingRoles?.includes(EntryType.DRIVER.toLowerCase()))
+        safetyType = EntryType.DRIVER;
+    else if (mappingRoles?.includes(EntryType.SECURITY.toLowerCase()))
+        safetyType = EntryType.SECURITY;
+    else if (mappingRoles?.includes(EntryType.WB.toLowerCase()))
+        safetyType = EntryType.WB;
+    else if (mappingRoles?.includes(EntryType.SALES.toLowerCase()))
+        safetyType = EntryType.SALES;
+    else if (mappingRoles?.includes(EntryType.ADMIN.toLowerCase()))
+        safetyType = EntryType.ADMIN;
+
+    return safetyType;
+};
