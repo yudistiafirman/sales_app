@@ -62,9 +62,7 @@ function RootScreen(
     onSelectBPOption: (item: BatchingPlant) => void
 ) {
     if (userData !== null) {
-        const safetyType = getUserType(userData?.type, userData?.roles);
-
-        switch (safetyType?.toLowerCase()) {
+        switch (userData?.type?.toLowerCase()) {
             case EntryType.DRIVER.toLowerCase():
                 return (
                     <>
