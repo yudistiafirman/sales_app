@@ -10,11 +10,12 @@ buildscript {
         PATCH_VERSION = 34
 
         compileSdkVersion = 33
-        minSdkVersion = 21
+        minSdkVersion = 24
         targetSdkVersion = 33
         buildToolsVersion = "33.0.0"
         kotlinVersion = "1.7.0"
         googlePlayServicesVersion = "18.0.0"
+        ffmpegKitPackage = "full-gpl"
 
          if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we need to use the NDK 24 which added support for aarch64

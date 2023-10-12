@@ -4184,6 +4184,11 @@ fbjs@^0.8.9:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.30"
 
+ffmpeg-kit-react-native@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/ffmpeg-kit-react-native/-/ffmpeg-kit-react-native-6.0.2.tgz#9eeac96ad89367c99480bd90431391405d4eb73e"
+  integrity sha512-r9uSmahq8TeyIb7fXf3ft+uUXyoeWRFa99+khjo0TAzWO9y0z9wU7eGnab9JLw1MmCB9v64o4yojNluJhVm9nQ==
+
 figures@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-3.2.0.tgz#625c18bd293c604dc4a8ddb2febf0c88341746af"
@@ -7458,10 +7463,10 @@ react-native-video@^6.0.0-alpha.8:
     keymirror "^0.1.1"
     prop-types "^15.7.2"
 
-react-native-vision-camera@^2.16.1:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-2.16.1.tgz#b1af6d2161a7b19dc39da8f645344a63b0d4ded8"
-  integrity sha512-2utw/1EkgeaL6CLQX9Bm6HEpkmkbyx/dBJmwjA2nVz3IuXn5ys57NwMa0o/qg8proSGvcs8XKpqtQtnMPA1P+w==
+react-native-vision-camera@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-3.3.1.tgz#9dc6a74560535d6ce6deb85046b6b327615a45e3"
+  integrity sha512-OeoHvDTR4wlfij17azxmr7fwDtZc3nzEUe8ZJ3EYJx4HSGaDtvt578VRXUdxLpPs3jqS3J8g/8bivH2IHUkxtg==
 
 react-native-webview@^11.22.7:
   version "11.26.1"

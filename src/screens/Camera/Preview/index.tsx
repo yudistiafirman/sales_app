@@ -13,7 +13,8 @@ import {
     View,
     Image,
     StyleSheet,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Alert
 } from "react-native";
 import Geolocation from "react-native-geolocation-service";
 import Pdf from "react-native-pdf";
@@ -68,9 +69,10 @@ import {
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import { hasLocationPermission } from "@/utils/permissions";
-import { safetyCheck } from "@/utils/generalFunc";
+import { replaceMP4videoPath, safetyCheck } from "@/utils/generalFunc";
 import { uploadFiles } from "@/actions/CommonActions";
 import Video from "react-native-video";
+import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
 
 const styles = StyleSheet.create({
     parent: {
@@ -129,7 +131,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
     const visitationData = useSelector((state: RootState) => state.visitation);
     const operationData = useSelector((state: RootState) => state.operation);
     const authState = useSelector((state: RootState) => state.auth);
-    let latlongResult = "";
+    const latlongResult = route?.params?.latlongResult;
 
     useHeaderTitleChanged({
         title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
@@ -175,22 +177,6 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             throw new Error(error);
         }
     };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            hasLocationPermission().then((result) => {
-                if (result) {
-                    getCurrentLocation().then((longlat) => {
-                        latlongResult =
-                            safetyCheck(longlat?.latitude) &&
-                            safetyCheck(longlat?.longitude)
-                                ? `${longlat?.latitude}, ${longlat?.longitude}`
-                                : "";
-                    });
-                }
-            });
-        }, [])
-    );
 
     const getTypeOfImagePayload = () => {
         if (navigateTo) {
@@ -324,11 +310,17 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         if (capturedFile) {
             localFile = {
                 file: {
-                    uri:
-                        isVideo === true
-                            ? capturedFile
-                            : `file:${capturedFile}`,
+                    // uri:
+                    //     isVideo === true
+                    //         ? `file:${replaceMP4videoPath(capturedFile)}`
+                    //         : `file:${capturedFile}`,
+                    uri: `file:${capturedFile}`,
+                    // type: isVideo === true ? "video/mp4" : `image/${photoType}`,
                     type: isVideo === true ? "video/mp4" : `image/${photoType}`,
+                    // name:
+                    //     isVideo === true
+                    //         ? replaceMP4videoPath(photoName)
+                    //         : photoName,
                     name: photoName,
                     longlat: latlongResult,
                     datetime: moment(new Date()).format("DD/MM/yyyy HH:mm:ss")
@@ -483,35 +475,45 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
             }
             case EntryType.DRIVER: {
                 const newFiles: LocalFileType[] = [];
-                if (isVideo === true) {
-                    operationData?.videoFiles?.forEach((item) => {
-                        let selectedItem: LocalFileType | undefined = {
-                            ...item
-                        };
-                        if (
-                            selectedItem?.attachType === operationAddedStep ||
-                            (selectedItem?.attachType === driversFileName[7] &&
-                                operationData?.videoFiles.filter(
-                                    (it) => it.file !== null
-                                ).length > 0)
-                        ) {
-                            selectedItem = localFile;
-                        }
+                operationData?.photoFiles?.forEach((item) => {
+                    let selectedItem: LocalFileType | undefined = {
+                        ...item
+                    };
+                    if (selectedItem?.attachType === operationAddedStep) {
+                        selectedItem = localFile;
+                    }
 
-                        if (selectedItem) newFiles?.push(selectedItem);
-                    });
-                } else {
-                    operationData?.photoFiles?.forEach((item) => {
-                        let selectedItem: LocalFileType | undefined = {
-                            ...item
-                        };
-                        if (selectedItem?.attachType === operationAddedStep) {
-                            selectedItem = localFile;
-                        }
+                    if (selectedItem) newFiles?.push(selectedItem);
+                });
+                // if (isVideo === true) {
+                //     operationData?.videoFiles?.forEach((item) => {
+                //         let selectedItem: LocalFileType | undefined = {
+                //             ...item
+                //         };
+                //         if (
+                //             selectedItem?.attachType === operationAddedStep ||
+                //             (selectedItem?.attachType === driversFileName[7] &&
+                //                 operationData?.videoFiles.filter(
+                //                     (it) => it.file !== null
+                //                 ).length > 0)
+                //         ) {
+                //             selectedItem = localFile;
+                //         }
 
-                        if (selectedItem) newFiles?.push(selectedItem);
-                    });
-                }
+                //         if (selectedItem) newFiles?.push(selectedItem);
+                //     });
+                // } else {
+                //     operationData?.photoFiles?.forEach((item) => {
+                //         let selectedItem: LocalFileType | undefined = {
+                //             ...item
+                //         };
+                //         if (selectedItem?.attachType === operationAddedStep) {
+                //             selectedItem = localFile;
+                //         }
+
+                //         if (selectedItem) newFiles?.push(selectedItem);
+                //     });
+                // }
 
                 navigation.dispatch(StackActions.pop(2));
                 switch (photoTitle) {
@@ -576,25 +578,26 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         );
                         break;
                     default:
-                        if (isVideo === true) {
-                            uploadEachPhoto(
-                                `Video ${photoTitle}`,
-                                localFile,
-                                newFiles
-                            );
-                            newFiles.push({
-                                file: null,
-                                isFromPicker: false,
-                                isVideo: true,
-                                attachType: `Penuangan Ke-${
-                                    newFiles.length + 1
-                                }`,
-                                type: "COVER"
-                            });
-                            dispatch(setAllOperationVideo({ file: newFiles }));
-                        } else {
-                            dispatch(setAllOperationPhoto({ file: newFiles }));
-                        }
+                        dispatch(setAllOperationPhoto({ file: newFiles }));
+                        // if (isVideo === true) {
+                        //     uploadEachPhoto(
+                        //         `Video ${photoTitle}`,
+                        //         localFile,
+                        //         newFiles
+                        //     );
+                        //     newFiles.push({
+                        //         file: null,
+                        //         isFromPicker: false,
+                        //         isVideo: true,
+                        //         attachType: `Penuangan Ke-${
+                        //             newFiles.length + 1
+                        //         }`,
+                        //         type: "COVER"
+                        //     });
+                        //     dispatch(setAllOperationVideo({ file: newFiles }));
+                        // } else {
+                        //     dispatch(setAllOperationPhoto({ file: newFiles }));
+                        // }
                         break;
                 }
                 return;
@@ -781,7 +784,9 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                         controls
                         resizeMode="cover"
                         style={{ ...styles.image, flex: 1 }}
-                        source={{ uri: capturedFile }}
+                        source={{
+                            uri: replaceMP4videoPath(capturedFile)
+                        }}
                     />
                 )}
                 {picker && picker.type === "application/pdf" && (

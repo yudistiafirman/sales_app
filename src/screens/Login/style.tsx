@@ -67,7 +67,10 @@ const loginStyle = StyleSheet.create({
         flex: 0.85
     },
     buttonStyle: {
-        width: resScale(328)
+        width: "100%",
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "space-between"
     }
 });
 export default loginStyle;

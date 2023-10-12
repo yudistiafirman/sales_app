@@ -11,7 +11,7 @@ import * as React from "react";
 import { Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { isJsonString } from "@/utils/generalFunc";
+import { getUserType, isJsonString } from "@/utils/generalFunc";
 import remoteConfig from "@react-native-firebase/remote-config";
 import BackgroundFetch from "react-native-background-fetch";
 import { HUNTER_AND_FARMER } from "@/navigation/ScreenNames";
@@ -40,10 +40,13 @@ const useAsyncConfigSetup = () => {
                     const batchingPlantsResponse = await getBatchingPlants();
                     const decoded =
                         jwtDecode<UserModel.DataSuccessLogin>(userToken);
-
+                    const safetyType = getUserType(
+                        decoded?.type,
+                        decoded?.roles
+                    );
                     dispatch(
                         setUserData({
-                            userData: decoded,
+                            userData: { ...decoded, type: safetyType },
                             remoteConfigData: fetchedRemoteConfig,
                             batchingPlants:
                                 batchingPlantsResponse?.data?.data?.data
@@ -61,9 +64,13 @@ const useAsyncConfigSetup = () => {
                 if (userToken) {
                     const decoded =
                         jwtDecode<UserModel.DataSuccessLogin>(userToken);
+                    const safetyType = getUserType(
+                        decoded?.type,
+                        decoded?.roles
+                    );
                     dispatch(
                         setUserData({
-                            userData: decoded,
+                            userData: { ...decoded, type: safetyType },
                             remoteConfigData: fetchedRemoteConfig
                         })
                     );

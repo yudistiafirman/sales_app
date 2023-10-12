@@ -30,6 +30,7 @@ import {
     OperationFileType,
     OperationsDeliveryOrderFileResponse
 } from "@/interfaces/Operation";
+import { VideoFile } from "react-native-vision-camera";
 
 const { RNCustomConfig } = NativeModules;
 
@@ -918,4 +919,46 @@ export function mapDOPhotoFromBE(
 }
 
 export const convertTimeString = (time: number) =>
-    moment().startOf("day").seconds(time).format("hh:mm:ss");
+    moment().startOf("day").seconds(time).format("HH:mm:ss");
+
+export const replaceMP4videoPath = (path: string) =>
+    path.replace(".mp4", "_timestamp.mp4");
+
+export const ffmegLiveTimestampOverlayCommand = (
+    inputVideo: VideoFile,
+    localUnixTime: string,
+    currentAddress: string,
+    latlong: string
+) => {
+    const overlayCommand = ` -i ${
+        inputVideo.path
+    } -vf "drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${latlong}':x=w-tw-200:y=h-th-60:fontsize=42:fontcolor=white,drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='${currentAddress}':x=w-tw-200:y=h-th-120:fontsize=42:fontcolor=white, drawtext=fontfile=/system/fonts/Roboto-Regular.ttf:text='%{pts\\:gmtime\\:${localUnixTime}\\:%d/%m/%Y %T}':x=w-tw-200:y=h-th-170:fontsize=42:fontcolor=white" -preset ultrafast -c:v libx264 -pix_fmt yuv420p -crf 30 -c:a copy ${replaceMP4videoPath(
+        inputVideo.path
+    )}`;
+
+    return overlayCommand;
+};
+
+export const getCurrentTimestamp = () => moment().format("DD/MM/YYYY HH:mm:ss");
+
+export const getGmtPlus7UnixTime = () => moment().unix() + 7 * 3600;
+export const getUserType = (type?: string, roles?: string[]) => {
+    const mappingRoles: string[] = [];
+    let safetyType = type ?? "";
+    roles?.forEach((item) => {
+        mappingRoles?.push(item?.toLowerCase());
+    });
+
+    if (mappingRoles?.includes(EntryType.DRIVER.toLowerCase()))
+        safetyType = EntryType.DRIVER;
+    else if (mappingRoles?.includes(EntryType.SECURITY.toLowerCase()))
+        safetyType = EntryType.SECURITY;
+    else if (mappingRoles?.includes(EntryType.WB.toLowerCase()))
+        safetyType = EntryType.WB;
+    else if (mappingRoles?.includes(EntryType.SALES.toLowerCase()))
+        safetyType = EntryType.SALES;
+    else if (mappingRoles?.includes(EntryType.ADMIN.toLowerCase()))
+        safetyType = EntryType.ADMIN;
+
+    return safetyType;
+};

@@ -19,6 +19,7 @@ import { setUserData } from "@/redux/reducers/authReducer";
 import { RootState } from "@/redux/store";
 import { resScale } from "@/utils";
 import otpMessageImage from "@/assets/illustration/ic_otp_message.png";
+import { getUserType } from "@/utils/generalFunc";
 import VerificationStyles from "./styles";
 import VIntstruction from "./element/VInstruction";
 import ResendOTP from "./element/ResendOTP";
@@ -68,20 +69,30 @@ function Verification() {
                 await bStorage.setItem(storageKey.userToken, accessToken);
                 let batchingPlantsResponse;
                 if (decoded) batchingPlantsResponse = await getBatchingPlants();
-                if (batchingPlantsResponse?.data?.data?.data)
+                if (batchingPlantsResponse?.data?.data?.data) {
+                    const safetyType = getUserType(
+                        decoded?.type,
+                        decoded?.roles
+                    );
                     dispatch(
                         setUserData({
-                            userData: decoded,
+                            userData: { ...decoded, type: safetyType },
                             batchingPlants:
                                 batchingPlantsResponse?.data?.data?.data
                         })
                     );
-                else
+                } else {
+                    const safetyType = getUserType(
+                        decoded?.type,
+                        decoded?.roles
+                    );
                     dispatch(
                         setUserData({
-                            userData: decoded
+                            userData: { ...decoded, type: safetyType }
                         })
                     );
+                }
+
                 setVerificationState({
                     ...verificationState,
                     errorOtp: "",
@@ -90,13 +101,13 @@ function Verification() {
                 });
                 analytics().setUserId(response?.data?.id);
                 analytics().setUserProperties({
-                    role: response?.data?.type,
+                    role: response?.data?.roles,
                     email: response?.data?.email,
                     username: response?.data?.phone
                 });
                 crashlytics().setUserId(response?.data?.id);
                 crashlytics().setAttributes({
-                    role: response?.data?.type,
+                    role: response?.data?.roles,
                     email: response?.data?.email,
                     username: response?.data?.phone
                 });
@@ -106,7 +117,7 @@ function Verification() {
         } catch (error) {
             setVerificationState({
                 ...verificationState,
-                errorOtp: error?.message,
+                errorOtp: (error as Error).message,
                 otpValue: "",
                 loading: false
             });
