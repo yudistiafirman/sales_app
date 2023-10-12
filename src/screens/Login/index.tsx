@@ -20,6 +20,7 @@ import loginStyle from "./style";
 import Label from "./element/Label";
 import Instruction from "./element/Intstruction";
 import PhoneInput from "./element/PhoneInput";
+import { styles } from "../Transaction/element/TransactionListCard";
 
 interface LoginState {
     errorMessage: string | any;
@@ -115,19 +116,20 @@ function Login() {
             />
             {errorMessage && <BErrorText text={errorMessage} />}
             <BSpacer size={resScale(40)} />
-            <BButtonPrimary
-                disable={disableBtn}
-                buttonStyle={[
-                    loginStyle.buttonStyle,
-                    {
+            <View style={loginStyle.buttonStyle}>
+                <BButtonPrimary
+                    disable={disableBtn}
+                    buttonStyle={{
+                        width: "86%",
                         backgroundColor: disableBtn
                             ? `${colors.primary}40`
                             : colors.primary
-                    }
-                ]}
-                onPress={sendOtp}
-                title="Kirim OTP"
-            />
+                    }}
+                    onPress={sendOtp}
+                    title="Kirim OTP"
+                />
+            </View>
+
             <Spinner
                 visible={loading}
                 size="large"
