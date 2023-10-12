@@ -48,6 +48,7 @@ import {
 } from "@/utils/generalFunc";
 import { colors, fonts, layout } from "@/constants";
 import hasMicrophonePermissions from "@/utils/permissions/microphonePersmission";
+import { setTotalItems } from "@/redux/reducers/invoiceReducer";
 import HeaderButton from "./elements/HeaderButton";
 import CameraButton from "./elements/CameraButton";
 import LiveTimeStamp from "./elements/LiveTimestamp";
@@ -98,7 +99,7 @@ function CameraScreen() {
     const operationTempData = route?.params?.operationTempData;
     const soNumber = route?.params?.soNumber;
     const soID = route?.params?.soID;
-    const isVideo = route?.params?.isVideo;
+    // const isVideo = route?.params?.isVideo;
     const disabledDocPicker =
         route?.params?.disabledDocPicker !== undefined
             ? route?.params?.disabledDocPicker
@@ -110,13 +111,13 @@ function CameraScreen() {
     const devices = useCameraDevice(isFrontCamera ? "front" : "back");
     const [latlongResult, setLatlongResult] = React.useState("");
     const [formattedAddress, setFormattedAddress] = React.useState("");
-    const [localTime, setLocalTime] = React.useState(getGmtPlus7UnixTime);
+    // const [localTime, setLocalTime] = React.useState(getGmtPlus7UnixTime);
 
-    const [currentTimestamp, setCurrentTimestamp] = React.useState(
-        getCurrentTimestamp()
-    );
+    // const [currentTimestamp, setCurrentTimestamp] = React.useState(
+    //     getCurrentTimestamp()
+    // );
     const [isCameraLoading, setIsCameraLoading] = React.useState(false);
-    const interval = React.useRef();
+    // const interval = React.useRef();
 
     const showCameraError = (errorText: string) => {
         dispatch(
@@ -172,7 +173,8 @@ function CameraScreen() {
     };
 
     useHeaderTitleChanged({
-        title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
+        // title: isVideo === true ? `Video ${photoTitle}` : `Foto ${photoTitle}`,
+        title: `Foto ${photoTitle}`,
         selectedBP: authState.selectedBatchingPlant,
         hideBPBadges: true
     });
@@ -215,15 +217,15 @@ function CameraScreen() {
         });
     };
 
-    const stopVideo = async () => {
-        setIsRecording(false);
-        console.log("wkwkwk 0:: ", false);
-        try {
-            await camera?.current?.stopRecording();
-        } catch (e) {
-            console.log(e);
-        }
-    };
+    // const stopVideo = async () => {
+    //     setIsRecording(false);
+    //     console.log("wkwkwk 0:: ", false);
+    //     try {
+    //         await camera?.current?.stopRecording();
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // };
 
     const takePhoto = async () => {
         if (camera === undefined || camera?.current === undefined) {
@@ -257,120 +259,123 @@ function CameraScreen() {
         }
     };
 
-    const recordVideo = React.useCallback(async () => {
-        if (camera === undefined || camera?.current === undefined) {
-            stopVideo();
-            showCameraError("Camera not Found");
-        } else {
-            setIsRecording(true);
-            console.log("wkwkwk 1:: ", true);
-            await camera?.current?.startRecording({
-                flash: enableFlashlight ? "on" : "off",
-                onRecordingFinished: async (video) => {
-                    setIsRecording(false);
-                    console.log("wkwkwk 2:: ", false);
-                    await dispatch(
-                        openPopUp({
-                            popUpType: "loading",
-                            popUpText: "Video sedang di proses",
-                            outsideClickClosePopUp: false
-                        })
-                    );
+    // const recordVideo = React.useCallback(async () => {
+    //     if (camera === undefined || camera?.current === undefined) {
+    //         stopVideo();
+    //         showCameraError("Camera not Found");
+    //     } else {
+    //         setIsRecording(true);
+    //         console.log("wkwkwk 1:: ", true);
+    //         await camera?.current?.startRecording({
+    //             flash: enableFlashlight ? "on" : "off",
+    //             onRecordingFinished: async (video) => {
+    //                 setIsRecording(false);
+    //                 console.log("wkwkwk 2:: ", false);
+    //                 await dispatch(
+    //                     openPopUp({
+    //                         popUpType: "loading",
+    //                         popUpText: "Video sedang di proses",
+    //                         outsideClickClosePopUp: false
+    //                     })
+    //                 );
 
-                    try {
-                        await camera?.current?.stopRecording();
-                    } catch (e) {
-                        console.log(e);
-                    }
+    //                 try {
+    //                     await camera?.current?.stopRecording();
+    //                 } catch (e) {
+    //                     console.log(e);
+    //                 }
 
-                    const overlayCommand = ffmegLiveTimestampOverlayCommand(
-                        video,
-                        localTime.toString(),
-                        formattedAddress,
-                        latlongResult
-                    );
+    //                 const overlayCommand = ffmegLiveTimestampOverlayCommand(
+    //                     video,
+    //                     localTime.toString(),
+    //                     formattedAddress,
+    //                     latlongResult
+    //                 );
 
-                    await FFmpegKit.execute(overlayCommand);
+    //                 await FFmpegKit.execute(overlayCommand);
 
-                    await dispatch(closePopUp());
+    //                 await dispatch(closePopUp());
 
-                    await navigation.navigate(IMAGE_PREVIEW, {
-                        capturedFile: video,
-                        picker: undefined,
-                        latlongResult,
-                        isVideo,
-                        photoTitle,
-                        navigateTo,
-                        closeButton,
-                        existingVisitation,
-                        operationAddedStep,
-                        operationTempData,
-                        soID,
-                        soNumber
-                    });
-                },
+    //                 await navigation.navigate(IMAGE_PREVIEW, {
+    //                     capturedFile: video,
+    //                     picker: undefined,
+    //                     latlongResult,
+    //                     isVideo,
+    //                     photoTitle,
+    //                     navigateTo,
+    //                     closeButton,
+    //                     existingVisitation,
+    //                     operationAddedStep,
+    //                     operationTempData,
+    //                     soID,
+    //                     soNumber
+    //                 });
+    //             },
 
-                onRecordingError: (error) => {
-                    if (error.code === "capture/recording-in-progress") {
-                        console.log(error);
-                    } else {
-                        setIsRecording(false);
-                        console.log("wkwkwk 3:: ", false);
-                        showCameraError(error.message);
-                    }
-                }
-            });
-        }
-    }, [isRecording]);
+    //             onRecordingError: (error) => {
+    //                 if (error.code === "capture/recording-in-progress") {
+    //                     console.log(error);
+    //                 } else {
+    //                     setIsRecording(false);
+    //                     console.log("wkwkwk 3:: ", false);
+    //                     showCameraError(error.message);
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }, [isRecording]);
 
     const onFileSelect = (data: any) => {
-        navigation.navigate(IMAGE_PREVIEW, {
-            photo: undefined,
-            picker: data,
-            photoTitle,
-            navigateTo,
-            closeButton,
-            existingVisitation,
-            operationAddedStep,
-            operationTempData,
-            soID,
-            soNumber
-        });
+        if (data !== null) {
+            navigation.navigate(IMAGE_PREVIEW, {
+                photo: undefined,
+                picker: data,
+                photoTitle,
+                navigateTo,
+                closeButton,
+                existingVisitation,
+                operationAddedStep,
+                operationTempData,
+                soID,
+                soNumber
+            });
+        } else {
+            setIsCameraLoading(true);
+            setTimeout(() => {
+                setIsCameraLoading(false);
+            }, 500);
+        }
     };
 
     const isFocused = useIsFocused();
 
     React.useEffect(() => {
         crashlytics().log(CAMERA);
-        if (isVideo) {
-            clearInterval(interval.current);
-            if (
-                interval &&
-                interval !== null &&
-                interval.current &&
-                interval.current !== null
-            )
-                interval.current = setInterval(() => {
-                    setCurrentTimestamp(getCurrentTimestamp());
-                    setLocalTime(getGmtPlus7UnixTime);
-                }, 1000);
-        }
+        // if (isVideo) {
+        //     clearInterval(interval.current);
+        //     if (
+        //         interval &&
+        //         interval !== null &&
+        //         interval.current &&
+        //         interval.current !== null
+        //     )
+        //         interval.current = setInterval(() => {
+        //             setCurrentTimestamp(getCurrentTimestamp());
+        //             setLocalTime(getGmtPlus7UnixTime);
+        //         }, 1000);
+        // }
 
-        return () => clearInterval(interval.current);
-    }, [navigation, isVideo]);
+        // return () => clearInterval(interval.current);
+    }, [navigation]);
 
     useFocusEffect(
         React.useCallback(() => {
             setIsCameraLoading(true);
             hasCameraPermissions().then((response) => {
                 if (response) {
-                    hasMicrophonePermissions().then((result) => {
-                        if (result) {
-                            hasLocationPermission().then((res) => {
-                                if (res) {
-                                    getCurrentLocation();
-                                }
-                            });
+                    hasLocationPermission().then((res) => {
+                        if (res) {
+                            getCurrentLocation();
                         }
                     });
                 }
@@ -394,13 +399,13 @@ function CameraScreen() {
             {devices ? (
                 <Camera
                     ref={camera}
-                    device={devices}
                     isActive={isFocused}
                     photo
+                    device={devices}
                     orientation="portrait"
                     style={StyleSheet.absoluteFill}
-                    video={isVideo}
-                    audio={isVideo}
+                    // video={isVideo}
+                    // audio={isVideo}
                     enableZoomGesture
                     enableHighQualityPhotos={!!enableHighQuality}
                     hdr={!!enableHDR}
@@ -426,20 +431,20 @@ function CameraScreen() {
                 enableFlashlight={enableFlashlight}
                 enableHDR={enableHDR}
             />
-            {isVideo && (
+            {/* {isVideo && (
                 <LiveTimeStamp
                     currentLocation={formattedAddress}
                     currentTimestamp={currentTimestamp}
                     latlong={latlongResult}
                 />
-            )}
+            )} */}
 
             <CameraButton
                 takePhoto={takePhoto}
-                recordVideo={recordVideo}
-                isVideo={isVideo}
-                stopRecordingVideo={stopVideo}
-                isRecording={isRecording}
+                // recordVideo={recordVideo}
+                // isVideo={isVideo}
+                // stopRecordingVideo={stopVideo}
+                // isRecording={isRecording}
                 onGalleryPress={(data) => onFileSelect(data)}
                 onDocPress={(data) => onFileSelect(data)}
                 disabledDocPicker={disabledDocPicker}

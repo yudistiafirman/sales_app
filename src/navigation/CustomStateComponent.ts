@@ -33,7 +33,7 @@ export type RootStackParamList = {
         operationTempData?: OperationProjectDetails;
         soID?: string;
         soNumber?: string;
-        isVideo?: boolean;
+        // isVideo?: boolean;
         latlongResult?: string;
     };
     ALL_PRODUCT: {

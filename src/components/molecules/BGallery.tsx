@@ -15,6 +15,7 @@ import LocalFileType from "@/interfaces/LocalFileType";
 import { colors, layout } from "@/constants";
 import { fileIsFromInternet } from "@/utils/generalFunc";
 import Icon from "react-native-vector-icons/FontAwesome6";
+import FastImage from "react-native-fast-image";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";
 import BThumbnail from "../atoms/BThumbnail";
@@ -88,7 +89,7 @@ export default function BGallery({
                         </View>
                     </TouchableOpacity>
                 )}
-                {item?.isVideo && item?.file !== null ? (
+                {/* {item?.isVideo && item?.file !== null ? (
                     <>
                         <BThumbnail videoUri={item?.file?.uri} />
                         <View
@@ -119,60 +120,52 @@ export default function BGallery({
                             />
                         </View>
                     </>
-                ) : (
-                    <View>
-                        {item?.isFromPicker ? (
-                            <View>
-                                {item?.file?.type === "image/jpeg" ||
-                                item?.file?.type === "image/png" ? (
-                                    <View>
-                                        {item?.file !== null && (
-                                            <Image
-                                                source={item?.file}
-                                                style={[
-                                                    style.imageStyle,
-                                                    {
-                                                        resizeMode: "cover"
-                                                    }
-                                                ]}
-                                            />
-                                        )}
-                                    </View>
-                                ) : (
-                                    <View>
-                                        {item?.file !== null && (
-                                            <Pdf
-                                                source={{
-                                                    uri: item?.file?.uri
-                                                }}
-                                                style={style.imageStyle}
-                                                page={1}
-                                            />
-                                        )}
-                                    </View>
-                                )}
-                            </View>
-                        ) : (
-                            <View>
-                                {item?.file !== null && (
-                                    <Image
-                                        source={
-                                            fileIsFromInternet(item?.file?.uri)
-                                                ? { uri: item?.file?.uri }
-                                                : item?.file
-                                        }
-                                        style={[
-                                            style.imageStyle,
-                                            {
-                                                resizeMode: "cover"
-                                            }
-                                        ]}
-                                    />
-                                )}
-                            </View>
-                        )}
-                    </View>
-                )}
+                ) : ( */}
+                <View>
+                    {item?.isFromPicker ? (
+                        <View>
+                            {item?.file?.type === "image/jpeg" ||
+                            item?.file?.type === "image/png" ? (
+                                <View>
+                                    {item?.file !== null && (
+                                        <FastImage
+                                            source={item?.file}
+                                            resizeMode="cover"
+                                            style={[style.imageStyle]}
+                                        />
+                                    )}
+                                </View>
+                            ) : (
+                                <View>
+                                    {item?.file !== null && (
+                                        <Pdf
+                                            source={{
+                                                uri: item?.file?.uri
+                                            }}
+                                            style={style.imageStyle}
+                                            page={1}
+                                        />
+                                    )}
+                                </View>
+                            )}
+                        </View>
+                    ) : (
+                        <View>
+                            {item?.file !== null && (
+                                <FastImage
+                                    source={
+                                        fileIsFromInternet(item?.file?.uri)
+                                            ? { uri: item?.file?.uri }
+                                            : item?.file
+                                    }
+                                    resizeMode="cover"
+                                    style={[style.imageStyle]}
+                                />
+                            )}
+                        </View>
+                    )}
+                </View>
+
                 {item?.file !== null &&
                     item?.type === "GALLERY" &&
                     removePict && (

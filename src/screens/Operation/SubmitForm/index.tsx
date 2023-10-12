@@ -637,7 +637,7 @@ function SubmitForm() {
 
     const addMoreImages = useCallback(
         (attachType?: string, isVideo?: boolean) => {
-            setVideoTitleDialogVisible(false);
+            // setVideoTitleDialogVisible(false);
             switch (userData?.type) {
                 case EntryType.DRIVER: {
                     navigation.dispatch(
@@ -645,7 +645,7 @@ function SubmitForm() {
                             photoTitle:
                                 isVideo === true ? videoTitle : attachType,
                             closeButton: true,
-                            isVideo,
+                            // isVideo,
                             navigateTo: EntryType.DRIVER,
                             operationAddedStep:
                                 isVideo === true ? videoTitle : attachType
@@ -773,8 +773,8 @@ function SubmitForm() {
                                 picts={operationData?.photoFiles}
                             />
                         </View>
-                        <BSpacer size="small" />
-                        {operationType === EntryType.DRIVER && (
+                        {/* <BSpacer size="small" /> */}
+                        {/* {operationType === EntryType.DRIVER && (
                             <View>
                                 <BDivider />
                                 <BSpacer size="small" />
@@ -799,7 +799,7 @@ function SubmitForm() {
                                     picts={operationData?.videoFiles}
                                 />
                             </View>
-                        )}
+                        )} */}
 
                         <View style={style.flexFull}>
                             {(operationType === EntryType.DRIVER ||
@@ -831,7 +831,7 @@ function SubmitForm() {
                     </View>
                 }
             />
-            <PopUpQuestion
+            {/* <PopUpQuestion
                 isVisible={isVideoTitleDialogVisible}
                 setIsPopupVisible={() => setVideoTitleDialogVisible(false)}
                 actionButton={() => addMoreImages(selectedAttachType, true)}
@@ -844,7 +844,7 @@ function SubmitForm() {
                 cancelText="Kembali"
                 actionText="Lanjutkan"
                 text="Masukkan judul untuk video"
-            />
+            /> */}
             {!keyboardVisible && (
                 <View
                     style={{
