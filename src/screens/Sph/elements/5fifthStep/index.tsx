@@ -4,7 +4,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     SafeAreaView,
-    Platform
+    Platform,
+    FlatList
 } from "react-native";
 import React, { useContext, useState } from "react";
 import {
@@ -41,13 +42,12 @@ import {
     updateUploadedAndMappedRequiredDocs,
     updateUseHighway
 } from "@/redux/reducers/SphReducer";
-import { FlashList } from "@shopify/flash-list";
 import { DEFAULT_ESTIMATED_LIST_SIZE } from "@/constants/general";
 import {
     safetyCheck,
     shouldAllowSPHStateToContinue
 } from "@/utils/generalFunc";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import { postSph } from "@/actions/OrderActions";
 import { useNavigation } from "@react-navigation/native";
 import StepDone from "../StepDoneModal/StepDone";
@@ -333,10 +333,9 @@ export default function FifthStep() {
             ) {
                 let photoResponse;
                 if (photoFiles && photoFiles?.length > 0) {
-                    photoResponse = await uploadFileImage(
-                        photoFiles,
-                        "sph"
-                    ).catch((err) => Error(err));
+                    photoResponse = await uploadFiles(photoFiles, "sph").catch(
+                        (err) => Error(err)
+                    );
                 }
 
                 const files: { documentId: string; fileId: string }[] = [];
@@ -496,8 +495,7 @@ export default function FifthStep() {
                         </View>
                         <BSpacer size="small" />
                     </View>
-                    <FlashList
-                        estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+                    <FlatList
                         data={sphState?.chosenProducts}
                         renderItem={(item) => (
                             <>

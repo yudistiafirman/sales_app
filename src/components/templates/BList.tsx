@@ -2,7 +2,6 @@ import { ICustomerListData } from "@/models/Customer";
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { colors, layout } from "@/constants";
-import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
@@ -14,6 +13,7 @@ import {
     INDIVIDU,
     PERUSAHAAN
 } from "@/constants/general";
+import { FlatList } from "react-native-gesture-handler";
 import BShimmerAvatarList from "./BShimmerAvatarList";
 import BEmptyState from "../organism/BEmptyState";
 import BCard from "../molecules/BCard";
@@ -187,6 +187,7 @@ function BList({
                         textInputStyle={searchBarInputStyle}
                         left={
                             <TextInput.Icon
+                                style={{ marginBottom: 24 }}
                                 size={layout.pad.xl}
                                 disabled
                                 icon="magnify"
@@ -196,6 +197,7 @@ function BList({
                             searchQuery &&
                             searchQuery?.length > 2 && (
                                 <TextInput.Icon
+                                    style={{ marginBottom: 24 }}
                                     onPress={onClearValue}
                                     size={layout.pad.lg}
                                     icon="close-circle"
@@ -212,10 +214,9 @@ function BList({
                     swipeEnabled={false}
                     navigationState={{ index: itemIndex, routes }}
                     renderScene={() => (
-                        <FlashList
+                        <FlatList
                             data={data}
                             renderItem={renderItem}
-                            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                             onEndReachedThreshold={
                                 DEFAULT_ON_END_REACHED_THREHOLD
                             }

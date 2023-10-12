@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     TextStyle,
     Platform,
-    ListRenderItem
+    ListRenderItem,
+    FlatList
 } from "react-native";
 import { IDurationButton, Input } from "@/interfaces";
 import { colors, fonts, layout } from "@/constants";
@@ -17,7 +18,6 @@ import { TextInputMask } from "react-native-masked-text";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DatePicker from "react-native-date-picker";
 import { replaceDot } from "@/utils/generalFunc";
-import { FlashList } from "@shopify/flash-list";
 import font from "@/constants/fonts";
 import moment from "moment";
 import { MarkedDates } from "react-native-calendars/src/types";
@@ -756,12 +756,7 @@ const renderInput = (
     if (type === "area") {
         const defaultErrorMsg = `${label} harus diisi`;
         return (
-            <View
-                style={[
-                    styles.relative,
-                    Platform.OS !== "android" && { zIndex: -1 }
-                ]}
-            >
+            <View style={Platform.OS !== "android" && { zIndex: -1 }}>
                 {textInputAsButton && (
                     <TouchableOpacity
                         onPress={textInputAsButtonOnPress}
@@ -779,16 +774,16 @@ const renderInput = (
                     value={value}
                     multiline
                     numberOfLines={4}
-                    minHeight={Platform.OS === "ios" ? 20 * 4 : null}
+                    minHeight={Platform.OS === "ios" ? 10 * 4 : null}
                     placeholder={placeholder}
-                    contentStyle={textStyles}
+                    contentStyle={[textStyles, { marginTop: 32 }]}
                     left={
                         LeftIcon && (
                             <TextInput.Icon
                                 forceTextInputFocus={false}
                                 icon={LeftIcon}
                                 style={{
-                                    marginTop: layout.pad.xs
+                                    marginTop: 16
                                 }}
                             />
                         )
@@ -1140,9 +1135,8 @@ const renderInput = (
                     isRequired={isRequire}
                 />
                 <BSpacer size="verySmall" />
-                <FlashList
+                <FlatList
                     data={input?.durationButton?.data}
-                    estimatedItemSize={10}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => item?.id}

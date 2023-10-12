@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import {
     View,
@@ -8,7 +7,8 @@ import {
     TouchableOpacity,
     Share,
     Platform,
-    Linking
+    Linking,
+    FlatList
 } from "react-native";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import Modal from "react-native-modal";
@@ -316,8 +316,7 @@ export default function StepDone({
                         <BSpacer size="extraSmall" />
                         <Text style={styles.partText}>Produk</Text>
                         <BSpacer size="extraSmall" />
-                        <FlashList
-                            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+                        <FlatList
                             renderItem={({ item }) => (
                                 <BProductCard
                                     name={item?.product?.name}

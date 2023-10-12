@@ -1,6 +1,5 @@
-import { FlashList } from "@shopify/flash-list";
 import React, { useCallback } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, FlatList } from "react-native";
 import { BLabel, BSpacer } from "@/components";
 import { colors, layout } from "@/constants";
 import { STAGE_PROJECT } from "@/constants/dropdown";
@@ -86,8 +85,7 @@ function ProjectPhase({ phase }: { phase: string }) {
                 label="Fase Proyek"
             />
             <BSpacer size="extraSmall" />
-            <FlashList
-                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+            <FlatList
                 data={STAGE_PROJECT}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index?.toString()}

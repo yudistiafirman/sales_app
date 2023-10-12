@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
     allVisitationGetAction,
-    uploadFileImage,
+    uploadFiles,
     projectByUserGetAction,
     projectGetOneById,
     getSphDocuments,
@@ -44,7 +44,7 @@ export const postUploadFiles = createAsyncThunk<
     { files: any[]; from: string }
 >("common/postUploadFiles", async ({ files, from }, { rejectWithValue }) => {
     try {
-        const response = await uploadFileImage(files, from);
+        const response = await uploadFiles(files, from);
 
         const { data } = response;
         if (data?.error) throw new Error(data);
@@ -236,7 +236,6 @@ export const getUserCurrentLocation = createAsyncThunk(
 
             return coordinate;
         } catch (error) {
-            console.log(error);
             let errorData = error?.message;
             if (error?.response?.data) {
                 errorData = error?.response?.data;

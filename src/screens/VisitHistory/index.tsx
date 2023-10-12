@@ -5,8 +5,7 @@ import visitHistoryMachine from "@/machine/visitHistoryMachine";
 import { useRoute } from "@react-navigation/native";
 import { useMachine } from "@xstate/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { FlashList } from "@shopify/flash-list";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { VISIT_HISTORY } from "@/navigation/ScreenNames";
@@ -121,8 +120,7 @@ function VisitHistory() {
                         swipeEnabled={false}
                         navigationState={{ index, routes }}
                         renderScene={() => (
-                            <FlashList
-                                estimatedItemSize={1}
+                            <FlatList
                                 data={[1]}
                                 renderItem={() => <BSpacer size="verySmall" />}
                                 ListHeaderComponent={renderVisitHistory}

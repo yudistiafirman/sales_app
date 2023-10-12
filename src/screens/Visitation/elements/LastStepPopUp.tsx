@@ -270,6 +270,7 @@ export default function LastStepPopUp({
                                 placeholder="Pilih Tanggal"
                                 right={
                                     <TextInput.Icon
+                                        style={{ marginBottom: 24 }}
                                         forceTextInputFocus={false}
                                         icon={chevronRight}
                                     />

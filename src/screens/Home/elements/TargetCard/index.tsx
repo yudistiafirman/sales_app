@@ -22,10 +22,6 @@ const style = StyleSheet.create({
         borderRadius: layout.radius.md,
         justifyContent: "center",
         alignItems: "center"
-    },
-    count: {
-        fontFamily: font.family.montserrat[700],
-        colors: colors.black
     }
 });
 

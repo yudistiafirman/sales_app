@@ -216,6 +216,7 @@ export default function FirstStep() {
                                 activeOutlineColor="gray"
                                 left={
                                     <TextInput.Icon
+                                        style={{ marginBottom: 24 }}
                                         forceTextInputFocus={false}
                                         icon="magnify"
                                     />

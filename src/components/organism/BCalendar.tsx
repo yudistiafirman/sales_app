@@ -4,7 +4,7 @@ import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { resScale } from "@/utils";
-import { colors } from "@/constants";
+import { colors, fonts } from "@/constants";
 
 const styles = StyleSheet.create({
     arrowStyleRight: {
@@ -101,9 +101,9 @@ function BCalendar({
                 selectedDayBackgroundColor: colors.primary,
                 dotColor: colors.primary,
                 dayTextColor: colors.text.darker,
-                textDayFontFamily: "Montserrat-Regular",
-                textMonthFontFamily: "Montserrat-SemiBold",
-                textDayHeaderFontFamily: "Montserrat-Medium"
+                textDayFontFamily: fonts.family.montserrat[400],
+                textMonthFontFamily: fonts.family.montserrat[600],
+                textDayHeaderFontFamily: fonts.family.montserrat[500]
             }}
             onDayPress={onDayPress}
             markedDates={markedDates}

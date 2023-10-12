@@ -22,6 +22,7 @@ export interface OperationProjectDetails {
 
 export interface OperationInitState {
     photoFiles: LocalFileType[];
+    videoFiles: LocalFileType[];
     inputsValue: InputsValue;
     projectDetails: OperationProjectDetails;
     isLoading: boolean;
@@ -30,6 +31,7 @@ export interface OperationInitState {
 
 const initialState: OperationInitState = {
     photoFiles: [],
+    videoFiles: [],
     inputsValue: {
         recepientName: "",
         recepientPhoneNumber: "",
@@ -95,6 +97,38 @@ export const operationSlice = createSlice({
             ...state,
             projectDetails: actions.payload?.projectDetails
         }),
+        setOperationVideo: (
+            state,
+            actions: PayloadAction<{
+                file: LocalFileType;
+                withoutAddButton: boolean;
+            }>
+        ) => {
+            let currentVideos = [...state.videoFiles];
+            if (actions.payload?.withoutAddButton)
+                currentVideos = currentVideos?.filter(
+                    (it) => it?.file !== null
+                );
+            currentVideos?.push(actions.payload?.file);
+            return {
+                ...state,
+                videoFiles: [...currentVideos]
+            };
+        },
+        setAllOperationVideo: (
+            state,
+            actions: PayloadAction<{ file: LocalFileType[] }>
+        ) => {
+            if (actions.payload?.file) {
+                return {
+                    ...state,
+                    videoFiles: [...actions.payload.file]
+                };
+            }
+            return {
+                ...state
+            };
+        },
         setOperationPhoto: (
             state,
             actions: PayloadAction<{
@@ -140,6 +174,19 @@ export const operationSlice = createSlice({
                 photoFiles: [...currentImages]
             };
         },
+        removeOperationVideo: (
+            state,
+            actions: PayloadAction<{ index: number }>
+        ) => {
+            let currentVideos = [...state.videoFiles];
+            currentVideos = currentVideos?.filter((it) => it?.file !== null);
+            currentVideos?.splice(actions.payload?.index, 1);
+            currentVideos?.unshift({ file: null });
+            return {
+                ...state,
+                videoFiles: [...currentVideos]
+            };
+        },
         setExistingFiles: (
             state,
             actions: PayloadAction<{
@@ -173,6 +220,27 @@ export const operationSlice = createSlice({
                 ...state,
                 photoFiles: [...newPhotoFiles]
             };
+        },
+        removeDriverVideo: (
+            state,
+            actions: PayloadAction<{ index: number; attachType: string }>
+        ) => {
+            const newVideoFiles: LocalFileType[] = [];
+            state?.videoFiles?.forEach((item) => {
+                let selectedItem: LocalFileType | undefined = { ...item };
+                if (selectedItem?.attachType === actions.payload?.attachType) {
+                    selectedItem = {
+                        file: null,
+                        attachType: actions.payload?.attachType
+                    };
+                }
+
+                if (selectedItem) newVideoFiles?.push(selectedItem);
+            });
+            return {
+                ...state,
+                videoFiles: [...newVideoFiles]
+            };
         }
     }
 });
@@ -183,9 +251,13 @@ export const {
     onChangeInputValue,
     onChangeProjectDetails,
     setOperationPhoto,
+    setOperationVideo,
     setAllOperationPhoto,
     removeOperationPhoto,
+    setAllOperationVideo,
+    removeOperationVideo,
     removeDriverPhoto,
+    removeDriverVideo,
     setExistingFiles
 } = operationSlice.actions;
 

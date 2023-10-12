@@ -1,7 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useEffect } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -151,8 +150,7 @@ function CreatePo() {
                 />
             ) : (
                 <View style={{ height: "100%", flexDirection: "row" }}>
-                    <FlashList
-                        estimatedItemSize={1}
+                    <FlatList
                         data={[1]}
                         renderItem={() => <BSpacer size="verySmall" />}
                         ListHeaderComponent={
@@ -201,6 +199,7 @@ function CreatePo() {
                                         <BSearchBar
                                             left={
                                                 <TextInput.Icon
+                                                    style={{ marginBottom: 24 }}
                                                     forceTextInputFocus={false}
                                                     icon="magnify"
                                                 />

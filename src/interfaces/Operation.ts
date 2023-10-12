@@ -1,4 +1,5 @@
 interface OperationsDeliverOrderProjectResponse {
+    ShippingAddress: any;
     companyName?: string;
     projectName?: string;
     id?: string;
@@ -77,7 +78,8 @@ export enum OperationFileType {
     DO_DRIVER_DO = "DO_DRIVER_DO",
     DO_DRIVER_UNBOXING = "DO_DRIVER_UNBOXING",
     DO_DRIVER_EMPTY = "DO_DRIVER_EMPTY",
-    DO_DRIVER_FINISH_PROJECT = "DO_DRIVER_FINISH_PROJECT"
+    DO_DRIVER_FINISH_PROJECT = "DO_DRIVER_FINISH_PROJECT",
+    DO_POURING_DRIVER = "DO_POURING_DRIVER"
 }
 
 export interface OperationsDeliveryOrdersListResponse {

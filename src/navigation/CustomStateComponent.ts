@@ -3,7 +3,7 @@ import { CustomerDocs } from "@/models/Customer";
 import EntryType from "@/models/EnumModel";
 import { OperationProjectDetails } from "@/redux/reducers/operationReducer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { PhotoFile } from "react-native-vision-camera";
+import { PhotoFile, VideoFile } from "react-native-vision-camera";
 
 export type RootStackParamList = {
     TAB_ROOT: { screen?: string; params?: any };
@@ -20,9 +20,10 @@ export type RootStackParamList = {
         operationTempData?: OperationProjectDetails;
         soID?: string;
         soNumber?: string;
+        isVideo?: boolean;
     };
     IMAGE_PREVIEW: {
-        photo?: PhotoFile;
+        capturedFile?: PhotoFile | VideoFile;
         photoTitle: string;
         picker?: any;
         navigateTo?: string;
@@ -32,6 +33,8 @@ export type RootStackParamList = {
         operationTempData?: OperationProjectDetails;
         soID?: string;
         soNumber?: string;
+        // isVideo?: boolean;
+        latlongResult?: string;
     };
     ALL_PRODUCT: {
         coordinate: { longitude: number; latitude: number };

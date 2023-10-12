@@ -19,6 +19,7 @@ import Operation from "@/screens/Operation";
 import Splash from "@/screens/Splash";
 import Verification from "@/screens/Verification";
 import { BatchingPlant } from "@/models/BatchingPlant";
+import { getUserType } from "@/utils/generalFunc";
 import SecurityTabs from "./tabs/SecurityTabs";
 import SalesTabs from "./tabs/SalesTabs";
 import {
@@ -29,7 +30,9 @@ import {
     VERIFICATION_TITLE,
     DRIVER,
     DRIVER_TITLE,
-    BLANK_SCREEN
+    BLANK_SCREEN,
+    SECURITY,
+    SECURITY_TITLE
 } from "./ScreenNames";
 import SalesStack from "./Sales/Stack";
 import SalesHeaderRight from "./Sales/HeaderRight";
@@ -59,23 +62,7 @@ function RootScreen(
     onSelectBPOption: (item: BatchingPlant) => void
 ) {
     if (userData !== null) {
-        const { type, roles } = userData;
-        const mappingRoles: string[] = [];
-        let safetyType = type;
-        roles?.forEach((item) => {
-            mappingRoles?.push(item?.toLowerCase());
-        });
-        if (mappingRoles?.includes(EntryType.DRIVER.toLowerCase()))
-            safetyType = EntryType.DRIVER;
-        else if (mappingRoles?.includes(EntryType.SECURITY.toLowerCase()))
-            safetyType = EntryType.SECURITY;
-        else if (mappingRoles?.includes(EntryType.WB.toLowerCase()))
-            safetyType = EntryType.WB;
-        else if (mappingRoles?.includes(EntryType.SALES.toLowerCase()))
-            safetyType = EntryType.SALES;
-        else if (mappingRoles?.includes(EntryType.ADMIN.toLowerCase()))
-            safetyType = EntryType.ADMIN;
-        switch (safetyType?.toLowerCase()) {
+        switch (userData?.type?.toLowerCase()) {
             case EntryType.DRIVER.toLowerCase():
                 return (
                     <>
@@ -100,21 +87,32 @@ function RootScreen(
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            case EntryType.SECURITY.toLowerCase(): {
+
+            case EntryType.SECURITY.toLowerCase():
                 return (
                     <>
                         <Stack.Screen
-                            name={TAB_ROOT}
-                            key={TAB_ROOT}
-                            component={SecurityTabs}
+                            name={SECURITY}
+                            key={SECURITY}
+                            component={Operation}
                             options={{
-                                headerShown: false
+                                headerTitleAlign: "center",
+                                headerTitle: () =>
+                                    selectedBPOption(
+                                        SECURITY_TITLE,
+                                        selectedBatchingPlant,
+                                        batchingPlants,
+                                        onSelectBPOption
+                                    ),
+                                headerRight: () =>
+                                    SalesHeaderRight(colors.text.darker),
+                                headerShown: true
                             }}
                         />
                         {OperationStack(selectedBatchingPlant, Stack)}
                     </>
                 );
-            }
+
             case EntryType.WB.toLowerCase():
                 return (
                     <>

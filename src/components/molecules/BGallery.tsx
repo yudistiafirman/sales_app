@@ -1,11 +1,11 @@
-import { FlashList } from "@shopify/flash-list";
 import * as React from "react";
 import {
     View,
     StyleSheet,
     TouchableOpacity,
     Image,
-    ListRenderItem
+    ListRenderItem,
+    FlatList
 } from "react-native";
 import Pdf from "react-native-pdf";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -13,9 +13,12 @@ import Feather from "react-native-vector-icons/Feather";
 import { resScale } from "@/utils";
 import LocalFileType from "@/interfaces/LocalFileType";
 import { colors, layout } from "@/constants";
-import { photoIsFromInternet } from "@/utils/generalFunc";
+import { fileIsFromInternet } from "@/utils/generalFunc";
+import Icon from "react-native-vector-icons/FontAwesome6";
+import FastImage from "react-native-fast-image";
 import BText from "../atoms/BText";
 import BSpacer from "../atoms/BSpacer";
+import BThumbnail from "../atoms/BThumbnail";
 
 const style = StyleSheet.create({
     container: {
@@ -56,7 +59,7 @@ const style = StyleSheet.create({
 
 type BGalleryType = {
     picts: any[];
-    addMorePict?: (attachType?: string) => void;
+    addMorePict?: (attachType?: string, index?: number) => void;
     removePict?: (index: number, attachType?: string) => void;
 };
 
@@ -75,7 +78,7 @@ export default function BGallery({
             >
                 {item?.file === null && addMorePict && (
                     <TouchableOpacity
-                        onPress={() => addMorePict(item?.attachType)}
+                        onPress={() => addMorePict(item?.attachType, index)}
                     >
                         <View style={[style.addImage]}>
                             <Feather
@@ -86,54 +89,99 @@ export default function BGallery({
                         </View>
                     </TouchableOpacity>
                 )}
-                {item?.isFromPicker ? (
-                    <View>
-                        {item?.file?.type === "image/jpeg" ||
-                        item?.file?.type === "image/png" ? (
-                            <Image
-                                source={item?.file}
-                                style={[
-                                    style.imageStyle,
-                                    {
-                                        resizeMode: "cover"
-                                    }
-                                ]}
-                            />
-                        ) : (
-                            <Pdf
-                                source={{ uri: item?.file?.uri }}
-                                style={style.imageStyle}
-                                page={1}
-                            />
-                        )}
-                    </View>
-                ) : (
-                    <Image
-                        source={
-                            photoIsFromInternet(item?.file?.uri)
-                                ? { uri: item?.file?.uri }
-                                : item?.file
-                        }
-                        style={[
-                            style.imageStyle,
-                            {
-                                resizeMode: "cover"
-                            }
-                        ]}
-                    />
-                )}
-                {item?.type === "GALLERY" && removePict && (
-                    <TouchableOpacity
-                        style={style.closeIcon}
-                        onPress={() => removePict(index - 1, item?.attachType)}
-                    >
-                        <AntDesign
-                            name="close"
-                            size={resScale(15)}
-                            color={colors.white}
+                {/* {item?.isVideo && item?.file !== null ? (
+                    <>
+                        <BThumbnail videoUri={item?.file?.uri} />
+                        <View
+                            style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: colors.black,
+                                opacity: 0.5
+                            }}
                         />
-                    </TouchableOpacity>
-                )}
+                        <View
+                            style={{
+                                position: "absolute",
+                                height: "100%",
+                                width: "100%",
+                                justifyContent: "center",
+                                alignSelf: "center",
+                                alignItems: "center"
+                            }}
+                        >
+                            <Icon
+                                name="play"
+                                color={colors.white}
+                                size={layout.pad.xl}
+                            />
+                        </View>
+                    </>
+                ) : ( */}
+                <View>
+                    {item?.isFromPicker ? (
+                        <View>
+                            {item?.file?.type === "image/jpeg" ||
+                            item?.file?.type === "image/png" ? (
+                                <View>
+                                    {item?.file !== null && (
+                                        <FastImage
+                                            source={item?.file}
+                                            resizeMode="cover"
+                                            style={[style.imageStyle]}
+                                        />
+                                    )}
+                                </View>
+                            ) : (
+                                <View>
+                                    {item?.file !== null && (
+                                        <Pdf
+                                            source={{
+                                                uri: item?.file?.uri
+                                            }}
+                                            style={style.imageStyle}
+                                            page={1}
+                                        />
+                                    )}
+                                </View>
+                            )}
+                        </View>
+                    ) : (
+                        <View>
+                            {item?.file !== null && (
+                                <FastImage
+                                    source={
+                                        fileIsFromInternet(item?.file?.uri)
+                                            ? { uri: item?.file?.uri }
+                                            : item?.file
+                                    }
+                                    resizeMode="cover"
+                                    style={[style.imageStyle]}
+                                />
+                            )}
+                        </View>
+                    )}
+                </View>
+
+                {item?.file !== null &&
+                    item?.type === "GALLERY" &&
+                    removePict && (
+                        <TouchableOpacity
+                            style={style.closeIcon}
+                            onPress={() =>
+                                removePict(index - 1, item?.attachType)
+                            }
+                        >
+                            <AntDesign
+                                name="close"
+                                size={resScale(15)}
+                                color={colors.white}
+                            />
+                        </TouchableOpacity>
+                    )}
                 {item?.attachType !== undefined &&
                     item?.attachType !== null && (
                         <View style={style.attachType}>
@@ -148,8 +196,7 @@ export default function BGallery({
         []
     );
     return (
-        <FlashList
-            estimatedItemSize={10}
+        <FlatList
             data={picts}
             keyExtractor={(item, index) => index?.toString()}
             renderItem={renderItem}

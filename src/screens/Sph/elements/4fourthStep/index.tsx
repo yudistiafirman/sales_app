@@ -1,6 +1,5 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import { useNavigation } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
     View,
@@ -8,7 +7,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     DeviceEventEmitter,
-    Dimensions
+    Dimensions,
+    FlatList
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -203,6 +203,7 @@ export default function FourthStep() {
                             activeOutlineColor="gray"
                             left={
                                 <TextInput.Icon
+                                    style={{ marginBottom: 24 }}
                                     forceTextInputFocus={false}
                                     icon="magnify"
                                 />
@@ -212,8 +213,7 @@ export default function FourthStep() {
                     <BSpacer size="verySmall" />
                     {/* <Text>Tidak ada produk yang terpilih</Text> */}
                     <View style={{ flexGrow: 1, flexDirection: "row" }}>
-                        <FlashList
-                            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+                        <FlatList
                             data={chosenProducts}
                             keyExtractor={(item) => item?.product?.id}
                             ListFooterComponent={

@@ -1,9 +1,14 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import moment, { locale } from "moment";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { View, Text, StyleSheet, DeviceEventEmitter } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    DeviceEventEmitter,
+    FlatList
+} from "react-native";
 import { DateData } from "react-native-calendars";
 import { useDispatch, useSelector } from "react-redux";
 import { BButtonPrimary, BCalendar, BSpacer, BText } from "@/components";
@@ -230,8 +235,7 @@ export default function CalendarScreen() {
     return (
         <View style={styles.container}>
             <View style={{ flex: 1, flexDirection: "row" }}>
-                <FlashList
-                    estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+                <FlatList
                     data={customerDatas}
                     ListHeaderComponent={
                         <View>

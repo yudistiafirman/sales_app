@@ -4,11 +4,10 @@ import {
     StackActions,
     useFocusEffect
 } from "@react-navigation/native";
-import { FlashList } from "@shopify/flash-list";
 import * as React from "react";
-import { BackHandler, View } from "react-native";
+import { BackHandler, View, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import { uploadSOSignedDocs } from "@/actions/OrderActions";
 import {
     BBackContinueBtn,
@@ -103,7 +102,7 @@ function FormSO() {
 
             let responseFiles;
             if (photoFilestoUpload && photoFilestoUpload?.length > 0)
-                responseFiles = await uploadFileImage(
+                responseFiles = await uploadFiles(
                     photoFilestoUpload,
                     "SO Signed"
                 );
@@ -205,8 +204,7 @@ function FormSO() {
     );
     return (
         <View style={{ flex: 1, padding: layout.pad.lg }}>
-            <FlashList
-                estimatedItemSize={1}
+            <FlatList
                 data={[1]}
                 renderItem={() => <BSpacer size="verySmall" />}
                 ListHeaderComponent={

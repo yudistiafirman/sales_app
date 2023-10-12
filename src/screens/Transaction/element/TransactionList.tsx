@@ -1,7 +1,6 @@
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import { FlashList } from "@shopify/flash-list";
 import React, { useCallback } from "react";
-import { ListRenderItem } from "react-native";
+import { ListRenderItem, FlatList } from "react-native";
 import { BEmptyState, BSpacer } from "@/components";
 import { layout } from "@/constants";
 import {
@@ -112,8 +111,7 @@ function TransactionList<ArrayOfObject extends TransactionsData>({
     const renderSeparator = () => <BSpacer size={layout.pad.md} />;
 
     return (
-        <FlashList
-            estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
+        <FlatList
             onEndReachedThreshold={DEFAULT_ON_END_REACHED_THREHOLD}
             data={transactions}
             onRefresh={onRefresh}

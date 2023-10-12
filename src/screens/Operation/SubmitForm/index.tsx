@@ -4,9 +4,11 @@ import {
     BForm,
     BGallery,
     BHeaderIcon,
+    BLabel,
     BLocationText,
     BSpacer,
-    BVisitationCard
+    BVisitationCard,
+    PopUpQuestion
 } from "@/components";
 import { colors, fonts, layout } from "@/constants";
 import { TM_CONDITION } from "@/constants/dropdown";
@@ -26,7 +28,8 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    View
+    View,
+    FlatList
 } from "react-native";
 import crashlytics from "@react-native-firebase/crashlytics";
 import {
@@ -34,6 +37,7 @@ import {
     SUBMIT_FORM,
     TAB_DISPATCH_TITLE,
     TAB_RETURN_TITLE,
+    driversFileName,
     securityDispatchFileType,
     securityReturnFileType
 } from "@/navigation/ScreenNames";
@@ -44,6 +48,7 @@ import { RootStackScreenProps } from "@/navigation/CustomStateComponent";
 import {
     onChangeInputValue,
     removeDriverPhoto,
+    removeDriverVideo,
     removeOperationPhoto,
     resetOperationState
 } from "@/redux/reducers/operationReducer";
@@ -51,13 +56,12 @@ import { useKeyboardActive } from "@/hooks";
 import moment from "moment";
 import { UpdateDeliverOrder } from "@/models/updateDeliveryOrder";
 import { closePopUp, openPopUp } from "@/redux/reducers/modalReducer";
-import { uploadFileImage } from "@/actions/CommonActions";
+import { uploadFiles } from "@/actions/CommonActions";
 import {
     updateDeliveryOrder,
     updateDeliveryOrderWeight
 } from "@/actions/OrderActions";
-import { FlashList } from "@shopify/flash-list";
-import { mapFileNameToTypeDO, photoIsFromInternet } from "@/utils/generalFunc";
+import { mapFileNameToTypeDO, fileIsFromInternet } from "@/utils/generalFunc";
 
 const style = StyleSheet.create({
     flexFull: {
@@ -99,7 +103,7 @@ const style = StyleSheet.create({
 });
 
 function LeftIcon() {
-    return <Text style={style.leftIconStyle}>+62</Text>;
+    return <Text style={[style.leftIconStyle, { marginBottom: 16 }]}>+62</Text>;
 }
 const phoneNumberRegex = /^(?:0[0-9]{9,10}|[1-9][0-9]{7,11})$/;
 
@@ -117,18 +121,20 @@ function SubmitForm() {
     const [tmCondition, setTMCondition] = React.useState<string | undefined>(
         undefined
     );
+    const [isVideoTitleDialogVisible, setVideoTitleDialogVisible] =
+        React.useState(false);
     const [receipientName, setReceipientName] = React.useState<
         string | undefined
     >(undefined);
     const [receipientPhone, setReceipientPhone] = React.useState<
         string | undefined
     >(undefined);
-
-    const securityFileType =
-        operationType === EntryType.DISPATCH
-            ? securityDispatchFileType
-            : securityReturnFileType;
-
+    const [videoTitle, setVideoTitle] = React.useState<string | undefined>(
+        undefined
+    );
+    const [selectedAttachType, setSelectedAttachType] = React.useState<
+        string | undefined
+    >(undefined);
     const enableLocationHeader =
         operationType === EntryType.DRIVER &&
         operationData?.projectDetails?.address &&
@@ -216,6 +222,9 @@ function SubmitForm() {
         const filteredPhoto = operationData?.photoFiles?.filter(
             (it) => it?.file !== null
         );
+        const filteredVideo = operationData?.videoFiles?.filter(
+            (it) => it?.file !== null
+        );
         let photos;
         if (filteredPhoto) photos = [...filteredPhoto];
         if (userData?.type === EntryType.DRIVER) {
@@ -223,6 +232,7 @@ function SubmitForm() {
                 (photos && photos?.length < 7) ||
                 !operationData?.inputsValue?.recepientName ||
                 operationData?.inputsValue?.recepientName?.length === 0 ||
+                filteredVideo?.length === 0 ||
                 !phoneNumberRegex?.test(
                     operationData?.inputsValue?.recepientPhoneNumber
                 )
@@ -268,18 +278,31 @@ function SubmitForm() {
             payload.batchingPlantId = selectedBatchingPlant?.id;
             const photoFilestoUpload = operationData?.photoFiles
                 ?.filter(
-                    (v) =>
-                        v?.file !== null && !photoIsFromInternet(v?.file?.uri)
+                    (v) => v?.file !== null && !fileIsFromInternet(v?.file?.uri)
                 )
                 ?.map((photo) => ({
                     ...photo?.file,
                     uri: photo?.file?.uri?.replace("file:", "file://"),
                     attachType: photo?.attachType
                 }));
+            const videoFilestoUpload = operationData?.videoFiles
+                ?.filter(
+                    (v) => v?.file !== null && !fileIsFromInternet(v?.file?.uri)
+                )
+                ?.map((video) => ({
+                    ...video?.file,
+                    uri: video?.file?.uri?.replace("file:", "file://"),
+                    attachType: video?.attachType
+                }));
+            if (videoFilestoUpload.length > 0)
+                Array.prototype.push.apply(
+                    photoFilestoUpload,
+                    videoFilestoUpload
+                );
 
             let responseFiles;
             if (photoFilestoUpload && photoFilestoUpload?.length > 0) {
-                responseFiles = await uploadFileImage(
+                responseFiles = await uploadFiles(
                     photoFilestoUpload,
                     "Update Delivery Order"
                 );
@@ -443,13 +466,31 @@ function SubmitForm() {
                 backAction
             );
             return () => backHandler.remove();
-        }, [handleBack, operationData?.photoFiles, userData?.type])
+        }, [
+            handleBack,
+            operationData?.photoFiles,
+            operationData?.videoFiles,
+            userData?.type
+        ])
     );
 
     useHeaderTitleChanged({
         title: getHeaderTitle(),
         selectedBP: selectedBatchingPlant
     });
+
+    const videoTitleInputs: Input[] = [
+        {
+            label: "Judul Video",
+            value: videoTitle,
+            onChange: (e) => {
+                setVideoTitle(e?.nativeEvent?.text);
+            },
+            isRequire: false,
+            type: "textInput",
+            placeholder: "Masukkan judul video"
+        }
+    ];
 
     const weightInputs: Input[] = [
         {
@@ -573,31 +614,41 @@ function SubmitForm() {
     ];
 
     const deleteImages = useCallback(
-        (i: number, attachType: string) => {
+        (i: number, attachType: string, isVideo?: boolean) => {
             // if (userData?.type === EntryType.DRIVER) {
-            dispatch(removeDriverPhoto({ index: i, attachType }));
+            if (isVideo === true) {
+                dispatch(removeDriverVideo({ index: i, attachType }));
+            } else {
+                dispatch(removeDriverPhoto({ index: i, attachType }));
+            }
             // } else {
             //     dispatch(removeOperationPhoto({ index: i }));
             // }
         },
         [
             operationData?.photoFiles,
+            operationData?.videoFiles,
             dispatch,
             removeOperationPhoto,
-            removeDriverPhoto
+            removeDriverPhoto,
+            videoTitle
         ]
     );
 
     const addMoreImages = useCallback(
-        (attachType?: string) => {
+        (attachType?: string, isVideo?: boolean) => {
+            // setVideoTitleDialogVisible(false);
             switch (userData?.type) {
                 case EntryType.DRIVER: {
                     navigation.dispatch(
                         StackActions.push(CAMERA, {
-                            photoTitle: attachType,
+                            photoTitle:
+                                isVideo === true ? videoTitle : attachType,
                             closeButton: true,
+                            // isVideo,
                             navigateTo: EntryType.DRIVER,
-                            operationAddedStep: attachType
+                            operationAddedStep:
+                                isVideo === true ? videoTitle : attachType
                         })
                     );
                     break;
@@ -651,14 +702,17 @@ function SubmitForm() {
                 }
             }
         },
-        [operationData?.photoFiles, dispatch]
+        [
+            operationData?.photoFiles,
+            operationData?.videoFiles,
+            dispatch,
+            videoTitle
+        ]
     );
 
-    console.log("lolololo:: ", operationData?.inputsValue);
     return (
         <SafeAreaView style={style.parent}>
-            <FlashList
-                estimatedItemSize={1}
+            <FlatList
                 data={[1]}
                 contentContainerStyle={{
                     paddingHorizontal: layout.pad.lg,
@@ -693,10 +747,7 @@ function SubmitForm() {
                                     time: `${moment(
                                         operationData?.projectDetails
                                             ?.deliveryTime
-                                    ).format("L")} | ${moment(
-                                        operationData?.projectDetails
-                                            ?.deliveryTime
-                                    ).format("HH:mm")}`
+                                    ).format("L")}`
                                 }}
                                 customStyle={{
                                     backgroundColor: colors.tertiary
@@ -709,16 +760,47 @@ function SubmitForm() {
                             <BSpacer size="extraSmall" />
                         </View>
                         <View>
+                            <BLabel bold="500" label="Foto" />
                             <BGallery
-                                addMorePict={(attachType) =>
-                                    addMoreImages(attachType)
-                                }
+                                addMorePict={(attachType) => {
+                                    setVideoTitle(undefined);
+                                    setSelectedAttachType(undefined);
+                                    addMoreImages(attachType, false);
+                                }}
                                 removePict={(pos, attachType) =>
-                                    deleteImages(pos, attachType || "")
+                                    deleteImages(pos, attachType || "", false)
                                 }
                                 picts={operationData?.photoFiles}
                             />
                         </View>
+                        {/* <BSpacer size="small" /> */}
+                        {/* {operationType === EntryType.DRIVER && (
+                            <View>
+                                <BDivider />
+                                <BSpacer size="small" />
+                                <BLabel bold="500" label="Video" />
+                                <BGallery
+                                    addMorePict={(attachType, index) => {
+                                        setVideoTitle(
+                                            `Penuangan Ke-${index! + 1}`
+                                        );
+                                        setSelectedAttachType(
+                                            `Penuangan Ke-${index! + 1}`
+                                        );
+                                        setVideoTitleDialogVisible(true);
+                                    }}
+                                    removePict={(pos, attachType) =>
+                                        deleteImages(
+                                            pos,
+                                            attachType || "",
+                                            true
+                                        )
+                                    }
+                                    picts={operationData?.videoFiles}
+                                />
+                            </View>
+                        )} */}
+
                         <View style={style.flexFull}>
                             {(operationType === EntryType.DRIVER ||
                                 operationType === EntryType.RETURN ||
@@ -749,7 +831,20 @@ function SubmitForm() {
                     </View>
                 }
             />
-
+            {/* <PopUpQuestion
+                isVisible={isVideoTitleDialogVisible}
+                setIsPopupVisible={() => setVideoTitleDialogVisible(false)}
+                actionButton={() => addMoreImages(selectedAttachType, true)}
+                disabledNext={!(videoTitle && videoTitle !== "")}
+                descContent={
+                    <View style={{ paddingHorizontal: layout.pad.md }}>
+                        <BForm titleBold="500" inputs={videoTitleInputs} />
+                    </View>
+                }
+                cancelText="Kembali"
+                actionText="Lanjutkan"
+                text="Masukkan judul untuk video"
+            /> */}
             {!keyboardVisible && (
                 <View
                     style={{

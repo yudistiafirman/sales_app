@@ -1,7 +1,13 @@
 import BVisitationCard from "@/components/molecules/BVisitationCard";
 import { colors, layout } from "@/constants";
 import * as React from "react";
-import { ListRenderItem, Platform, StyleSheet, View } from "react-native";
+import {
+    FlatList,
+    ListRenderItem,
+    Platform,
+    StyleSheet,
+    View
+} from "react-native";
 import { selectedCompanyInterface, visitationDataType } from "@/interfaces";
 import BSpacer from "@/components/atoms/BSpacer";
 import { CreatedSPHListResponse } from "@/interfaces/CreatePurchaseOrder";
@@ -9,7 +15,6 @@ import BSearchBar from "@/components/molecules/BSearchBar";
 import { TextInput } from "react-native-paper";
 import BTabSections from "@/components/organism/TabSections";
 import { CreatedPurchaseOrderListResponse } from "@/interfaces/SelectConfirmedPO";
-import { FlashList } from "@shopify/flash-list";
 import {
     DEFAULT_ESTIMATED_LIST_SIZE,
     DEFAULT_ON_END_REACHED_THREHOLD
@@ -151,6 +156,7 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 onChangeText={(text) => onChangeText(text)}
                 left={
                     <TextInput.Icon
+                        style={{ marginBottom: 24 }}
                         onPress={() =>
                             onPressMagnifyCheck !== null && onPressMagnify
                         }
@@ -159,7 +165,11 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                 }
                 right={
                     onClearValue && (
-                        <TextInput.Icon onPress={onClearValue} icon="close" />
+                        <TextInput.Icon
+                            style={{ marginBottom: 24 }}
+                            onPress={onClearValue}
+                            icon="close"
+                        />
                     )
                 }
                 autoFocus={autoFocus}
@@ -175,9 +185,8 @@ function BCommonSearchList<ArrayOfObject extends ListRenderItemData>({
                     renderScene={() => (
                         <>
                             <BSpacer size="extraSmall" />
-                            <FlashList
+                            <FlatList
                                 data={data}
-                                estimatedItemSize={DEFAULT_ESTIMATED_LIST_SIZE}
                                 onEndReachedThreshold={
                                     DEFAULT_ON_END_REACHED_THREHOLD
                                 }
