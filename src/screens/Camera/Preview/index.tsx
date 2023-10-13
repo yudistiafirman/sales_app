@@ -340,7 +340,7 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
         } else if (picker) {
             localFile = {
                 file: {
-                    uri: picker?.uri,
+                    uri: picker?.fileCopyUri,
                     type: picker?.type,
                     name: pdfName,
                     longlat: latlongResult,
@@ -790,13 +790,16 @@ function Preview({ style }: { style?: StyleProp<ViewStyle> }) {
                     />
                 )}
                 {picker && picker.type === "application/pdf" && (
-                    <Pdf style={styles.image} source={{ uri: picker?.uri }} />
+                    <Pdf
+                        style={styles.image}
+                        source={{ uri: picker?.fileCopyUri }}
+                    />
                 )}
                 {picker &&
                     (picker.type === "image/jpeg" ||
                         picker.type === "image/png") && (
                         <Image
-                            source={{ uri: picker?.uri }}
+                            source={{ uri: picker?.fileCopyUri }}
                             style={styles.image}
                         />
                     )}
