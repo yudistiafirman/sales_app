@@ -139,7 +139,8 @@ ConfigType) {
                         typeDocument === "IMAGE"
                             ? ["image/png", "image/jpg", "image/jpeg"]
                             : [DocumentPicker.types.pdf],
-                    allowMultiSelection: false
+                    allowMultiSelection: false,
+                    copyTo: "documentDirectory"
                 });
 
                 if (typeDocument === "IMAGE") onGalleryPress(res);
