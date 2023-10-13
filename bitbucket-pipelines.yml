@@ -19,14 +19,6 @@ pipelines:
                       - gradle
                       - node
                   script:
-                      - echo JAVA_HOME=$JAVA_HOME > .env
-                      - echo GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY >> .env
-                      - echo API_URL_COMMON=$API_URL_COMMON >> .env
-                      - echo API_URL_INV=$API_URL_INV >> .env
-                      - echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY >> .env
-                      - echo API_URL_ORDER=$API_URL_ORDER >> .env
-                      - echo API_URL_FINANCE=$API_URL_FINANCE >> .env
-                      - cat .env
                       - yarn install
 
             - step:
@@ -35,6 +27,14 @@ pipelines:
                   caches:
                       - node
                   script: # Modify the commands below to build your repository
+                      - echo JAVA_HOME=$JAVA_HOME > .env
+                      - echo GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY >> .env
+                      - echo API_URL_COMMON=$API_URL_COMMON >> .env
+                      - echo API_URL_INV=$API_URL_INV >> .env
+                      - echo API_URL_PRODUCTIVITY=$API_URL_PRODUCTIVITY >> .env
+                      - echo API_URL_ORDER=$API_URL_ORDER >> .env
+                      - echo API_URL_FINANCE=$API_URL_FINANCE >> .env
+                      - cat .env
                       - cd android
                       - yarn androidRelease-Dev
                   artifacts:
