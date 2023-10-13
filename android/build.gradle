@@ -7,7 +7,7 @@ buildscript {
         */
         MAJOR_VERSION = 1
         MINOR_VERSION = 1
-        PATCH_VERSION = 35
+        PATCH_VERSION = 36
 
         compileSdkVersion = 33
         minSdkVersion = 24
